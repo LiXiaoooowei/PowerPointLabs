@@ -5,6 +5,7 @@
         #region Action Framework Tags
         public const string RibbonMenuId = "CaptionsLabMenu";
         public const string AddCaptionsTag = "AddCaptions";
+        public const string AddCalloutsTag = "AddCallouts";
         public const string RemoveCaptionsTag = "RemoveCaptions";
         public const string RemoveNotesTag = "RemoveNotes";
         #endregion
@@ -12,6 +13,7 @@
         #region GUI Text
         public const string RibbonMenuLabel = "Captions";
         public const string AddCaptionsButtonLabel = "Add Captions";
+        public const string AddCalloutsButtonLabel = "Add Callouts";
         public const string RemoveCaptionsButtonLabel = "Remove Captions";
         public const string RemoveAllNotesButtonLabel = "Remove All Notes";
 
@@ -20,6 +22,8 @@
         public const string AddCaptionsButtonSupertip =
             "Create movie-style subtitles from text in the Notes pane for the currently selected slides.\n\n" +
             "To perform this action, select the slide(s) with the notes, then click this button.";
+        public const string AddCalloutsButtonSupertip =
+            "Attach callout to an object in current PPT.";
         public const string RemoveCaptionsButtonSupertip =
             "Remove captions added using Captions Lab from the selected slides.\n\n" +
             "To perform this action, select the slide(s) to remove the captions from, then click this button.";

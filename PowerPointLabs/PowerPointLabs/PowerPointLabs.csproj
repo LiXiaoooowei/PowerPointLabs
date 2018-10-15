@@ -256,6 +256,10 @@
   -->
   <ItemGroup>
     <Compile Include="ActionFramework\AnimationLab\AnimationLabSettings\AnimationLabSettingsActionHandler.cs" />
+    <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsActionHandler.cs" />
+    <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsImageHandler.cs" />
+    <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsLabelHandler.cs" />
+    <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsSupertipHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonActionHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonImageHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonLabelHandler.cs" />
