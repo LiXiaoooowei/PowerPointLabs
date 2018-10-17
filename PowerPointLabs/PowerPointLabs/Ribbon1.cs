@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 using PowerPointLabs.ActionFramework.Common.Factory;
 using PowerPointLabs.ActionFramework.Common.Log;
+using PowerPointLabs.CaptionsLab;
 using PowerPointLabs.NarrationsLab;
 using PowerPointLabs.PictureSlidesLab.Views;
 using PowerPointLabs.TextCollection;
@@ -270,6 +271,10 @@ namespace PowerPointLabs
 
         public PictureSlidesLabWindow PictureSlidesLabWindow { get; set; }
 
+        #endregion
+
+        #region Feature: Captions Lab
+        public CalloutsTextDialog CalloutsTextDialog { get; set; }
         #endregion
 
         #region Feature: Combine Shapes

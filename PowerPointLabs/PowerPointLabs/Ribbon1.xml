@@ -141,7 +141,6 @@
                     getImage="GetImage"
                     getSupertip="GetSupertip"
                     onAction="OnAction"/>
-            <gallery idMso="ShapesInsertGallery" />
             <button id="AddCalloutsButton"
                    tag="AddCallouts"
                    getLabel="GetLabel"
