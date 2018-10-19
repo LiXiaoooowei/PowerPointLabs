@@ -14,7 +14,7 @@ using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
 namespace PowerPointLabs.CaptionsLab
 {
-    internal static class NotesToCaptions
+    public static class NotesToCaptions
     {
 #pragma warning disable 0618
         public static bool IsRemoveCaptionsEnabled { get; set; } = true;
@@ -86,6 +86,44 @@ namespace PowerPointLabs.CaptionsLab
             }
         }
 
+        public static IEnumerable<string> SplitNotesByClicks(string rawNotes)
+        {
+            TaggedText taggedNotes = new TaggedText(rawNotes);
+            List<String> splitByClicks = taggedNotes.SplitByClicks();
+            return splitByClicks;
+        }
+
+        public static List<string> ConvertSectionsToCaptions(IEnumerable<string> separatedNotes)
+        {
+            List<String> captionCollection = new List<string>();
+            foreach (string text in separatedNotes)
+            {
+                TaggedText section = new TaggedText(text);
+                String currentCaption = section.ToPrettyString().Trim();
+                if (!string.IsNullOrEmpty(currentCaption))
+                {
+                    captionCollection.Add(currentCaption);
+                }
+            }
+            return captionCollection;
+        }
+
+        public static void RemoveCaptionsFromSlide(PowerPointSlide slide)
+        {
+            if (slide != null)
+            {
+                slide.DeleteShapesWithPrefixTimelineInvariant("PowerPointLabs Caption ");
+            }
+        }
+
+        public static void ShowNotesPane()
+        {
+            if (!Globals.ThisAddIn.IsApplicationVersion2010())
+            {
+                Globals.ThisAddIn.Application.CommandBars.ExecuteMso("ShowNotes");
+            }
+        }
+
         // Returns true if the captions are successfully added
         private static bool EmbedCaptionsOnSlide(PowerPointSlide s)
         {
@@ -130,28 +168,6 @@ namespace PowerPointLabs.CaptionsLab
             return true;
         }
 
-        private static IEnumerable<string> SplitNotesByClicks(string rawNotes)
-        {
-            TaggedText taggedNotes = new TaggedText(rawNotes);
-            List<String> splitByClicks = taggedNotes.SplitByClicks();
-            return splitByClicks;
-        }
-
-        private static List<string> ConvertSectionsToCaptions(IEnumerable<string> separatedNotes)
-        {
-            List<String> captionCollection = new List<string>();
-            foreach (string text in separatedNotes)
-            {
-                TaggedText section = new TaggedText(text);
-                String currentCaption = section.ToPrettyString().Trim();
-                if (!string.IsNullOrEmpty(currentCaption))
-                {
-                    captionCollection.Add(currentCaption);
-                }
-            }
-            return captionCollection;
-        }
-
         private static Shape AddCaptionBoxToSlide(string caption, PowerPointSlide s)
         {
             float slideWidth = PowerPointPresentation.Current.SlideWidth;
@@ -170,22 +186,6 @@ namespace PowerPointLabs.CaptionsLab
 
             textBox.Top = slideHeight - textBox.Height;
             return textBox;
-        }
-
-        private static void RemoveCaptionsFromSlide(PowerPointSlide slide)
-        {
-            if (slide != null)
-            {
-                slide.DeleteShapesWithPrefixTimelineInvariant("PowerPointLabs Caption ");
-            }
-        }
-
-        private static void ShowNotesPane()
-        {
-            if (!Globals.ThisAddIn.IsApplicationVersion2010())
-            {
-                Globals.ThisAddIn.Application.CommandBars.ExecuteMso("ShowNotes");
-            }
         }
     }
 }

@@ -65,6 +65,8 @@ namespace PowerPointLabs
 
         private bool isResizePaneVisible;
 
+      //  private int slideCount = 0;
+
         private readonly Dictionary<PowerPoint.DocumentWindow,
             List<CustomTaskPane>> _documentPaneMapper = new Dictionary<PowerPoint.DocumentWindow, List<CustomTaskPane>>();
 
@@ -820,6 +822,7 @@ namespace PowerPointLabs
             Application.AfterNewPresentation += ThisAddInAfterNewPresentation;
             Application.PresentationOpen += ThisAddInPresentationOpen;
             Application.PresentationClose += ThisAddInPresentationClose;
+            Application.PresentationSave += ThisAddInPresentationSave;
 
             // Priority Mid: Window Actions
             Application.WindowActivate += ThisAddInApplicationOnWindowActivate;
@@ -829,7 +832,18 @@ namespace PowerPointLabs
             Application.SlideShowEnd += SlideShowEndHandler;
 
             // Priority Low: Slide Actions
+            Application.PresentationNewSlide += ThisAddInPresentationNewSlideAdded;
             Application.SlideSelectionChanged += ThisAddInSlideSelectionChanged;
+        }
+
+        private void ThisAddInPresentationNewSlideAdded(PowerPoint.Slide sld)
+        {
+          //  sld.Name = "PowerPointSlide " + (++slideCount).ToString();
+        }
+
+        private void ThisAddInPresentationSave(PowerPoint.Presentation pres)
+        {
+            AddCallouts.UpdateCalloutsOnSlides(PowerPointCurrentPresentationInfo.SelectedSlides.ToList());
         }
 
         private void ThisAddInApplicationOnWindowDeactivate(PowerPoint.Presentation pres, PowerPoint.DocumentWindow wn)

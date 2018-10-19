@@ -761,6 +761,23 @@ namespace PowerPointLabs.Models
             return matchingShapes;
         }
 
+        public int GetSlideIndexForCallouts()
+        {
+            try
+            {
+                Match m = Regex.Match(Name, @"^PowerPointSlide\s([1-9][0-9]*)$");
+                if (m.Success && Int32.TryParse(m.Groups[1].Value, out int slideNo))
+                {
+                    return slideNo;
+                }
+                return -1;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+        }
+
         public bool HasShapeWithRule(Regex nameRule)
         {
             return GetShapesWithRule(nameRule).Count > 0;

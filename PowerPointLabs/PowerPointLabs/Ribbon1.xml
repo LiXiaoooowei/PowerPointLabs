@@ -141,6 +141,12 @@
                     getImage="GetImage"
                     getSupertip="GetSupertip"
                     onAction="OnAction"/>
+            <button id="AddCalloutsButton"
+                    tag="AddCallouts"
+                    getLabel="GetLabel"
+                    getImage="GetImage"
+                    getSupertip="GetSupertip"
+                    onAction="OnAction"/>
             <button id="RemoveCaptionsButton"
                     tag="RemoveCaptions"
                     getLabel="GetLabel"
