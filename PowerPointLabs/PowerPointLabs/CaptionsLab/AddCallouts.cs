@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
 
@@ -21,16 +23,20 @@ namespace PowerPointLabs.CaptionsLab
 #pragma warning disable 0618
         private static Dictionary<int, Callouts> calloutsTable = new Dictionary<int, Callouts>();
 
-        public static void EmbedCalloutsOnSelectedSlides()
+        public static void InitializeCalloutsTable(CalloutsTableSerializable table)
         {
-            if (PowerPointCurrentPresentationInfo.SelectedSlides == null ||
-                !PowerPointCurrentPresentationInfo.SelectedSlides.Any())
+            calloutsTable = table.ToCalloutsTable();
+        }
+
+        public static void EmbedCalloutsOnSelectedSlides(IEnumerable<PowerPointSlide> slides)
+        {
+            if (slides == null || !slides.Any())
             {
                 Logger.Log(String.Format("{0} in EmbedCalloutsOnSelectedSlides", CaptionsLabText.ErrorNoSelectionLog));
                 MessageBox.Show(CaptionsLabText.ErrorNoSelection, CaptionsLabText.ErrorDialogTitle);
                 return;
             }
-            EmbedCalloutsOnSlides(PowerPointCurrentPresentationInfo.SelectedSlides.ToList());
+            EmbedCalloutsOnSlides(slides.ToList());
         }
 
         public static void EmbedCalloutsOnSlides(List<PowerPointSlide> slides)
@@ -39,13 +45,11 @@ namespace PowerPointLabs.CaptionsLab
             {
                 if (NeedsUpdateCallouts(slide.Name))
                 {
-                    Logger.Log("calling updatecalloutsonslide");
                     InsertCalloutsOnSlideToNotesPage(slide);
                     UpdateCalloutsOnNotesPageToSlide(slide);
                 }
                 else
                 {
-                    Logger.Log("calling embedcalloutsonslide");
                     bool captionAdded = EmbedCalloutsOnNotesPageToSlide(slide);
                     bool captionInserted = InsertCalloutsOnSlideToNotesPage(slide);
                     if (!captionAdded && slides.Count == 1 && !captionInserted)
@@ -58,13 +62,35 @@ namespace PowerPointLabs.CaptionsLab
             }
         }
 
-        public static void UpdateCalloutsOnSlides(List<PowerPointSlide> slides)
+        public static void SyncCalloutsOnSlides(List<PowerPointSlide> slides)
         {
             foreach (PowerPointSlide slide in slides)
             {
                 SyncCalloutsOnSlideToNotespage(slide);
                 Logger.Log("saving slide " + slide.Name);
             }
+            string filePath = Environment.ExpandEnvironmentVariables(@"%UserProfile%\\Desktop\\callouts.dat");
+            StorageUtil.WriteToXMLFile(filePath, ConvertToCalloutTableSerializable());
+        }
+
+        private static CalloutsTableSerializable ConvertToCalloutTableSerializable()
+        {
+            List<CalloutsTableSerializable.CalloutsListSerializable> lists =
+                new List<CalloutsTableSerializable.CalloutsListSerializable>();
+            foreach (KeyValuePair<int, Callouts> callout in calloutsTable)
+            {
+                CalloutsTableSerializable.CalloutsListSerializable item =
+                    new CalloutsTableSerializable.CalloutsListSerializable()
+                    {
+                        slideNo = callout.Key,
+                        callout = callout.Value.Serialize()
+                    };
+                lists.Add(item);
+            }
+            return new CalloutsTableSerializable()
+            {
+                list = lists
+            };
         }
 
         private static bool NeedsUpdateCallouts(string name)
@@ -164,8 +190,8 @@ namespace PowerPointLabs.CaptionsLab
                 return false;
             }
 
-            IEnumerable<string> separatedNotes = NotesToCaptions.SplitNotesByClicks(rawNotes);
-            List<string> captionCollection = NotesToCaptions.ConvertSectionsToCaptions(separatedNotes);
+            IEnumerable<string> separatedNotes = CaptionUtil.SplitNotesByClicks(rawNotes);
+            List<string> captionCollection = CaptionUtil.ConvertSectionsToCaptions(separatedNotes);
             if (captionCollection.Count == 0)
             {
                 return false;
@@ -175,14 +201,14 @@ namespace PowerPointLabs.CaptionsLab
             {
                 int currIdx = i - calloutsDeleted;
                 string currentCaption = captionCollection[i];
-                if (NotesToCaptions.IsNewNoteInserted(currentCaption))
+                if (CaptionUtil.IsNewNoteInserted(currentCaption))
                 {
                     currentCaption = currentCaption.Replace("[i]", "");
                     Shape callout = AddCalloutBoxToSlide(currentCaption, s);
                     int calloutIdx = calloutsTable[slideNo].InsertCallout(currentCaption, currIdx);
                     callout.Name = "PowerPointLabs Callout " + calloutIdx;
                 }
-                else if (NotesToCaptions.IsOldNoteDeleted(currentCaption))
+                else if (CaptionUtil.IsOldNoteDeleted(currentCaption))
                 {
                     calloutsDeleted++;
                     int calloutNo = calloutsTable[slideNo].DeleteCallout(currIdx);
@@ -201,7 +227,6 @@ namespace PowerPointLabs.CaptionsLab
             return true;
         }
 
-        // Returns true if the captions are successfully added
         private static bool EmbedCalloutsOnNotesPageToSlide(PowerPointSlide s)
         {
             String rawNotes = s.NotesPageText;
@@ -212,8 +237,8 @@ namespace PowerPointLabs.CaptionsLab
                 return false;
             }
 
-            IEnumerable<string> separatedNotes = NotesToCaptions.SplitNotesByClicks(rawNotes);
-            List<string> captionCollection = NotesToCaptions.ConvertSectionsToCaptions(separatedNotes);
+            IEnumerable<string> separatedNotes = CaptionUtil.SplitNotesByClicks(rawNotes);
+            List<string> captionCollection = CaptionUtil.ConvertSectionsToCaptions(separatedNotes);
             if (captionCollection.Count == 0)
             {
                 return false;

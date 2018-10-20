@@ -644,6 +644,9 @@
     <Compile Include="AutoUpdate\Interface\IDownloader.cs" />
     <Compile Include="AutoUpdate\Updater.cs" />
     <Compile Include="CaptionsLab\AddCallouts.cs" />
+    <Compile Include="CaptionsLab\CalloutsTableSerializable.cs" />
+    <Compile Include="CaptionsLab\CaptionUtil.cs" />
+    <Compile Include="CaptionsLab\StorageUtil.cs" />
     <Compile Include="EffectsLab\EffectsLabSettings.cs" />
     <Compile Include="EffectsLab\EffectsLabUtil.cs" />
     <Compile Include="EffectsLab\EffectsLabRecolor.cs" />

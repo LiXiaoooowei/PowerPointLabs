@@ -843,7 +843,7 @@ namespace PowerPointLabs
 
         private void ThisAddInPresentationSave(PowerPoint.Presentation pres)
         {
-            AddCallouts.UpdateCalloutsOnSlides(PowerPointCurrentPresentationInfo.SelectedSlides.ToList());
+            AddCallouts.SyncCalloutsOnSlides(PowerPointCurrentPresentationInfo.SelectedSlides.ToList());
         }
 
         private void ThisAddInApplicationOnWindowDeactivate(PowerPoint.Presentation pres, PowerPoint.DocumentWindow wn)
@@ -1031,6 +1031,13 @@ namespace PowerPointLabs
                 RefreshRibbonMenuButtons();
                 // Initialise the "Maintain Tab Focus" checkbox
                 Ribbon.InitialiseVisibilityCheckbox();
+            }
+            string filePath = Environment.ExpandEnvironmentVariables(@"%UserProfile%\\Desktop\\callouts.dat");
+            CalloutsTableSerializable table = 
+                StorageUtil.ReadFromXmlFile<CalloutsTableSerializable>(filePath);
+            if (table != default(CalloutsTableSerializable))
+            {
+                AddCallouts.InitializeCalloutsTable(table);
             }
         }
 

@@ -22,7 +22,12 @@ namespace PowerPointLabs.Models
         public Callouts()
         {
         }
-
+        public Callouts(int shapeCount, Dictionary<int, int> calloutsInverted, List<string> notesInverted)
+        {
+            this.shapeCount = shapeCount;
+            this.calloutsInverted = calloutsInverted;
+            this.notesInverted = notesInverted;
+        }
         public int InsertCallout(string note, int stmtIdx)
         {           
             for (int i = notesInverted.Count - 1; i >= stmtIdx; i--)
@@ -86,6 +91,26 @@ namespace PowerPointLabs.Models
                 builder.Append(_s + "[AfterClick]" + " ");               
             }
             return builder.ToString();
+        }
+
+        public CaptionsLab.CalloutsTableSerializable.CalloutSerializable Serialize()
+        {
+            List<CaptionsLab.CalloutsTableSerializable.IntPair> pairs = 
+                new List<CaptionsLab.CalloutsTableSerializable.IntPair>();
+            foreach (KeyValuePair<int, int> callout in calloutsInverted)
+            {
+                pairs.Add(new CaptionsLab.CalloutsTableSerializable.IntPair()
+                {
+                    stmtNo = callout.Key,
+                    shapeNo = callout.Value
+                });
+            }
+            return new CaptionsLab.CalloutsTableSerializable.CalloutSerializable()
+            {
+                shapeCount = this.shapeCount,
+                notesInverted = this.notesInverted,
+                calloutsInverted = pairs
+            };
         }
     }
 }

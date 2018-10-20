@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Microsoft.Office.Interop.PowerPoint;
 using Microsoft.Office.Tools;
 
@@ -39,6 +39,11 @@ namespace PowerPointLabs.ActionFramework.Common.Extension
         public static PowerPointSlide GetCurrentSlide(this BaseHandler handler)
         {
             return ActionFrameworkExtensions.GetCurrentSlide();
+        }
+
+        public static IEnumerable<PowerPointSlide> GetSelectedSlides(this BaseHandler handler)
+        {
+            return ActionFrameworkExtensions.GetSelectedSlides();
         }
 
         public static PowerPointPresentation GetCurrentPresentation(this BaseHandler handler)

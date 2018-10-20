@@ -15,16 +15,7 @@ namespace PowerPointLabs.ActionFramework.CaptionsLab
             //TODO: This needs to improved to stop using global variables
             this.StartNewUndoEntry();
 
-            foreach (PowerPointSlide slide in this.GetCurrentPresentation().SelectedSlides)
-            {
-                if (slide.NotesPageText.Trim() != "")
-                {
-                    NotesToCaptions.IsRemoveCaptionsEnabled = true;
-                    break;
-                }
-            }
-
-            AddCallouts.EmbedCalloutsOnSelectedSlides();
+            AddCallouts.EmbedCalloutsOnSelectedSlides(this.GetSelectedSlides());
             this.GetRibbonUi().RefreshRibbonControl("RemoveCaptionsButton");
         }
     }

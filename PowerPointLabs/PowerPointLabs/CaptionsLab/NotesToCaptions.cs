@@ -87,28 +87,6 @@ namespace PowerPointLabs.CaptionsLab
             }
         }
 
-        public static IEnumerable<string> SplitNotesByClicks(string rawNotes)
-        {
-            TaggedText taggedNotes = new TaggedText(rawNotes);
-            List<String> splitByClicks = taggedNotes.SplitByClicks();
-            return splitByClicks;
-        }
-
-        public static List<string> ConvertSectionsToCaptions(IEnumerable<string> separatedNotes)
-        {
-            List<String> captionCollection = new List<string>();
-            foreach (string text in separatedNotes)
-            {
-                TaggedText section = new TaggedText(text);
-                String currentCaption = section.ToPrettyString().Trim();
-                if (!string.IsNullOrEmpty(currentCaption))
-                {
-                    captionCollection.Add(currentCaption);
-                }
-            }
-            return captionCollection;
-        }
-
         public static void RemoveCaptionsFromSlide(PowerPointSlide slide)
         {
             if (slide != null)
@@ -125,35 +103,6 @@ namespace PowerPointLabs.CaptionsLab
             }
         }
 
-        public static bool IsNewNoteInserted(string s)
-        {
-            return s.Contains("[i]");
-        }
-
-        public static bool IsOldNoteDeleted(string s)
-        {
-            return s.Contains("[d]");
-        }
-
-        public static string RemoveInsertionAndDeletionMarker(string rawNotes)
-        {
-            StringBuilder builder = new StringBuilder();
-            IEnumerable<string> separatedNotes = SplitNotesByClicks(rawNotes);
-            foreach (string s in separatedNotes)
-            {
-                if (string.IsNullOrEmpty(s.Trim()))
-                {
-                    continue;
-                }
-                string _s = s.Replace("[i]", "");
-                if (!IsOldNoteDeleted(_s))
-                {
-                    builder.Append(_s + "[AfterClick]" + " ");
-                }
-            }
-            return builder.ToString();
-        }
-
         // Returns true if the captions are successfully added
         private static bool EmbedCaptionsOnSlide(PowerPointSlide s)
         {
@@ -164,8 +113,8 @@ namespace PowerPointLabs.CaptionsLab
                 return false;
             }
 
-            IEnumerable<string> separatedNotes = SplitNotesByClicks(rawNotes);
-            List<string> captionCollection = ConvertSectionsToCaptions(separatedNotes);
+            IEnumerable<string> separatedNotes = CaptionUtil.SplitNotesByClicks(rawNotes);
+            List<string> captionCollection = CaptionUtil.ConvertSectionsToCaptions(separatedNotes);
             if (captionCollection.Count == 0)
             {
                 return false;
