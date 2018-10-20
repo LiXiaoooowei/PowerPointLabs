@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using PowerPointLabs.ActionFramework.Common.Log;
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
 namespace PowerPointLabs.Models
@@ -17,22 +18,44 @@ namespace PowerPointLabs.Models
    //     private Dictionary<string, int> notes = new Dictionary<string, int>();
         // map from stmt idx to note string
         private List<string> notesInverted = new List<string>();
-
+        int shapeCount = 0;
         public Callouts()
         {
         }
 
         public int InsertCallout(string note, int stmtIdx)
-        {
+        {           
+            for (int i = notesInverted.Count - 1; i >= stmtIdx; i--)
+            {
+                int calloutShapeIdx = calloutsInverted[i];
+                calloutsInverted.Remove(i);
+                calloutsInverted.Add(i + 1, calloutShapeIdx);
+            }
             notesInverted.Insert(stmtIdx, note);
-            int calloutIdx = calloutsInverted.Count + 1;
+            int calloutIdx = (++shapeCount);
             calloutsInverted.Add(stmtIdx, calloutIdx);
             return calloutIdx;
         }
 
-        public int GetCalloutNoFromStmtNo(int stmtNo)
+        public int DeleteCallout(int stmtIdx)
         {
-            return calloutsInverted.ContainsKey(stmtNo) ? calloutsInverted[stmtNo] : -1;
+            int calloutIdx = calloutsInverted[stmtIdx];
+            for (int i = stmtIdx + 1; i < notesInverted.Count; i++)
+            {
+                int calloutShapeIdx = calloutsInverted[i];
+                calloutsInverted.Remove(i - 1);
+                calloutsInverted.Add(i - 1, calloutShapeIdx);
+            }
+            calloutsInverted.Remove(notesInverted.Count - 1);
+            notesInverted.RemoveAt(stmtIdx);
+            return calloutIdx;
+        }
+
+        public int UpdateCallout(string note, int stmtIdx)
+        {
+            int calloutIdx = calloutsInverted[stmtIdx];
+            notesInverted[stmtIdx] = note;
+            return calloutIdx;
         }
     }
 }

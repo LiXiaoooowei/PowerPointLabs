@@ -99,18 +99,34 @@ namespace PowerPointLabs.CaptionsLab
             {
                 return false;
             }
-
+            int calloutsDeleted = 0;
             for (int i = 0; i < captionCollection.Count; i++)
             {
+                int currIdx = i - calloutsDeleted;
                 string currentCaption = captionCollection[i];
-                //TODO: consider stmt insertion and deletion case
-                int calloutNo = calloutsTable[slideNo].GetCalloutNoFromStmtNo(i);
-                foreach (Shape callout in s.GetShapeWithName("PowerPointLabs Callout " + calloutNo.ToString()))
+                if (NotesToCaptions.IsNewNoteInserted(currentCaption))
                 {
-                    callout.TextFrame.TextRange.Text = currentCaption;
+                    currentCaption = currentCaption.Replace("[i]", "");
+                    Shape callout = AddCalloutBoxToSlide(currentCaption, s);
+                    int calloutIdx = calloutsTable[slideNo].InsertCallout(currentCaption, currIdx);
+                    callout.Name = "PowerPointLabs Callout " + calloutIdx;
                 }
+                else if (NotesToCaptions.IsOldNoteDeleted(currentCaption))
+                {
+                    calloutsDeleted++;
+                    int calloutNo = calloutsTable[slideNo].DeleteCallout(currIdx);
+                    s.RemoveShapeWithName("PowerPointLabs Callout " + calloutNo.ToString());
+                }
+                else
+                {
+                    int calloutNo = calloutsTable[slideNo].UpdateCallout(currentCaption, currIdx);
+                    foreach (Shape callout in s.GetShapeWithName("PowerPointLabs Callout " + calloutNo.ToString()))
+                    {
+                        callout.TextFrame.TextRange.Text = currentCaption;
+                    }
+                }            
             }
-
+            s.NotesPageText = NotesToCaptions.RemoveInsertionAndDeletionMarker(rawNotes);
             return true;
         }
 

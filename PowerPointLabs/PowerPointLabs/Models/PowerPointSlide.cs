@@ -672,6 +672,14 @@ namespace PowerPointLabs.Models
             }
         }
 
+        public void RemoveShapeWithName(string name)
+        {
+            foreach (Shape s in GetShapeWithName(name))
+            {
+                s.Delete();
+            }
+        }
+
         public void DeleteShapeAnimations(Shape sh)
         {
             Sequence sequence = _slide.TimeLine.MainSequence;

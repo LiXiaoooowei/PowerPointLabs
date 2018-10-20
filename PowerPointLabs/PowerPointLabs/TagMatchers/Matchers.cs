@@ -16,7 +16,7 @@ namespace PowerPointLabs.TagMatchers
                     new EndVoiceTagMatcher(),
                     new StartSpeedTagMatcher(),
                     new EndSpeedTagMatcher(),
-                    new PronounceTagMatcher()
+                    new PronounceTagMatcher(),
                 };
             }
         }

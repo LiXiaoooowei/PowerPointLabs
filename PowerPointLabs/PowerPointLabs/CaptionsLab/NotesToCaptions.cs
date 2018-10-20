@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows;
 
 using Microsoft.Office.Core;
@@ -122,6 +123,35 @@ namespace PowerPointLabs.CaptionsLab
             {
                 Globals.ThisAddIn.Application.CommandBars.ExecuteMso("ShowNotes");
             }
+        }
+
+        public static bool IsNewNoteInserted(string s)
+        {
+            return s.Contains("[i]");
+        }
+
+        public static bool IsOldNoteDeleted(string s)
+        {
+            return s.Contains("[d]");
+        }
+
+        public static string RemoveInsertionAndDeletionMarker(string rawNotes)
+        {
+            StringBuilder builder = new StringBuilder();
+            IEnumerable<string> separatedNotes = SplitNotesByClicks(rawNotes);
+            foreach (string s in separatedNotes)
+            {
+                if (string.IsNullOrEmpty(s.Trim()))
+                {
+                    continue;
+                }
+                string _s = s.Replace("[i]", "");
+                if (!IsOldNoteDeleted(_s))
+                {
+                    builder.Append(_s + "[AfterClick]" + " ");
+                }
+            }
+            return builder.ToString();
         }
 
         // Returns true if the captions are successfully added
