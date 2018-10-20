@@ -12,6 +12,7 @@ using PowerPointLabs.Models;
 using PowerPointLabs.TextCollection;
 
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
+using ShapeRange = Microsoft.Office.Interop.PowerPoint.ShapeRange;
 
 namespace PowerPointLabs.CaptionsLab
 {
@@ -38,14 +39,16 @@ namespace PowerPointLabs.CaptionsLab
             {
                 if (NeedsUpdateCallouts(slide.Name))
                 {
-                     Logger.Log("calling updatecalloutsonslide");
-                     UpdateCalloutsOnSlide(slide);
+                    Logger.Log("calling updatecalloutsonslide");
+                    InsertCalloutsOnSlideToNotesPage(slide);
+                    UpdateCalloutsOnNotesPageToSlide(slide);
                 }
                 else
                 {
                     Logger.Log("calling embedcalloutsonslide");
-                    bool captionAdded = EmbedCalloutsOnSlide(slide);
-                    if (!captionAdded && slides.Count == 1)
+                    bool captionAdded = EmbedCalloutsOnNotesPageToSlide(slide);
+                    bool captionInserted = InsertCalloutsOnSlideToNotesPage(slide);
+                    if (!captionAdded && slides.Count == 1 && !captionInserted)
                     {
                         Logger.Log(String.Format("{0} in EmbedCaptionsOnSlides", CaptionsLabText.ErrorNoNotesLog));
                         MessageBox.Show(CaptionsLabText.ErrorNoNotes, CaptionsLabText.ErrorDialogTitle);
@@ -59,7 +62,7 @@ namespace PowerPointLabs.CaptionsLab
         {
             foreach (PowerPointSlide slide in slides)
             {
-              //  UpdateCalloutsOnSlide(slide);
+                SyncCalloutsOnSlideToNotespage(slide);
                 Logger.Log("saving slide " + slide.Name);
             }
         }
@@ -84,11 +87,79 @@ namespace PowerPointLabs.CaptionsLab
             }
         }
 
-        private static bool UpdateCalloutsOnSlide(PowerPointSlide s)
+        private static bool InsertCalloutsOnSlideToNotesPage(PowerPointSlide s)
+        {
+            int slideNo = s.GetSlideIndexForCallouts();
+            if (slideNo == -1)
+            {
+                slideNo = calloutsTable.Count + 1;
+                s.Name = "PowerPointSlide " + slideNo.ToString();
+            }
+            if (!calloutsTable.ContainsKey(slideNo))
+            {
+                calloutsTable.Add(slideNo, new Callouts());
+            }
+            try
+            {
+                ShapeRange shapes = Globals.ThisAddIn.Application.ActiveWindow.Selection.ShapeRange;
+                foreach (Shape shape in shapes)
+                {
+                    if (!shape.Name.Contains("PowerPointLabs Callout"))
+                    {
+                        string currentCaption = shape.TextFrame.TextRange.Text;
+                        int calloutIdx = calloutsTable[slideNo].InsertCallout(currentCaption);
+                        shape.Name = "PowerPointLabs Callout " + calloutIdx;
+                    }
+                }
+                s.NotesPageText = calloutsTable[slideNo].NotesToString();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Log("Exception here " + e.Message);
+                return false;
+            }
+        }
+
+        private static bool SyncCalloutsOnSlideToNotespage(PowerPointSlide s)
+        {
+            int slideNo = s.GetSlideIndexForCallouts();
+            if (slideNo == -1)
+            {
+                return false;
+            }
+
+            int calloutsDeleted = 0;
+            Callouts calloutsOnNotesPage = calloutsTable[slideNo];
+
+            for (int i = 0; i < calloutsOnNotesPage.GetNotesInvertedCount(); i++)
+            {
+                int currIdx = i - calloutsDeleted;
+                int calloutIdx = calloutsOnNotesPage.GetCalloutIdxFromStmtNo(currIdx);
+                bool foundShape = false;
+                foreach (Shape shape in s.GetShapesWithPrefix("PowerPointLabs Callout"))
+                {
+                    if (shape.Name == "PowerPointLabs Callout " + calloutIdx.ToString())
+                    {
+                        calloutsOnNotesPage.UpdateCallout(shape.TextFrame.TextRange.Text, currIdx);
+                        foundShape = true;
+                        break;
+                    }
+                }
+                if (!foundShape)
+                {
+                    calloutsOnNotesPage.DeleteCallout(currIdx);
+                }
+            }
+            s.NotesPageText = calloutsTable[slideNo].NotesToString();
+            return true;
+        }
+
+        private static bool UpdateCalloutsOnNotesPageToSlide(PowerPointSlide s)
         {
             String rawNotes = s.NotesPageText;
             int slideNo = s.GetSlideIndexForCallouts();
-            if (String.IsNullOrWhiteSpace(rawNotes)||slideNo == -1)
+            if (String.IsNullOrWhiteSpace(rawNotes) || slideNo == -1)
             {
                 return false;
             }
@@ -124,14 +195,14 @@ namespace PowerPointLabs.CaptionsLab
                     {
                         callout.TextFrame.TextRange.Text = currentCaption;
                     }
-                }            
+                }
             }
-            s.NotesPageText = NotesToCaptions.RemoveInsertionAndDeletionMarker(rawNotes);
+            s.NotesPageText = calloutsTable[slideNo].NotesToString();
             return true;
         }
 
         // Returns true if the captions are successfully added
-        private static bool EmbedCalloutsOnSlide(PowerPointSlide s)
+        private static bool EmbedCalloutsOnNotesPageToSlide(PowerPointSlide s)
         {
             String rawNotes = s.NotesPageText;
             int slideNo = calloutsTable.Count + 1;
@@ -156,7 +227,7 @@ namespace PowerPointLabs.CaptionsLab
                 Shape callout = AddCalloutBoxToSlide(currentCaption, s);
                 int calloutIdx = callouts.InsertCallout(currentCaption, i);
                 callout.Name = "PowerPointLabs Callout " + calloutIdx;
-                
+
                 if (i == 0)
                 {
                     s.SetShapeAsAutoplay(callout);
@@ -175,6 +246,7 @@ namespace PowerPointLabs.CaptionsLab
                 previous = callout;
             }
             calloutsTable.Add(slideNo, callouts);
+            s.NotesPageText = calloutsTable[slideNo].NotesToString();
             return true;
         }
 

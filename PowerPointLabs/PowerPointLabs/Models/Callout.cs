@@ -37,6 +37,15 @@ namespace PowerPointLabs.Models
             return calloutIdx;
         }
 
+        public int InsertCallout(string note)
+        {
+            int stmtIdx = notesInverted.Count;
+            notesInverted.Add(note);
+            int calloutIdx = (++shapeCount);
+            calloutsInverted.Add(stmtIdx, calloutIdx);
+            return calloutIdx;
+        }
+
         public int DeleteCallout(int stmtIdx)
         {
             int calloutIdx = calloutsInverted[stmtIdx];
@@ -56,6 +65,27 @@ namespace PowerPointLabs.Models
             int calloutIdx = calloutsInverted[stmtIdx];
             notesInverted[stmtIdx] = note;
             return calloutIdx;
+        }
+
+        public int GetNotesInvertedCount()
+        {
+            return notesInverted.Count;
+        }
+
+        public int GetCalloutIdxFromStmtNo(int stmtNo)
+        {
+            return calloutsInverted[stmtNo];
+        }
+
+        public string NotesToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (string s in notesInverted)
+            {
+                string _s = s.Replace("[i]", "");
+                builder.Append(_s + "[AfterClick]" + " ");               
+            }
+            return builder.ToString();
         }
     }
 }
