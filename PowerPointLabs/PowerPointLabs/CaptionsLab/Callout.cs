@@ -72,6 +72,27 @@ namespace PowerPointLabs.Models
             return calloutIdx;
         }
 
+        public void ReorderNotes(List<int> callouts)
+        {
+            for (int i = 0; i < notesInverted.Count; i++)
+            {
+                int newShapeIdx = callouts[i];
+                int newIdx = GetStmtNoFromCalloutIdx(newShapeIdx);
+                if (newIdx != i)
+                {
+                    string temp = notesInverted[i];
+                    int tempShapeIdx = GetCalloutIdxFromStmtNo(i);
+                    notesInverted[i] = notesInverted[newIdx];
+                    notesInverted[newIdx] = temp;
+                    calloutsInverted.Remove(newIdx);
+                    calloutsInverted.Remove(i);
+                    calloutsInverted.Add(newIdx, tempShapeIdx);
+                    calloutsInverted.Add(i, newShapeIdx);
+                }
+            }
+            Logger.Log("after inverstion "+notesInverted.ToString());
+        }
+
         public int GetNotesInvertedCount()
         {
             return notesInverted.Count;
@@ -80,6 +101,18 @@ namespace PowerPointLabs.Models
         public int GetCalloutIdxFromStmtNo(int stmtNo)
         {
             return calloutsInverted[stmtNo];
+        }
+
+        public int GetStmtNoFromCalloutIdx(int calloutNo)
+        {
+            foreach (KeyValuePair<int, int> kv in calloutsInverted)
+            {
+                if (kv.Value == calloutNo)
+                {
+                    return kv.Key;
+                }
+            }
+            return -1;
         }
 
         public string NotesToString()

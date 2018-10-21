@@ -59,6 +59,7 @@ namespace PowerPointLabs.CaptionsLab
                         NotesToCaptions.ShowNotesPane();
                     }
                 }
+                AnimationUtil.ResetAnimationsForCalloutsOnSlide(calloutsTable[slide.GetSlideIndexForCallouts()], slide);
             }
         }
 
@@ -66,7 +67,13 @@ namespace PowerPointLabs.CaptionsLab
         {
             foreach (PowerPointSlide slide in slides)
             {
-                SyncCalloutsOnSlideToNotespage(slide);
+                int slideNo = slide.GetSlideIndexForCallouts();
+                if (slideNo != -1 && calloutsTable.ContainsKey(slideNo))
+                {
+                    SyncCalloutsOnSlideToNotespage(slide);
+                    calloutsTable[slideNo] = AnimationUtil.SyncAnimationsForCalloutsOnSlide(slide, calloutsTable[slideNo]);
+                    slide.NotesPageText = calloutsTable[slideNo].NotesToString();
+                }
                 Logger.Log("saving slide " + slide.Name);
             }
             string filePath = Environment.ExpandEnvironmentVariables(@"%UserProfile%\\Desktop\\callouts.dat");

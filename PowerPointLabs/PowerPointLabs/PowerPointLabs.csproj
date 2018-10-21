@@ -644,6 +644,7 @@
     <Compile Include="AutoUpdate\Interface\IDownloader.cs" />
     <Compile Include="AutoUpdate\Updater.cs" />
     <Compile Include="CaptionsLab\AddCallouts.cs" />
+    <Compile Include="CaptionsLab\AnimationUtil.cs" />
     <Compile Include="CaptionsLab\CalloutsTableSerializable.cs" />
     <Compile Include="CaptionsLab\CaptionUtil.cs" />
     <Compile Include="CaptionsLab\StorageUtil.cs" />
@@ -651,7 +652,7 @@
     <Compile Include="EffectsLab\EffectsLabUtil.cs" />
     <Compile Include="EffectsLab\EffectsLabRecolor.cs" />
     <Compile Include="HighlightLab\HighlightLabSettings.cs" />
-    <Compile Include="Models\Callout.cs" />
+    <Compile Include="CaptionsLab\Callout.cs" />
     <Compile Include="NarrationsLab\NarrationsLabSettings.cs" />
     <Compile Include="PasteLab\PasteToFitSlide.cs" />
     <Compile Include="PositionsLab\PositionsLabSettings.cs" />
