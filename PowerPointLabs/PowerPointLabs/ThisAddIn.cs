@@ -843,7 +843,7 @@ namespace PowerPointLabs
 
         private void ThisAddInPresentationSave(PowerPoint.Presentation pres)
         {
-            AddCallouts.SyncCalloutsOnSlides(PowerPointCurrentPresentationInfo.SelectedSlides.ToList());
+          //  AddCallouts.SyncCalloutsOnSlides(PowerPointCurrentPresentationInfo.SelectedSlides.ToList());
         }
 
         private void ThisAddInApplicationOnWindowDeactivate(PowerPoint.Presentation pres, PowerPoint.DocumentWindow wn)
@@ -1027,17 +1027,13 @@ namespace PowerPointLabs
                     _documentHashcodeMapper[activeWindow] = tempName;
                 }
 
+                InitializeSlideCountForCallouts(pres);
+                InitializeCountForTagGenerator(pres);
+
                 // Refresh ribbon to enable the menu buttons if there are now at least one window
                 RefreshRibbonMenuButtons();
                 // Initialise the "Maintain Tab Focus" checkbox
                 Ribbon.InitialiseVisibilityCheckbox();
-            }
-            string filePath = Environment.ExpandEnvironmentVariables(@"%UserProfile%\\Desktop\\callouts.dat");
-            CalloutsTableSerializable table = 
-                StorageUtil.ReadFromXmlFile<CalloutsTableSerializable>(filePath);
-            if (table != default(CalloutsTableSerializable))
-            {
-                AddCallouts.InitializeCalloutsTable(table);
             }
         }
 
@@ -1120,6 +1116,42 @@ namespace PowerPointLabs
             Ribbon.RefreshRibbonControl(TimerLabText.RibbonMenuId);
             Ribbon.RefreshRibbonControl(AgendaLabText.RibbonMenuId);
             Ribbon.RefreshRibbonControl(PictureSlidesLabText.RibbonMenuId);
+        }
+
+        private void InitializeCountForTagGenerator(PowerPoint.Presentation pres)
+        {
+            int count = 0;
+            foreach (PowerPoint.Slide slide in pres.Slides)
+            {
+                PowerPointSlide s = PowerPointSlide.FromSlideFactory(slide);
+                string notes = s.NotesPageText;
+                IEnumerable<string> splittedNotes = CalloutsUtil.SplitNotesByClicks(notes);
+                foreach (string note in splittedNotes)
+                {
+                    int num = NameTagsUtil.GetTagNo(note);
+                    if (count < num)
+                    {
+                        count = num;
+                    }
+                }
+            }
+            NameTagsUtil.InitializeCount(count);
+        }
+
+        private void InitializeSlideCountForCallouts(PowerPoint.Presentation pres)
+        {
+            int count = 0;
+            foreach (PowerPoint.Slide slide in pres.Slides)
+            {
+                PowerPointSlide s = PowerPointSlide.FromSlideFactory(slide);
+                int slideNo = s.GetSlideIndexForCallouts();
+                if (slideNo > count)
+                {
+                    count = slideNo;
+                }
+            }
+            PowerPointCalloutsCache cache = PowerPointCalloutsCache.Instance;
+            cache.InitializeSlideCount(count);
         }
 
         private void ShutDownImageSearchPane()

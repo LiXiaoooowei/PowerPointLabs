@@ -113,8 +113,8 @@ namespace PowerPointLabs.CaptionsLab
                 return false;
             }
 
-            IEnumerable<string> separatedNotes = CaptionUtil.SplitNotesByClicks(rawNotes);
-            List<string> captionCollection = CaptionUtil.ConvertSectionsToCaptions(separatedNotes);
+            IEnumerable<string> separatedNotes = CalloutsUtil.SplitNotesByClicks(rawNotes);
+            List<string> captionCollection = CalloutsUtil.ConvertNotesToCaptions(separatedNotes);
             if (captionCollection.Count == 0)
             {
                 return false;

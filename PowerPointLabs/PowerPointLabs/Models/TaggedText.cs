@@ -41,7 +41,10 @@ namespace PowerPointLabs.Models
             }
 
             String remaining = _contents.Substring(startIndex).Trim();
-            splitStrings.Add(remaining);
+            if (!String.IsNullOrEmpty(remaining))
+            {
+                splitStrings.Add(remaining);
+            }
 
             return splitStrings;
         }
@@ -109,5 +112,6 @@ namespace PowerPointLabs.Models
             tags.Sort((first, second) => first.Start - second.Start);
             return tags;
         }
+
     }
 }

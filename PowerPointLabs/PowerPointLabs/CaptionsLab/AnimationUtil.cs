@@ -13,7 +13,7 @@ using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 namespace PowerPointLabs.CaptionsLab
 {
     public static class AnimationUtil
-    {
+    {/*
         public static void ResetAnimationsForCalloutsOnSlide(Callouts callouts, PowerPointSlide s)
         {
             List<Shape> shapes = s.GetShapesWithPrefix("PowerPointLabs Callout ");
@@ -90,6 +90,6 @@ namespace PowerPointLabs.CaptionsLab
             {
                 return -1;
             }
-        }
+        }*/
     }
 }
