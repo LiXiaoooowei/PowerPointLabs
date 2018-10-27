@@ -54,6 +54,7 @@ namespace PowerPointLabs.CaptionsLab
                 List<Tuple<NameTag, string>> notes = CalloutsUtil.ConvertNotesToCallouts(splittedNotes);
                 IntermediateResultTable intermediateResult = cache.UpdateNotes(slideNo, notes);
                 CalloutsUtil.UpdateCalloutBoxOnSlide(intermediateResult, slide);
+                AnimationUtil.UpdateAnimationsForCalloutsOnSlide(intermediateResult, slide);
                 slide.NotesPageText = intermediateResult.GetResultNotes();
             }
         }       

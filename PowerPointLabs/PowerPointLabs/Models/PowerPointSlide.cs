@@ -332,21 +332,23 @@ namespace PowerPointLabs.Models
             }
         }
 
-        public void SetShapeAsAutoplay(Shape shape)
+        public Effect SetShapeAsAutoplay(Shape shape)
         {
             Sequence mainSequence = _slide.TimeLine.MainSequence;
 
             Effect firstClickEvent = mainSequence.FindFirstAnimationForClick(1);
+            Effect effect; 
             bool hasNoClicksOnSlide = firstClickEvent == null;
 
             if (hasNoClicksOnSlide)
             {
-                AddShapeAsLastAutoplaying(shape, MsoAnimEffect.msoAnimEffectFade);
+                effect = AddShapeAsLastAutoplaying(shape, MsoAnimEffect.msoAnimEffectFade);
             }
             else
             {
-                InsertAnimationBeforeExisting(shape, firstClickEvent, MsoAnimEffect.msoAnimEffectFade);
+                effect = InsertAnimationBeforeExisting(shape, firstClickEvent, MsoAnimEffect.msoAnimEffectFade);
             }
+            return effect;
         }
 
         public void SetAudioAsAutoplay(Shape shape)
@@ -439,15 +441,16 @@ namespace PowerPointLabs.Models
             return addedEffect;
         }
 
-        public void ShowShapeAfterClick(Shape shape, int clickNumber)
+        public Effect ShowShapeAfterClick(Shape shape, int clickNumber)
         {
-            SetShapeAsClickTriggered(shape, clickNumber, MsoAnimEffect.msoAnimEffectAppear);
+            return SetShapeAsClickTriggered(shape, clickNumber, MsoAnimEffect.msoAnimEffectAppear);
         }
 
-        public void HideShapeAfterClick(Shape shape, int clickNumber)
+        public Effect HideShapeAfterClick(Shape shape, int clickNumber)
         {
             Effect addedEffect = SetShapeAsClickTriggered(shape, clickNumber, MsoAnimEffect.msoAnimEffectAppear);
             addedEffect.Exit = MsoTriState.msoTrue;
+            return addedEffect;
         }
 
         public void HideShapeAsLastClickIfNeeded(Shape shape)
