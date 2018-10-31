@@ -34,3 +34,4 @@ cov-report.xml
 # StyleCop
 PowerPointLabs/PowerPointLabs/StyleCop.Cache
 PowerPointLabs/.vs/PowerPointLabs/v15/sqlite3/storage.ide
+PowerPointLabs/.vs/
