@@ -652,10 +652,22 @@
     <Compile Include="HighlightLab\HighlightLabSettings.cs" />
     <Compile Include="NarrationsLab\AudioOutputFormat.cs" />
     <Compile Include="NarrationsLab\Authentication.cs" />
+    <Compile Include="NarrationsLab\DataModels\NarrationsLabSettingsPage.cs" />
     <Compile Include="NarrationsLab\GenericEventArgs.cs" />
     <Compile Include="NarrationsLab\NarrationsLabSettings.cs" />
     <Compile Include="NarrationsLab\Synthesize.cs" />
     <Compile Include="NarrationsLab\Gender.cs" />
+    <Compile Include="NarrationsLab\ValueConverters\BaseValueConverter.cs" />
+    <Compile Include="NarrationsLab\ValueConverters\NarrationsLabSettingsPageValueConverter.cs" />
+    <Compile Include="NarrationsLab\Views\HumanVoiceLoginPage.xaml.cs">
+      <DependentUpon>HumanVoiceLoginPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NarrationsLab\Views\HumanVoiceSelectionPage.xaml.cs">
+      <DependentUpon>HumanVoiceSelectionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NarrationsLab\Views\NarrationsLabMainSettingsPage.xaml.cs">
+      <DependentUpon>NarrationsLabMainSettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PasteLab\PasteToFitSlide.cs" />
     <Compile Include="PositionsLab\PositionsLabSettings.cs" />
     <Compile Include="SaveLab\SaveLabMain.cs" />
@@ -1429,6 +1441,18 @@
     <Page Include="EffectsLab\Views\BlurSettingsDialogBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NarrationsLab\Views\HumanVoiceLoginPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NarrationsLab\Views\HumanVoiceSelectionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NarrationsLab\Views\NarrationsLabMainSettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PositionsLab\Views\AlignSettingsDialog.xaml">
       <SubType>Designer</SubType>

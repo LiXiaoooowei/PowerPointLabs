@@ -13,11 +13,12 @@ namespace PowerPointLabs.NarrationsLab
 
         public static void ShowSettingsDialog()
         {
-            NarrationsLabSettingsDialogBox dialog = new NarrationsLabSettingsDialogBox(
+            NarrationsLabSettingsDialogBox dialog = NarrationsLabSettingsDialogBox.GetInstance();
+            NarrationsLabMainSettingsPage.GetInstance().SetNarrationsLabMainSettings(
                 VoiceSelectedIndex,
                 VoiceNameList,
                 IsPreviewEnabled);
-            dialog.DialogConfirmedHandler += OnSettingsDialogConfirmed;
+            NarrationsLabMainSettingsPage.GetInstance().DialogConfirmedHandler += OnSettingsDialogConfirmed;
             dialog.ShowDialog();
         }
 
