@@ -12,6 +12,7 @@ namespace PowerPointLabs.CaptionsLab
         List<Tuple<NameTag, string>> notesInserted = new List<Tuple<NameTag, string>>();
         List<Tuple<NameTag, string>> notesDeleted = new List<Tuple<NameTag, string>>();
         List<Tuple<NameTag, string>> notesModified = new List<Tuple<NameTag, string>>();
+        IEnumerable<NameTag> notes;
         string resultNotes = "";
 
         public void AddInsertedNote(NameTag tag, string note)
@@ -57,6 +58,16 @@ namespace PowerPointLabs.CaptionsLab
         public List<Tuple<NameTag, string>> GetModifiedNotes()
         {
             return notesModified;
+        }
+
+        public void SetNotes(IEnumerable<NameTag> notes)
+        {
+            this.notes = notes;
+        }
+
+        public IEnumerable<NameTag> GetNotes()
+        {
+            return notes;
         }
     }
 }

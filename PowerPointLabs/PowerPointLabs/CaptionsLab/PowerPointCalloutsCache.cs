@@ -26,6 +26,7 @@ namespace PowerPointLabs.CaptionsLab
         public IntermediateResultTable UpdateNotes(int slideNo, List<Tuple<NameTag, string>> updatedNotes)
         {
             IntermediateResultTable context = new IntermediateResultTable();
+            IEnumerable<NameTag> notes = from note in updatedNotes select note.Item1;
             if (IsTableExists(slideNo))
             {
                 context = calloutsTable[slideNo].UpdateNotes(updatedNotes);
@@ -40,6 +41,7 @@ namespace PowerPointLabs.CaptionsLab
                 context.AddInsertedNote(updatedNotes);
                 context.AddResultNotes(calloutsTable[slideNo].ToString());
             }
+            context.SetNotes(notes);
             return context;
         }
         public bool IsTableExists(int idx)
