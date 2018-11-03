@@ -17,16 +17,9 @@ namespace PowerPointLabs.CaptionsLab
     {
         public static void UpdateAnimationsForCalloutsOnSlide(IntermediateResultTable intermediateResult, PowerPointSlide slide)
         {
-            string namescope = "PPTLabs Callout ";
             List<Tuple<NameTag, string>> notesInserted = intermediateResult.GetInsertedNotes();
             List<Tuple<NameTag, string>> notesDeleted = intermediateResult.GetDeletedNotes();
             IEnumerable<NameTag> notes = intermediateResult.GetNotes();
-            IEnumerable<string> notesInsertedTags = from note in notesInserted select namescope + note.Item1.Contents;
-            HashSet<string> set = new HashSet<string>();
-            foreach (string note in notesInsertedTags)
-            {
-                set.Add(note);
-            }
 
             Sequence sequence = slide.TimeLine.MainSequence;
             IEnumerable<Effect> mainEffects = sequence.Cast<Effect>();
@@ -38,7 +31,7 @@ namespace PowerPointLabs.CaptionsLab
             AppendNotesToSlideAnimationPane(notesInserted, slide);
 
             // reorder notes on notes page
-            ReorderNotesOnSlideAnimationPane(notes, set, slide, Microsoft.Office.Core.MsoTriState.msoFalse);
+            ReorderNotesOnSlideAnimationPane(notes, slide, Microsoft.Office.Core.MsoTriState.msoFalse);
         }
 
         public static void ReorderAnimationsForCalloutsOnSlide(IntermediateResultTable intermediateResult, PowerPointSlide slide)
@@ -196,7 +189,7 @@ namespace PowerPointLabs.CaptionsLab
             }
         }
 
-        private static void ReorderNotesOnSlideAnimationPane(IEnumerable<NameTag> notes, HashSet<string> notesInserted, PowerPointSlide slide,
+        private static void ReorderNotesOnSlideAnimationPane(IEnumerable<NameTag> notes, PowerPointSlide slide,
             Microsoft.Office.Core.MsoTriState isExit = Microsoft.Office.Core.MsoTriState.msoFalse)
         {
             IEnumerable<Effect> mainEffects = slide.TimeLine.MainSequence.Cast<Effect>();
@@ -230,9 +223,7 @@ namespace PowerPointLabs.CaptionsLab
                         if (tuple != null)
                         {
                             appearIdxToEffect[i] = tuple.Item1;
-                          //  appearIdxToEffect[tuple.Item2] = animeEffect;
                             appearNameToIdx[tuple.Item1.Shape.Name] = i;
-                            //   appearNameToIdx[animeEffect.Shape.Name] = tuple.Item2;
                             tuple.Item1.MoveTo(i + 1);
                         }
                     }
@@ -247,11 +238,7 @@ namespace PowerPointLabs.CaptionsLab
                     appearIdxToEffect[i] = animeEffect;
                 }
             }
-        //    foreach (KeyValuePair<int, Effect> effect in appearIdxToEffect)
-         //   {
-          //      effect.Value.MoveTo(effect.Key + 1);
-           // }
-            // this loop maps all disappear callout effects to its Idx, which can be joint with appearIdxToEffects
+
             for (int i = 0; i < mainEffects.Count(); i++)
             {
                 Effect effect = mainEffects.ElementAt(i);
