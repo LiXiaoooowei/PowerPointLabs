@@ -43,15 +43,14 @@ namespace PowerPointLabs.NarrationsLab.Views
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             NarrationsLabSettingsDialogBox.GetInstance()
-                .SetCurrentPage(DataModels.NarrationsLabSettingsPage.MainSettingsPage);
+                .SetCurrentPage(Data.NarrationsLabSettingsPage.MainSettingsPage);
         }
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("setting human voice selected");
             NarrationsLabMainSettingsPage.GetInstance().SetHumanVoiceSelected("test");
             NarrationsLabSettingsDialogBox.GetInstance()
-                .SetCurrentPage(DataModels.NarrationsLabSettingsPage.MainSettingsPage);
+                .SetCurrentPage(Data.NarrationsLabSettingsPage.MainSettingsPage);
         }
     }
 }

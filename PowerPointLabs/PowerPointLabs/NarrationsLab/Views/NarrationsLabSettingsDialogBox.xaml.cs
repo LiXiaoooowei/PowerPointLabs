@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-using PowerPointLabs.NarrationsLab.DataModels;
+using PowerPointLabs.NarrationsLab.Data;
 
 namespace PowerPointLabs.NarrationsLab.Views
 {

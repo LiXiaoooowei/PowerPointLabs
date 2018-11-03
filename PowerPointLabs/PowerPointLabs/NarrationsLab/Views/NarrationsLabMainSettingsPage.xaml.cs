@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 
-using PowerPointLabs.NarrationsLab.DataModels;
+using PowerPointLabs.NarrationsLab.Data;
 using PowerPointLabs.TextCollection;
 
 namespace PowerPointLabs.NarrationsLab.Views
@@ -15,7 +15,7 @@ namespace PowerPointLabs.NarrationsLab.Views
     /// </summary>
     public partial class NarrationsLabMainSettingsPage: Page
     {
-        public delegate void DialogConfirmedDelegate(string voiceName, bool preview);
+        public delegate void DialogConfirmedDelegate(string voiceName, string humanVoiceName, bool preview);
         public DialogConfirmedDelegate DialogConfirmedHandler { get; set; }
        
         private static NarrationsLabMainSettingsPage instance;
@@ -33,11 +33,13 @@ namespace PowerPointLabs.NarrationsLab.Views
             return instance;
         }
 
-        public void SetNarrationsLabMainSettings(int selectedVoiceIndex, List<string> voices, bool isPreviewChecked)
+        public void SetNarrationsLabMainSettings(int selectedVoiceIndex, string humanVoice, List<string> voices, bool isPreviewChecked)
         {
             voiceSelectionInput.ItemsSource = voices;
             voiceSelectionInput.ToolTip = NarrationsLabText.SettingsVoiceSelectionInputTooltip;
             voiceSelectionInput.Content = voices[selectedVoiceIndex];
+
+            SetHumanVoiceSelected(humanVoice);
 
             previewCheckbox.IsChecked = isPreviewChecked;
             previewCheckbox.ToolTip = NarrationsLabText.SettingsPreviewCheckboxTooltip;
@@ -55,7 +57,7 @@ namespace PowerPointLabs.NarrationsLab.Views
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            DialogConfirmedHandler(voiceSelectionInput.Content.ToString(), previewCheckbox.IsChecked.GetValueOrDefault());
+            DialogConfirmedHandler(voiceSelectionInput.Content.ToString(), humanVoiceChosen.Text, previewCheckbox.IsChecked.GetValueOrDefault());
             NarrationsLabSettingsDialogBox.GetInstance().Close();
             NarrationsLabSettingsDialogBox.GetInstance().Destroy();
         }

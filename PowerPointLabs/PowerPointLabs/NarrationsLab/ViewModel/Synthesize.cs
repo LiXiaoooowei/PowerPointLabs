@@ -7,7 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace PowerPointLabs.NarrationsLab
+using PowerPointLabs.NarrationsLab.Data;
+
+namespace PowerPointLabs.NarrationsLab.ViewModel
 {
     public class Synthesize
     {
@@ -46,7 +48,7 @@ namespace PowerPointLabs.NarrationsLab
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A Task</returns>
-        public Task Speak(CancellationToken cancellationToken, InputOptions inputOptions)
+        public Task Speak(CancellationToken cancellationToken, InputOptions inputOptions, string filepath)
         {
             client.DefaultRequestHeaders.Clear();
             foreach (var header in inputOptions.Headers)
@@ -83,7 +85,7 @@ namespace PowerPointLabs.NarrationsLab
                         if (responseMessage.IsCompleted && responseMessage.Result != null && responseMessage.Result.IsSuccessStatusCode)
                         {
                             var httpStream = await responseMessage.Result.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                            this.AudioAvailable(new GenericEventArgs<Stream>(httpStream));
+                            this.AudioAvailable(new GenericEventArgs<Stream>(httpStream, filepath));
                         }
                         else
                         {

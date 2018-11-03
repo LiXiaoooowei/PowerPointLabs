@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 
-using PowerPointLabs.NarrationsLab.DataModels;
+using PowerPointLabs.NarrationsLab.Data;
 using PowerPointLabs.NarrationsLab.Views;
 
 namespace PowerPointLabs.NarrationsLab.ValueConverters

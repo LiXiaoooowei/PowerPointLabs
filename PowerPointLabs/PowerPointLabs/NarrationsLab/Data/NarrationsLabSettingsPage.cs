@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PowerPointLabs.NarrationsLab.DataModels
+namespace PowerPointLabs.NarrationsLab.Data
 {
     public enum NarrationsLabSettingsPage
     {

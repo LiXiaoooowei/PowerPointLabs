@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 
-namespace PowerPointLabs.NarrationsLab
+namespace PowerPointLabs.NarrationsLab.ViewModel
 {
     public class Authentication
     {

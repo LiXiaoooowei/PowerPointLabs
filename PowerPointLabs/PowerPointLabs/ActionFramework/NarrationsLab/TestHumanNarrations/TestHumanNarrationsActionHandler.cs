@@ -13,7 +13,8 @@ using PowerPointLabs.ActionFramework.Common.Extension;
 using PowerPointLabs.ActionFramework.Common.Interface;
 using PowerPointLabs.Models;
 using PowerPointLabs.NarrationsLab;
-using PowerPointLabs.NarrationsLab.Views;
+using PowerPointLabs.NarrationsLab.Data;
+using PowerPointLabs.NarrationsLab.ViewModel;
 using PowerPointLabs.TextCollection;
 
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
@@ -66,7 +67,7 @@ namespace PowerPointLabs.ActionFramework.NarrationsLab
                 string requestUri = "https://westus.tts.speech.microsoft.com/cognitiveservices/v1";
                 var cortana = new Synthesize();
 
-                cortana.OnAudioAvailable += PlayAudio;
+                cortana.OnAudioAvailable += SaveAudioToWaveFile;
                 cortana.OnError += ErrorHandler;
 
                 // Reuse Synthesize object to minimize latency
@@ -87,7 +88,7 @@ namespace PowerPointLabs.ActionFramework.NarrationsLab
                     // Service can return audio in different output format.
                     OutputFormat = AudioOutputFormat.Riff24Khz16BitMonoPcm,
                     AuthorizationToken = "Bearer " + accessToken,
-                }).Wait();
+                }, "").Wait();
 
                 Shape audioShape = InsertAudioFileOnSlide(slide, @"C:\Users\xiaov\Desktop\test.wav");
             }
@@ -129,7 +130,7 @@ namespace PowerPointLabs.ActionFramework.NarrationsLab
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="args">The <see cref="GenericEventArgs{Stream}"/> instance containing the event data.</param>
-        private static void PlayAudio(object sender, GenericEventArgs<Stream> args)
+        private static void SaveAudioToWaveFile(object sender, GenericEventArgs<Stream> args)
         {
             Console.WriteLine(args.EventData);
             SaveStreamToFile(@"C:\Users\xiaov\Desktop\test.wav", args.EventData);
