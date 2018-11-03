@@ -101,10 +101,17 @@ namespace PowerPointLabs.CaptionsLab
 
         public static void UpdateCalloutBoxOnSlide(IntermediateResultTable intermediateResult, PowerPointSlide s)
         {
+            List<NameTag> notes = intermediateResult.GetNotes().ToList();
+            HashSet<NameTag> notesInserted = new HashSet<NameTag>();
+            foreach (Tuple<NameTag, string> note in intermediateResult.GetInsertedNotes())
+            {
+                notesInserted.Add(note.Item1);
+            }
             foreach (Tuple<NameTag, string> note in intermediateResult.GetInsertedNotes())
             {
                 Logger.Log("inserted note is " + note.Item2);
-                InsertCalloutBoxToSlide(note.Item1, note.Item2, s);
+                Shape shape = InsertCalloutBoxToSlide(notes, notesInserted, note.Item1, note.Item2, s);
+                InsertDefaultCalloutBoxToSlide(note.Item1, note.Item2, s);
             }
 
             foreach (Tuple<NameTag, string> note in intermediateResult.GetDeletedNotes())
@@ -136,7 +143,26 @@ namespace PowerPointLabs.CaptionsLab
             s.DeleteShapeWithName(shapeName);
         }
 
-        private static Shape InsertCalloutBoxToSlide(NameTag tag, string note, PowerPointSlide s)
+        private static Shape InsertCalloutBoxToSlide(List<NameTag> notes, HashSet<NameTag> notesInserted, NameTag tag, string note, PowerPointSlide slide)
+        {
+            NameTag tagToCopy = FindNameTagToCopy(notes, notesInserted, tag);
+            if (tagToCopy != null)
+            {
+                List<Shape> shapes = slide.GetShapeWithName("PPTLabs Callout " + tagToCopy.Contents);
+                if (shapes.Count > 0)
+                {
+                    Shape shape = shapes[0];
+                    Shape copied = CreateCalloutFromShape(shape);
+                    copied.TextFrame.TextRange.Text = note;
+                    copied.Name = "PPTLabs Callout " + tag.Contents;
+                    slide.RemoveAnimationsForShape(copied);
+                    return copied;
+                }
+            }
+            return InsertDefaultCalloutBoxToSlide(tag, note, slide);
+        }
+
+        private static Shape InsertDefaultCalloutBoxToSlide(NameTag tag, string note, PowerPointSlide s)
         {
             string shapeName = "PPTLabs Callout " + tag.Contents;
             if (s.HasShapeWithSameName(shapeName))
@@ -158,6 +184,33 @@ namespace PowerPointLabs.CaptionsLab
             callout.TextFrame.TextRange.Font.Color.RGB = 0xffffff;
 
             return callout;
+        }
+
+        private static Shape CreateCalloutFromShape(Shape toCopy)
+        {
+            ShapeRange shapes = toCopy.Duplicate();
+            return shapes[1];
+        }
+
+        private static NameTag FindNameTagToCopy(List<NameTag> tags, HashSet<NameTag> tagsInserted, NameTag tag)
+        {
+            if (tags.Count > 1)
+            {
+                tags.Insert(0, tags[tags.Count - 1]);
+            }
+            NameTag prevTag = tagsInserted.Contains(tags[0]) ? null : tags[0];
+            for (int i = 1; i < tags.Count; i++)
+            {
+                if (tag == tags[i])
+                {
+                    return prevTag;
+                }
+                if (!tagsInserted.Contains(tags[i]))
+                {
+                    prevTag = tags[i];
+                }
+            }
+            return null;
         }
     }
 }
