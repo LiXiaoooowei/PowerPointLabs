@@ -260,6 +260,10 @@
     <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsImageHandler.cs" />
     <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsLabelHandler.cs" />
     <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsSupertipHandler.cs" />
+    <Compile Include="ActionFramework\CaptionsLab\CaptionsLabSettings\CaptionsLabSettingsActionHandler.cs" />
+    <Compile Include="ActionFramework\CaptionsLab\CaptionsLabSettings\CaptionsLabSettingsImageHandler.cs" />
+    <Compile Include="ActionFramework\CaptionsLab\CaptionsLabSettings\CaptionsLabSettingsLabelHandler.cs" />
+    <Compile Include="ActionFramework\CaptionsLab\CaptionsLabSettings\CaptionsLabSettingsSupertipHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonActionHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonImageHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonLabelHandler.cs" />
@@ -339,6 +343,10 @@
     <Compile Include="ActionFramework\ShapesLab\ShapesLabMenu\ShapesLabMenuLabelHandler.cs" />
     <Compile Include="ActionFramework\ShapesLab\ShapesLabMenu\ShapesLabMenuSupertipHandler.cs" />
     <Compile Include="ActionFramework\ShapesLab\ShapesLabSupertipHandler.cs" />
+    <Compile Include="ActionFramework\ShortcutsLab\AddToCalloutShapeStyle\AddToCalloutShapeStyleActionHandler.cs" />
+    <Compile Include="ActionFramework\ShortcutsLab\AddToCalloutShapeStyle\AddToCalloutShapeStyleEnabledHandler.cs" />
+    <Compile Include="ActionFramework\ShortcutsLab\AddToCalloutShapeStyle\AddToCalloutShapeStyleImageHandler.cs" />
+    <Compile Include="ActionFramework\ShortcutsLab\AddToCalloutShapeStyle\AddToCalloutShapeStyleLabelHandler.cs" />
     <Compile Include="ActionFramework\ShortcutsLab\HideShape\HideShapeActionHandler.cs" />
     <Compile Include="ActionFramework\AgendaLab\AgendaLabMenu\AgendaLabMenuImageHandler.cs" />
     <Compile Include="ActionFramework\AgendaLab\AgendaLabMenu\AgendaLabMenuLabelHandler.cs" />
@@ -646,6 +654,10 @@
     <Compile Include="CaptionsLab\AddCallouts.cs" />
     <Compile Include="CaptionsLab\AnimationUtil.cs" />
     <Compile Include="CaptionsLab\CalloutsUtil.cs" />
+    <Compile Include="CaptionsLab\CaptionsLabSettings\CaptionsLabSettings.cs" />
+    <Compile Include="CaptionsLab\CaptionsLabSettings\View\CaptionsLabSettingsDialogBox.xaml.cs">
+      <DependentUpon>CaptionsLabSettingsDialogBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CaptionsLab\IntermediateResultTable.cs" />
     <Compile Include="CaptionsLab\NameTagsUtil.cs" />
     <Compile Include="CaptionsLab\PowerPointCalloutsCache.cs" />
@@ -1411,6 +1423,10 @@
     <None Include="Resources\AgendaVisual.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="CaptionsLab\CaptionsLabSettings\View\CaptionsLabSettingsDialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CropLab\Views\CropLabSettingsDialogBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -2051,6 +2067,7 @@
   <ItemGroup>
     <None Include="Resources\FillSlide.png" />
   </ItemGroup>
+  <ItemGroup />
   <!-- Include the build rules for a C# project. -->
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

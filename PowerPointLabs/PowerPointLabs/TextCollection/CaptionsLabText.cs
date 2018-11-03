@@ -8,6 +8,7 @@
         public const string AddCalloutsTag = "AddCallouts";
         public const string RemoveCaptionsTag = "RemoveCaptions";
         public const string RemoveNotesTag = "RemoveNotes";
+        public const string SettingsTag = "CaptionsLabSettings";
         #endregion
 
         #region GUI Text
@@ -16,6 +17,7 @@
         public const string AddCalloutsButtonLabel = "Add Callouts";
         public const string RemoveCaptionsButtonLabel = "Remove Captions";
         public const string RemoveAllNotesButtonLabel = "Remove All Notes";
+        public const string SettingsButtonLabel = "Settings";
 
         public const string RibbonMenuSupertip =
             "Use Captions lab to create customizable movie-style subtitles from text in the Notes pane of the selected slides.";
@@ -30,6 +32,7 @@
         public const string RemoveAllNotesButtonSupertip =
             "Remove notes from Notes pane of selected slides.\n\n" +
             "To perform this action, select the slide(s) to remove the notes from, then click this button.";
+        public const string SettingsButtonSupertip = "Configure the settings for Captions Lab.";
 
         public const string ErrorDialogTitle = "Unable to execute action";
         public const string ErrorNoSelection = "Select at least one slide to apply captions.";

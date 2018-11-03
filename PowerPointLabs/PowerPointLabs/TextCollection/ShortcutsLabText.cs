@@ -28,6 +28,7 @@
         public const string HideShapeTag = "HideShape";
         public const string AddCustomShapeTag = "AddShape";
         public const string AddIntoGroupTag = "AddIntoGroup";
+        public const string AddToCalloutShapeStyleTag = "AddToCalloutStyle";
         public const string SpeakSelectedTag = "SpeakSelected";
         public const string FillSlideTag = "FillSlide";
         #endregion
@@ -41,6 +42,7 @@
         public const string ConvertToPictureLabel = "Convert To Picture";
         public const string AddIntoGroup = "Add Into Group";
         public const string AddCustomShapeLabel = "Add To Shapes Lab";
+        public const string AddToCalloutShapeStyleLabel = "Add To Callout Style";
         public const string HideSelectedShapeLabel = "Hide Shape";
         public const string ContextSpeakSelectedTextLabel = "Speak Selected Text";
         public const string FillSlideLabel = "Fill Slide";
