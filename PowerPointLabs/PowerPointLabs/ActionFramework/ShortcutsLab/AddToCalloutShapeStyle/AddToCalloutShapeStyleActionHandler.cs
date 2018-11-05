@@ -1,10 +1,16 @@
-﻿using Microsoft.Office.Interop.PowerPoint;
+﻿using System;
+using System.Drawing;
+using System.IO;
+using Microsoft.Office.Interop.PowerPoint;
 
 using PowerPointLabs.ActionFramework.Common.Attribute;
 using PowerPointLabs.ActionFramework.Common.Extension;
 using PowerPointLabs.ActionFramework.Common.Interface;
 using PowerPointLabs.ActionFramework.Common.Log;
+using PowerPointLabs.CaptionsLab.CaptionsLabSettings.Storage;
+using PowerPointLabs.ShortcutsLab;
 using PowerPointLabs.TextCollection;
+using PowerPointLabs.Utils;
 
 namespace PowerPointLabs.ActionFramework.ShortcutsLab
 {
@@ -19,7 +25,7 @@ namespace PowerPointLabs.ActionFramework.ShortcutsLab
             {
                 selectedShape = selection.ChildShapeRange[1];
             }
-            Logger.Log("clicked add to callout style");
+            CaptionsLabStorageConfig.SaveSelectedShapeConfig(selectedShape);            
         }
     }
 }

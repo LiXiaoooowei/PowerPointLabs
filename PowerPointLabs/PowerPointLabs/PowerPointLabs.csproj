@@ -655,6 +655,10 @@
     <Compile Include="CaptionsLab\AnimationUtil.cs" />
     <Compile Include="CaptionsLab\CalloutsUtil.cs" />
     <Compile Include="CaptionsLab\CaptionsLabSettings\CaptionsLabSettings.cs" />
+    <Compile Include="CaptionsLab\CaptionsLabSettings\Data\ShapeStyle.cs" />
+    <Compile Include="CaptionsLab\CaptionsLabSettings\Data\ShapeStyleList.cs" />
+    <Compile Include="CaptionsLab\CaptionsLabSettings\Storage\CaptionsLabPresentation.cs" />
+    <Compile Include="CaptionsLab\CaptionsLabSettings\Storage\CaptionsLabStorageConfig.cs" />
     <Compile Include="CaptionsLab\CaptionsLabSettings\View\CaptionsLabSettingsDialogBox.xaml.cs">
       <DependentUpon>CaptionsLabSettingsDialogBox.xaml</DependentUpon>
     </Compile>

@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
 using PowerPointLabs.ActionFramework.Common.Log;
+using PowerPointLabs.CaptionsLab.CaptionsLabSettings;
 using PowerPointLabs.Models;
 using PowerPointLabs.TagMatchers;
 using PowerPointLabs.Tags;
@@ -145,6 +146,14 @@ namespace PowerPointLabs.CaptionsLab
 
         private static Shape InsertCalloutBoxToSlide(List<NameTag> notes, HashSet<NameTag> notesInserted, NameTag tag, string note, PowerPointSlide slide)
         {
+            if (CaptionsLabSettings.CaptionsLabSettings.shapeToCopy != null)
+            {
+                Shape copied = CreateCalloutFromShape(CaptionsLabSettings.CaptionsLabSettings.shapeToCopy, slide);
+                copied.TextFrame.TextRange.Text = note;
+                copied.Name = "PPTLabs Callout " + tag.Contents;
+                slide.RemoveAnimationsForShape(copied);
+                return copied;
+            }
             NameTag tagToCopy = FindNameTagToCopy(notes, notesInserted, tag);
             if (tagToCopy != null)
             {
@@ -152,10 +161,9 @@ namespace PowerPointLabs.CaptionsLab
                 if (shapes.Count > 0)
                 {
                     Shape shape = shapes[0];
-                    Shape copied = CreateCalloutFromShape(shape);
+                    Shape copied = CreateCalloutFromShape(shape, slide);
                     copied.TextFrame.TextRange.Text = note;
                     copied.Name = "PPTLabs Callout " + tag.Contents;
-                    slide.RemoveAnimationsForShape(copied);
                     return copied;
                 }
             }
@@ -186,10 +194,9 @@ namespace PowerPointLabs.CaptionsLab
             return callout;
         }
 
-        private static Shape CreateCalloutFromShape(Shape toCopy)
+        private static Shape CreateCalloutFromShape(Shape toCopy, PowerPointSlide slide)
         {
-            ShapeRange shapes = toCopy.Duplicate();
-            return shapes[1];
+            return slide.CopyShapeToSlide(toCopy);
         }
 
         private static NameTag FindNameTagToCopy(List<NameTag> tags, HashSet<NameTag> tagsInserted, NameTag tag)
