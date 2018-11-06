@@ -6,6 +6,8 @@ using System.Net;
 using System.Text;
 using System.Threading;
 
+using PowerPointLabs.ActionFramework.Common.Log;
+
 namespace PowerPointLabs.NarrationsLab.ViewModel
 {
     public class Authentication
@@ -22,7 +24,6 @@ namespace PowerPointLabs.NarrationsLab.ViewModel
         {
             this.accessUri = issueTokenUri;
             this.apiKey = apiKey;
-
             this.accessToken = HttpPost(issueTokenUri, this.apiKey);
 
             // renew the token every specfied minutes

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -15,6 +16,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using PowerPointLabs.NarrationsLab.Data;
+
 namespace PowerPointLabs.NarrationsLab.Views
 {
     /// <summary>
@@ -23,9 +26,12 @@ namespace PowerPointLabs.NarrationsLab.Views
     public partial class HumanVoiceSelectionPage : Page
     {
         private static HumanVoiceSelectionPage instance;
+        private ObservableCollection<HumanVoice> voices = HumanVoiceList.voices;
         private HumanVoiceSelectionPage()
         {
             InitializeComponent();
+            voiceList.ItemsSource = voices;
+            voiceList.DisplayMemberPath = "Voice";
         }
 
         public static HumanVoiceSelectionPage GetInstance()
@@ -48,7 +54,9 @@ namespace PowerPointLabs.NarrationsLab.Views
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            NarrationsLabMainSettingsPage.GetInstance().SetHumanVoiceSelected("test");
+            HumanVoice item = (HumanVoice)voiceList.SelectedItem;
+            NarrationsLabSettings.humanVoice = item;
+            NarrationsLabMainSettingsPage.GetInstance().SetHumanVoiceSelected(item.Voice.ToString());
             NarrationsLabSettingsDialogBox.GetInstance()
                 .SetCurrentPage(Data.NarrationsLabSettingsPage.MainSettingsPage);
         }

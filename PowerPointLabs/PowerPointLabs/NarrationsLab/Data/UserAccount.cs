@@ -36,5 +36,10 @@ namespace PowerPointLabs.NarrationsLab.Data
         {
             return endpoint;
         }
+
+        public string GetUri()
+        {
+            return EndpointToUriMapping.endpointToUriMapping[endpoint];
+        }
     }
 }

@@ -47,7 +47,6 @@ namespace PowerPointLabs.ActionFramework.NarrationsLab
             for (int currentSlideIndex = 0; currentSlideIndex < numberOfSlides; currentSlideIndex++)
             {
                 PowerPointSlide slide = slides[currentSlideIndex];
-                Console.WriteLine("Starting Authtentication");
                 string accessToken;
                 Authentication auth = new Authentication("https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken", "9b3f23b8a9b14b32b40fee2ba141b5ac");
 

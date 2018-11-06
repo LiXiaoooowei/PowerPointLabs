@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 using PowerPointLabs.NarrationsLab.Data;
+using PowerPointLabs.NarrationsLab.ViewModel;
 
 namespace PowerPointLabs.NarrationsLab.Views
 {
@@ -40,10 +41,24 @@ namespace PowerPointLabs.NarrationsLab.Views
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             string _key = key.Text;
-            string _endpoint = endpoint.Text;
+            string _endpoint = endpoint.Text + "/issueToken";
 
+            try
+            {
+                Authentication auth = new Authentication(_endpoint, _key);
+                string accessToken = auth.GetAccessToken();
+                Console.WriteLine("Token: {0}\n", accessToken);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed authentication.");
+                Console.WriteLine(ex.ToString());
+                Console.WriteLine(ex.Message);
+                MessageBox.Show("Failed authentication");
+                return;
+            }
+            
             UserAccount.GetInstance().SetUserKeyAndEndpoint(_key, _endpoint);
-
             NarrationsLabSettingsDialogBox.GetInstance()
                 .SetCurrentPage(Data.NarrationsLabSettingsPage.VoiceSelectionPage);
         }

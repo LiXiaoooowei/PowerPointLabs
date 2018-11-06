@@ -7,6 +7,8 @@ using System.Security.Cryptography;
 using System.Speech.Synthesis;
 using System.Text;
 using System.Threading;
+
+using PowerPointLabs.ActionFramework.Common.Log;
 using PowerPointLabs.Models;
 using PowerPointLabs.NarrationsLab.Data;
 using PowerPointLabs.NarrationsLab.ViewModel;
@@ -16,6 +18,7 @@ namespace PowerPointLabs.SpeechEngine
     static class TextToSpeech
     {
         public static String DefaultVoiceName;
+        public static HumanVoice humanVoice;
 
         public static IEnumerable<string> GetVoices()
         {
@@ -32,6 +35,7 @@ namespace PowerPointLabs.SpeechEngine
             TaggedText taggedNotes = new TaggedText(notesText);
             List<String> stringsToSave = taggedNotes.SplitByClicks();
             //MD5 md5 = MD5.Create();
+            Logger.Log("inside save string to wave files" + DefaultVoiceName);
 
             for (int i = 0; i < stringsToSave.Count; i++)
             {
@@ -44,10 +48,12 @@ namespace PowerPointLabs.SpeechEngine
                 String filePath = folderPath + "\\" + fileName + ".wav";
                 if (GetVoices().Contains(DefaultVoiceName))
                 {
+                    Logger.Log("contains default voice name");
                     SaveStringToWaveFile(textToSave, filePath);
                 }
                 else
                 {
+                    Logger.Log("here" + DefaultVoiceName);
                     SaveStringToWaveFileWithHumanVoice(textToSave, filePath);
                 }
             }
@@ -79,17 +85,17 @@ namespace PowerPointLabs.SpeechEngine
             try
             {
                 accessToken = auth.GetAccessToken();
-                Console.WriteLine("Token: {0}\n", accessToken);
+                Logger.Log("Token: " + accessToken);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed authentication.");
-                Console.WriteLine(ex.ToString());
-                Console.WriteLine(ex.Message);
+                Logger.Log("Failed authentication.");
+                Logger.Log(ex.ToString());
+                Logger.Log(ex.Message);
                 return;
             }
 
-            string requestUri = "https://westus.tts.speech.microsoft.com/cognitiveservices/v1";
+            string requestUri = UserAccount.GetInstance().GetUri();
             var cortana = new Synthesize();
 
             cortana.OnAudioAvailable += SaveAudioToWaveFile;
@@ -99,17 +105,10 @@ namespace PowerPointLabs.SpeechEngine
             cortana.Speak(CancellationToken.None, new Synthesize.InputOptions()
             {
                 RequestUri = new Uri(requestUri),
-                // Text to be spoken.
                 Text = textToSave,
-                VoiceType = Gender.Female,
-                // Refer to the documentation for complete list of supported locales.
-                Locale = "en-US",
-                // You can also customize the output voice. Refer to the documentation to view the different
-                // voices that the TTS service can output.
-                // VoiceName = "Microsoft Server Speech Text to Speech Voice (en-US, Jessa24KRUS)",
-                VoiceName = "Microsoft Server Speech Text to Speech Voice (en-US, Guy24KRUS)",
-                // VoiceName = "Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)",
-
+                VoiceType = humanVoice.voiceType,
+                Locale = humanVoice.Locale,
+                VoiceName = humanVoice.voiceName,
                 // Service can return audio in different output format.
                 OutputFormat = AudioOutputFormat.Riff24Khz16BitMonoPcm,
                 AuthorizationToken = "Bearer " + accessToken,

@@ -651,7 +651,13 @@
     <Compile Include="EffectsLab\EffectsLabRecolor.cs" />
     <Compile Include="HighlightLab\HighlightLabSettings.cs" />
     <Compile Include="NarrationsLab\Data\AudioOutputFormat.cs" />
+    <Compile Include="NarrationsLab\Data\EndpointToUriMapping.cs" />
+    <Compile Include="NarrationsLab\Data\HumanVoice.cs" />
+    <Compile Include="NarrationsLab\Data\HumanVoiceList.cs" />
+    <Compile Include="NarrationsLab\Data\Locale.cs" />
+    <Compile Include="NarrationsLab\Data\LocaleMapping.cs" />
     <Compile Include="NarrationsLab\Data\UserAccount.cs" />
+    <Compile Include="NarrationsLab\Data\Voice.cs" />
     <Compile Include="NarrationsLab\ViewModel\Authentication.cs" />
     <Compile Include="NarrationsLab\Data\NarrationsLabSettingsPage.cs" />
     <Compile Include="NarrationsLab\ViewModel\GenericEventArgs.cs" />
