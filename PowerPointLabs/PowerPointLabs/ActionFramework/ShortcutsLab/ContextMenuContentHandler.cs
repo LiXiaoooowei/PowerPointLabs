@@ -64,7 +64,6 @@ namespace PowerPointLabs.ActionFramework.ShortcutsLab
                 }
 
                 shortcuts.Items.Add(ShortcutsLabText.EditNameTag);
-                shortcuts.Items.Add(ShortcutsLabText.AddToCalloutShapeStyleTag);
 
                 // Context menus other than picture will have these buttons
                 if (ribbonId != ShortcutsLabText.MenuPicture)

@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
 using PowerPointLabs.ActionFramework.Common.Log;
-using PowerPointLabs.CaptionsLab.CaptionsLabSettings;
 using PowerPointLabs.Models;
 using PowerPointLabs.TagMatchers;
 using PowerPointLabs.Tags;
@@ -146,14 +145,6 @@ namespace PowerPointLabs.CaptionsLab
 
         private static Shape InsertCalloutBoxToSlide(List<NameTag> notes, HashSet<NameTag> notesInserted, NameTag tag, string note, PowerPointSlide slide)
         {
-            if (CaptionsLabSettings.CaptionsLabSettings.shapeToCopy != null)
-            {
-                Shape copied = CreateCalloutFromShape(CaptionsLabSettings.CaptionsLabSettings.shapeToCopy, slide);
-                copied.TextFrame.TextRange.Text = note;
-                copied.Name = "PPTLabs Callout " + tag.Contents;
-                slide.RemoveAnimationsForShape(copied);
-                return copied;
-            }
             NameTag tagToCopy = FindNameTagToCopy(notes, notesInserted, tag);
             if (tagToCopy != null)
             {

@@ -194,7 +194,6 @@ namespace PowerPointLabs.CaptionsLab
             {
 
                 Effect animeEffect = mainEffects.ElementAt(i);
-                Logger.Log("effect name is " + animeEffect.Shape.Name);
                 int idx = shapes.Count();
                 Shape shape = animeEffect.Shape;
                 if (IsTargetedShapeEffect(animeEffect, namescope, isExit) && idx < notesCount)
@@ -210,9 +209,7 @@ namespace PowerPointLabs.CaptionsLab
                         {
                             appearIdxToEffect[i] = tuple.Item1;
                             appearNameToIdx[tuple.Item1.Shape.Name] = i;
-                            Logger.Log("moving "+tuple.Item1.Shape.Name + "to "+ (i + 1));
                             tuple.Item1.MoveTo(i + 1);
-                            Logger.Log("moving " + animeEffect.Shape.Name + "to " + (i + 1));
                             animeEffect.MoveTo(tuple.Item2 + 1);
                         }
                     }

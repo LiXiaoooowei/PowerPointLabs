@@ -160,13 +160,6 @@
                     getImage="GetImage"
                     getSupertip="GetSupertip"
                     onAction="OnAction"/>
-            <menuSeparator id="CaptionsLabSettingsSeparator"/>
-            <button id="CaptionsLabSettingsButton"
-                    tag="CaptionsLabSettings"
-                    getLabel="GetLabel"
-                    getImage="GetImage"
-                    getSupertip="GetSupertip"
-                    onAction="OnAction"/>
           </menu>
 
         </group>
