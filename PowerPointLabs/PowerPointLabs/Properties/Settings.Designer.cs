@@ -43,24 +43,6 @@ namespace PowerPointLabs.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.comp.nus.edu.sg/~pptlabs/download-78563/")]
-        public string ReleaseAddr {
-            get {
-                return ((string)(this["ReleaseAddr"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.comp.nus.edu.sg/~pptlabs/download/dev/")]
-        public string DevAddr {
-            get {
-                return ((string)(this["DevAddr"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("4.3.0.1")]
         public string Version {
             get {
@@ -74,6 +56,24 @@ namespace PowerPointLabs.Properties {
         public string ReleaseDate {
             get {
                 return ((string)(this["ReleaseDate"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://www.comp.nus.edu.sg/~pptlabs/download-78563/")]
+        public string ReleaseAddr {
+            get {
+                return ((string)(this["ReleaseAddr"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://www.comp.nus.edu.sg/~pptlabs/download/dev/")]
+        public string DevAddr {
+            get {
+                return ((string)(this["DevAddr"]));
             }
         }
     }

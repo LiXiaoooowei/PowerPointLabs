@@ -29,15 +29,13 @@ namespace PowerPointLabs.CaptionsLab
             foreach (Tuple<NameTag, string> note in updatedNotes)
             {
                 if (notes.ContainsKey(note.Item1))
-                {
-                    Logger.Log("adding to modified note " + note.Item2);
+                {                   
                     ModifyNote(note.Item1, note.Item2);
                     notesCopy[note.Item1] = note.Item2;
                     intermediateResultTable.AddModifiedNote(note.Item1, note.Item2);
                 }
                 else
                 {
-                    Logger.Log("inserting new note with key " + note.Item1.Contents);
                     InsertNewNote(note.Item1, note.Item2);
                     notesCopy.Add(note.Item1, note.Item2);
                     intermediateResultTable.AddInsertedNote(note.Item1, note.Item2);
