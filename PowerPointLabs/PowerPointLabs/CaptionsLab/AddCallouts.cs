@@ -36,23 +36,17 @@ namespace PowerPointLabs.CaptionsLab
         {
             foreach (PowerPointSlide slide in slides)
             {
-                int slideNo = slide.GetSlideIndexForCallouts();
+                NameTagGenerator.GetTagNo(slide.NotesPageText.Trim());
                 string contents = CalloutsUtil.GetCalloutNotes(slide);
-
-                if (String.IsNullOrEmpty(contents) && !cache.IsTableExists(slideNo))
+                if (String.IsNullOrEmpty(contents) && !cache.IsTableExists(slide.Name))
                 {
                     Logger.Log(String.Format("{0} in EmbedCaptionsOnSlides", CaptionsLabText.ErrorNoNotesLog));
                     MessageBox.Show(CaptionsLabText.ErrorNoNotes, CaptionsLabText.ErrorDialogTitle);
                     NotesToCaptions.ShowNotesPane();
-                }
-                else if (slideNo == -1)
-                {
-                    slideNo = cache.CreateNewTableEntry();
-                    slide.Name = "PowerPointSlide " + slideNo;
-                }
+                }              
                 IEnumerable<string> splittedNotes = CalloutsUtil.SplitNotesByClicks(contents);
                 List<Tuple<NameTag, string>> notes = CalloutsUtil.ConvertNotesToCallouts(splittedNotes);
-                IntermediateResultTable intermediateResult = cache.UpdateNotes(slideNo, notes);
+                IntermediateResultTable intermediateResult = cache.UpdateNotes(slide.Name, notes);
                 CalloutsUtil.UpdateCalloutBoxOnSlide(intermediateResult, slide);
                 AnimationUtil.UpdateAnimationsForCalloutsOnSlide(intermediateResult, slide);
                 slide.NotesPageText = intermediateResult.GetResultNotes();

@@ -167,10 +167,13 @@ namespace PowerPointLabs.CaptionsLab
                     continue;
                 }
                 Shape currShape = shapes[0];
-                Effect showEffect = slide.ShowShapeAfterClick(currShape, clickNo);
-                if (prevShape != null)
+                if (!IsEffectExists(sequence.Cast<Effect>(), currShape.Name))
                 {
-                    slide.HideShapeAfterClick(prevShape, clickNo);
+                    Effect showEffect = slide.ShowShapeAfterClick(currShape, clickNo);
+                    if (prevShape != null)
+                    {
+                        slide.HideShapeAfterClick(prevShape, clickNo);
+                    }
                 }
                 clickNo++;
                 prevShape = currShape;
@@ -303,18 +306,9 @@ namespace PowerPointLabs.CaptionsLab
             return effect.Shape.Name.Contains(name) && effect.Exit == isExit;
         }
 
-        private static Shape FindPPTLabsShapeForEffect(Effect effect)
+        private static bool IsEffectExists(IEnumerable<Effect> effects, string name)
         {
-            if (effect == null)
-            {
-                return null;
-            }
-            Shape shape = effect.Shape;
-            if (effect.Shape.Name.Contains("PPTLabs Callout "))
-            {
-                return shape;
-            }
-            return null;
+            return effects.Any((effect) => effect.Shape.Name == name);
         }
     }
 }

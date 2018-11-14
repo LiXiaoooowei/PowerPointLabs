@@ -21,9 +21,9 @@ namespace PowerPointLabs.CaptionsLab
         private static Lazy<PowerPointCalloutsCache> powerPointCalloutsCache 
             = new Lazy<PowerPointCalloutsCache>(() => new PowerPointCalloutsCache());
 
-        private Dictionary<int, Callouts> calloutsTable = new Dictionary<int, Callouts>();
-        private int slideCnt = 0;
-        public IntermediateResultTable UpdateNotes(int slideNo, List<Tuple<NameTag, string>> updatedNotes)
+        private Dictionary<string, Callouts> calloutsTable = new Dictionary<string, Callouts>();
+
+        public IntermediateResultTable UpdateNotes(string slideNo, List<Tuple<NameTag, string>> updatedNotes)
         {
             IntermediateResultTable context = new IntermediateResultTable();
             IEnumerable<NameTag> notes = from note in updatedNotes select note.Item1;
@@ -44,19 +44,9 @@ namespace PowerPointLabs.CaptionsLab
             context.SetNotes(notes);
             return context;
         }
-        public bool IsTableExists(int idx)
+        public bool IsTableExists(string idx)
         {
             return calloutsTable.ContainsKey(idx);
-        }
-
-        public int CreateNewTableEntry()
-        {
-            return ++slideCnt; 
-        }
-
-        public void InitializeSlideCount(int cnt)
-        {
-            slideCnt = cnt;
         }
 
         private PowerPointCalloutsCache()

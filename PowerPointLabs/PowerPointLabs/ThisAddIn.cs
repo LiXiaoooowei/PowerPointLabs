@@ -822,7 +822,6 @@ namespace PowerPointLabs
             Application.AfterNewPresentation += ThisAddInAfterNewPresentation;
             Application.PresentationOpen += ThisAddInPresentationOpen;
             Application.PresentationClose += ThisAddInPresentationClose;
-            Application.PresentationSave += ThisAddInPresentationSave;
 
             // Priority Mid: Window Actions
             Application.WindowActivate += ThisAddInApplicationOnWindowActivate;
@@ -832,19 +831,9 @@ namespace PowerPointLabs
             Application.SlideShowEnd += SlideShowEndHandler;
 
             // Priority Low: Slide Actions
-            Application.PresentationNewSlide += ThisAddInPresentationNewSlideAdded;
             Application.SlideSelectionChanged += ThisAddInSlideSelectionChanged;
         }
 
-        private void ThisAddInPresentationNewSlideAdded(PowerPoint.Slide sld)
-        {
-          //  sld.Name = "PowerPointSlide " + (++slideCount).ToString();
-        }
-
-        private void ThisAddInPresentationSave(PowerPoint.Presentation pres)
-        {
-          //  AddCallouts.SyncCalloutsOnSlides(PowerPointCurrentPresentationInfo.SelectedSlides.ToList());
-        }
 
         private void ThisAddInApplicationOnWindowDeactivate(PowerPoint.Presentation pres, PowerPoint.DocumentWindow wn)
         {
@@ -1025,10 +1014,7 @@ namespace PowerPointLabs
                 if (!_documentHashcodeMapper.ContainsKey(activeWindow))
                 {
                     _documentHashcodeMapper[activeWindow] = tempName;
-                }
-
-                InitializeSlideCountForCallouts(pres);
-                InitializeCountForTagGenerator(pres);
+                }          
 
                 // Refresh ribbon to enable the menu buttons if there are now at least one window
                 RefreshRibbonMenuButtons();
@@ -1116,42 +1102,6 @@ namespace PowerPointLabs
             Ribbon.RefreshRibbonControl(TimerLabText.RibbonMenuId);
             Ribbon.RefreshRibbonControl(AgendaLabText.RibbonMenuId);
             Ribbon.RefreshRibbonControl(PictureSlidesLabText.RibbonMenuId);
-        }
-
-        private void InitializeCountForTagGenerator(PowerPoint.Presentation pres)
-        {
-            int count = 0;
-            foreach (PowerPoint.Slide slide in pres.Slides)
-            {
-                PowerPointSlide s = PowerPointSlide.FromSlideFactory(slide);
-                string notes = s.NotesPageText;
-                IEnumerable<string> splittedNotes = CalloutsUtil.SplitNotesByClicks(notes);
-                foreach (string note in splittedNotes)
-                {
-                    int num = NameTagsUtil.GetTagNo(note);
-                    if (count < num)
-                    {
-                        count = num;
-                    }
-                }
-            }
-            NameTagsUtil.InitializeCount(count);
-        }
-
-        private void InitializeSlideCountForCallouts(PowerPoint.Presentation pres)
-        {
-            int count = 0;
-            foreach (PowerPoint.Slide slide in pres.Slides)
-            {
-                PowerPointSlide s = PowerPointSlide.FromSlideFactory(slide);
-                int slideNo = s.GetSlideIndexForCallouts();
-                if (slideNo > count)
-                {
-                    count = slideNo;
-                }
-            }
-            PowerPointCalloutsCache cache = PowerPointCalloutsCache.Instance;
-            cache.InitializeSlideCount(count);
         }
 
         private void ShutDownImageSearchPane()

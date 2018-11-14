@@ -647,7 +647,7 @@
     <Compile Include="CaptionsLab\AnimationUtil.cs" />
     <Compile Include="CaptionsLab\CalloutsUtil.cs" />
     <Compile Include="CaptionsLab\IntermediateResultTable.cs" />
-    <Compile Include="CaptionsLab\NameTagsUtil.cs" />
+    <Compile Include="CaptionsLab\NameTagGenerator.cs" />
     <Compile Include="CaptionsLab\PowerPointCalloutsCache.cs" />
     <Compile Include="EffectsLab\EffectsLabSettings.cs" />
     <Compile Include="EffectsLab\EffectsLabUtil.cs" />

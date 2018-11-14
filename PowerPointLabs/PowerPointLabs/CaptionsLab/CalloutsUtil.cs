@@ -34,7 +34,7 @@ namespace PowerPointLabs.CaptionsLab
                 var match = Regex.Match(note, @"\[Name\s*:(.*)\]", RegexOptions.IgnoreCase);
                 if (!match.Success)
                 {
-                    string uniqueTag = NameTagsUtil.GenerateUniqueName();
+                    string uniqueTag = NameTagGenerator.GenerateUniqueName();
                     note = "[Name: " + uniqueTag + "]" + note; 
                 }
                 TaggedText section = new TaggedText(note);
@@ -86,7 +86,7 @@ namespace PowerPointLabs.CaptionsLab
                     if (!shape.Name.Contains("PPTLabs Callout "))
                     {
                         string newNote = shape.TextFrame.TextRange.Text;
-                        string uniqueTag = NameTagsUtil.GenerateUniqueName();
+                        string uniqueTag = NameTagGenerator.GenerateUniqueName();
                         shape.Name = "PPTLabs Callout " + uniqueTag;
                         builder.Append("[Name:" + uniqueTag + "]" + newNote + "[AfterClick]");
                     }
@@ -109,20 +109,17 @@ namespace PowerPointLabs.CaptionsLab
             }
             foreach (Tuple<NameTag, string> note in intermediateResult.GetInsertedNotes())
             {
-                Logger.Log("inserted note is " + note.Item2);
                 Shape shape = InsertCalloutBoxToSlide(notes, notesInserted, note.Item1, note.Item2, s);
                 InsertDefaultCalloutBoxToSlide(note.Item1, note.Item2, s);
             }
 
             foreach (Tuple<NameTag, string> note in intermediateResult.GetDeletedNotes())
             {
-                Logger.Log("deleted note is " + note.Item2);
                 DeleteCalloutBoxFromSlide(note.Item1, note.Item2, s);
             }
 
             foreach (Tuple<NameTag, string> note in intermediateResult.GetModifiedNotes())
             {
-                Logger.Log("modified note is " + note.Item2);
                 ModifyCalloutBoxFromSlide(note.Item1, note.Item2, s);
             }
         }

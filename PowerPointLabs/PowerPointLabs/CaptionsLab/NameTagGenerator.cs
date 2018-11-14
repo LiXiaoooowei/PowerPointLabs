@@ -7,46 +7,36 @@ using PowerPointLabs.Tags;
 
 namespace PowerPointLabs.CaptionsLab
 {
-    public static class NameTagsUtil
+    public static class NameTagGenerator
     { 
 
-       private static HashSet<NameTag> nameTags = new HashSet<NameTag>();
-
-        private static int count = 0;
+       private static HashSet<int> nameTags = new HashSet<int>();
 
         public static string GenerateUniqueName()
         {
-            NameTag tag;
-
+            int count = 0;
             do
             {
-                tag = new NameTag(0, 0, "PPTLabs Callout " + (++count).ToString());
+                count++;
             }
-            while (nameTags.Contains(tag));
+            while (nameTags.Contains(count));
 
-            return tag.Contents;
+            return "PPTLabs Callout " + count.ToString();
         }
 
-        public static void InitializeCount(int cnt)
+        public static void GetTagNo(string note)
         {
-            count = cnt;
-        }
-
-        public static int GetTagNo(string note)
-        {
-            int no = 0;
             Regex regex = new Regex(@"\[Name\s*:\s*PPTLabs Callout\s*([1-9][0-9]*)\]", RegexOptions.IgnoreCase);
             MatchCollection regexMatches = regex.Matches(note);
             foreach (Match match in regexMatches)
             {
                 string value = match.Groups[1].Value.Trim();
-                int num = String.IsNullOrEmpty(value) ? -1 : Int32.Parse(value);
-                if (no < num)
+                if (!String.IsNullOrEmpty(value))
                 {
-                    no = num;
+                    nameTags.Add(Int32.Parse(value));
                 }
+               
             }
-            return no;
         }
     }
 }
