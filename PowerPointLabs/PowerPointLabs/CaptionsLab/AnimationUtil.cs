@@ -55,15 +55,6 @@ namespace PowerPointLabs.CaptionsLab
             foreach (Effect animeEffect in mainEffects)
             {
                 Effect effectForClick = sequence.FindFirstAnimationForClick(nextClick);
-                if (effectForClick == null)
-                {
-                    Logger.Log("effect is null");
-                }
-                else
-                {
-                    Logger.Log("click is " + nextClick + effectForClick.Shape.Name);
-                    Logger.Log("click is " + nextClick + animeEffect.Shape.Name);
-                }
                 if (nextClick == 0 && effectForClick == null)
                 {
                     effectForClick = sequence.FindFirstAnimationForClick(1);
@@ -72,7 +63,6 @@ namespace PowerPointLabs.CaptionsLab
                 }
                 if (effectForClick != null && animeEffect.Shape.Name == effectForClick.Shape.Name)
                 {
-                    Logger.Log("we reached this place");
                     nextClick++;
                     prevClick++;
                 }
@@ -83,7 +73,6 @@ namespace PowerPointLabs.CaptionsLab
                 {
                     if (!shape.Name.Contains("PPTLabs Callout") || animeEffect.Exit != Microsoft.Office.Core.MsoTriState.msoTrue)
                     {
-                        Logger.Log("adding " + shape.Name + " with click " + prevClick);
                         shapeSet.Add(shape);
                         shapesOrder.Add(new Tuple<Shape, MsoAnimEffect, int>(animeEffect.Shape, animeEffect.EffectType, prevClick));
                     }
@@ -98,7 +87,6 @@ namespace PowerPointLabs.CaptionsLab
                 Shape shape = shapeEffect.Item1;
                 MsoAnimEffect originalEffect = shapeEffect.Item2;
                 int animeClick = shapeEffect.Item3;
-                Logger.Log("shape " + shape.Name + " click " + animeClick);
                 Effect newEffect;
                 if (animeClick == 0)
                 {
@@ -160,9 +148,9 @@ namespace PowerPointLabs.CaptionsLab
         private static void AppendNotesToSlideAnimationPane(List<Tuple<NameTag, string>> notesInserted, PowerPointSlide slide)
         {
             int clickNo = 0;
-            Shape prevShape = null;
             Sequence sequence = slide.TimeLine.MainSequence;
             Effect effect = sequence.FindFirstAnimationForClick(clickNo++);
+            Shape prevShape = null;
             if (effect == null)
             {
                 effect = sequence.FindFirstAnimationForClick(clickNo);
@@ -206,17 +194,15 @@ namespace PowerPointLabs.CaptionsLab
             {
 
                 Effect animeEffect = mainEffects.ElementAt(i);
+                Logger.Log("effect name is " + animeEffect.Shape.Name);
                 int idx = shapes.Count();
                 Shape shape = animeEffect.Shape;
                 if (IsTargetedShapeEffect(animeEffect, namescope, isExit) && idx < notesCount)
                 {
                     string tag = notes.ElementAt(idx).Contents;                                     
                     shapes.Add(tag);
-                    Logger.Log(shape.Name + " tag: "+ tag + " shapes contain: ");
-                    foreach (string _shape in shapes)
-                    {                       
-                        Logger.Log(_shape);
-                    }
+                   
+           
                     if (animeEffect.Shape.Name != namescope + tag)
                     {
                         Tuple<Effect, int> tuple = GetFirstEffectWithShapeNameAndCriteria(tag, namescope, i, slide, isExit);
@@ -224,7 +210,10 @@ namespace PowerPointLabs.CaptionsLab
                         {
                             appearIdxToEffect[i] = tuple.Item1;
                             appearNameToIdx[tuple.Item1.Shape.Name] = i;
+                            Logger.Log("moving "+tuple.Item1.Shape.Name + "to "+ (i + 1));
                             tuple.Item1.MoveTo(i + 1);
+                            Logger.Log("moving " + animeEffect.Shape.Name + "to " + (i + 1));
+                            animeEffect.MoveTo(tuple.Item2 + 1);
                         }
                     }
                     else
@@ -299,15 +288,13 @@ namespace PowerPointLabs.CaptionsLab
                 
                 Effect effect = effects.ElementAt(i);
                 if (IsTargetedShapeEffect(effect, namescope, isExit) && effect.Shape.Name == namescope + tag)
-                {
-                    Logger.Log("find effect with name " + namescope + tag);
+                {           
                     return new Tuple<Effect, int>(effect, i);
                 }
             }
             List<Shape> shape = slide.GetShapeWithName(namescope + tag);
             if (shape.Count != 0)
             {
-                Logger.Log("generate effect with name " + namescope + tag);
                 Effect effect = slide.TimeLine.MainSequence.AddEffect(shape[0], MsoAnimEffect.msoAnimEffectAppear);
                 return new Tuple<Effect, int>(effect, count);
             }
@@ -319,5 +306,18 @@ namespace PowerPointLabs.CaptionsLab
             return effect.Shape.Name.Contains(name) && effect.Exit == isExit;
         }
 
+        private static Shape FindPPTLabsShapeForEffect(Effect effect)
+        {
+            if (effect == null)
+            {
+                return null;
+            }
+            Shape shape = effect.Shape;
+            if (effect.Shape.Name.Contains("PPTLabs Callout "))
+            {
+                return shape;
+            }
+            return null;
+        }
     }
 }

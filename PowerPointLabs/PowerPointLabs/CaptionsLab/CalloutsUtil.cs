@@ -164,6 +164,7 @@ namespace PowerPointLabs.CaptionsLab
                     Shape copied = CreateCalloutFromShape(shape, slide);
                     copied.TextFrame.TextRange.Text = note;
                     copied.Name = "PPTLabs Callout " + tag.Contents;
+                    slide.RemoveAnimationsForShape(copied);
                     return copied;
                 }
             }
@@ -196,7 +197,8 @@ namespace PowerPointLabs.CaptionsLab
 
         private static Shape CreateCalloutFromShape(Shape toCopy, PowerPointSlide slide)
         {
-            return slide.CopyShapeToSlide(toCopy);
+            //return slide.CopyShapeToSlide(toCopy);
+            return toCopy.Duplicate()[1];
         }
 
         private static NameTag FindNameTagToCopy(List<NameTag> tags, HashSet<NameTag> tagsInserted, NameTag tag)
