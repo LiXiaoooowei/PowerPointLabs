@@ -12,6 +12,7 @@ using Microsoft.Office.Interop.PowerPoint;
 using PowerPointLabs.ActionFramework.Common.Log;
 using PowerPointLabs.AudioMisc;
 using PowerPointLabs.Models;
+using PowerPointLabs.NarrationsLab.Data;
 using PowerPointLabs.SpeechEngine;
 using PowerPointLabs.Views;
 
@@ -112,6 +113,7 @@ namespace PowerPointLabs.NarrationsLab
             try
             {
                 String fileNameFormat = "Slide " + slide.ID + " Speech {0}";
+                Logger.Log(fileNameFormat);
                 TextToSpeech.SaveStringToWaveFiles(slide.NotesPageText, folderPath, fileNameFormat);
                 return true;
             }
@@ -162,6 +164,12 @@ namespace PowerPointLabs.NarrationsLab
         public static void SetDefaultVoice(string voiceName)
         {
             TextToSpeech.DefaultVoiceName = voiceName;
+        }
+
+        public static void SetDefaultVoice(string voiceName, HumanVoice humanVoice)
+        {
+            TextToSpeech.DefaultVoiceName = voiceName;
+            TextToSpeech.humanVoice = humanVoice;
         }
 
         public static void ReplaceSelectedAudio()

@@ -107,6 +107,12 @@
                     getImage="GetImage"
                     getSupertip="GetSupertip"
                     onAction="OnAction"/>
+            <button id="TestHumanNarrationsButton"
+                    tag="AddHumanVoice"
+                    getLabel="GetLabel"
+                    getImage="GetImage"
+                    getSupertip="GetSupertip"
+                    onAction="OnAction"/>
             <button id="RecordNarrationsButton"
                     tag="RecordNarrations"
                     getLabel="GetLabel"

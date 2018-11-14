@@ -1,0 +1,59 @@
+﻿<Page x:Class="PowerPointLabs.NarrationsLab.Views.NarrationsLabMainSettingsPage"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
+                      Height="150"
+                      Width="350"
+                      
+                      Title="Narrations Lab Main Settings Page">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/baselight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" x:Name="voiceLabel" FontSize="12" Margin="20,30,0,0">Default Voice</TextBlock>
+                <controls:DropDownButton Grid.Column="1" x:Name="voiceSelectionInput" Height="23" Width="200" Margin="0,25,20,0">
+                    <controls:DropDownButton.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" MouseUp="VoiceSelectionInput_Item_MouseUp" />
+                        </DataTemplate>
+                    </controls:DropDownButton.ItemTemplate>
+                </controls:DropDownButton>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" x:Name="humanVoiceBtn" Content="Generate Human Voice" Margin="10 10 30 0" Click="HumanVoiceBtn_Click"/>
+                <TextBox Grid.Column="1" x:Name="humanVoiceChosen" Padding="2" Margin=" 0 10 30 0" ></TextBox>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="116.667"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox Grid.Column="0" x:Name="previewCheckbox" Margin="20,10,0,0">Preview</CheckBox>
+                <Button Grid.Column="1" x:Name="okButton" Content="OK" Margin="0,10,10,10"  Width="80" IsDefault="True" Click="OkButton_Click"/>
+                <Button Grid.Column="2" x:Name="cancelButton" Content="Cancel" Margin="0,10,10,10"  Width="80" IsCancel="True" Click="CancelButton_Click"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Page>
