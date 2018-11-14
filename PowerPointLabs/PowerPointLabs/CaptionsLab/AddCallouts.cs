@@ -38,11 +38,13 @@ namespace PowerPointLabs.CaptionsLab
             {
                 NameTagGenerator.GetTagNo(slide.NotesPageText.Trim());
                 string contents = CalloutsUtil.GetCalloutNotes(slide);
-                if (String.IsNullOrEmpty(contents) && !cache.IsTableExists(slide.Name))
+                if (String.IsNullOrEmpty(contents) && !cache.IsTableExists(slide.Name) 
+                    && slide.GetShapesWithPrefix("PPTLabs Callout ").Count() == 0)
                 {
                     Logger.Log(String.Format("{0} in EmbedCaptionsOnSlides", CaptionsLabText.ErrorNoNotesLog));
                     MessageBox.Show(CaptionsLabText.ErrorNoNotes, CaptionsLabText.ErrorDialogTitle);
                     NotesToCaptions.ShowNotesPane();
+                    return;
                 }              
                 IEnumerable<string> splittedNotes = CalloutsUtil.SplitNotesByClicks(contents);
                 List<Tuple<NameTag, string>> notes = CalloutsUtil.ConvertNotesToCallouts(splittedNotes);

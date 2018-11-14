@@ -40,6 +40,10 @@ namespace PowerPointLabs.CaptionsLab
                 calloutsTable.Add(slideNo, new Callouts(updatedNotes));
                 context.AddInsertedNote(updatedNotes);
                 context.AddResultNotes(calloutsTable[slideNo].ToString());
+                if (updatedNotes.Count() == 0)
+                {
+                    calloutsTable.Remove(slideNo);
+                }
             }
             context.SetNotes(notes);
             return context;

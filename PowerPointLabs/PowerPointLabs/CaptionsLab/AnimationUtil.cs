@@ -25,7 +25,7 @@ namespace PowerPointLabs.CaptionsLab
             IEnumerable<Effect> mainEffects = sequence.Cast<Effect>();
 
             // handle deleted notes
-            DeleteNotesFromSlideAnimationPane(notesDeleted, slide);
+            DeleteNotesFromSlideAnimationPane(notes, slide);
 
             // handle newly inserted notes
             AppendNotesToSlideAnimationPane(notesInserted, slide);
@@ -34,12 +34,15 @@ namespace PowerPointLabs.CaptionsLab
             ReorderNotesOnSlideAnimationPane(notes, slide, Microsoft.Office.Core.MsoTriState.msoFalse);
         }
 
-        private static void DeleteNotesFromSlideAnimationPane(List<Tuple<NameTag, string>> notesDeleted, PowerPointSlide slide)
+        private static void DeleteNotesFromSlideAnimationPane(IEnumerable<NameTag> notes, PowerPointSlide slide)
         {
-            for (int i = 0; i < notesDeleted.Count; i++)
+            List<Shape> shapes = slide.GetShapesWithPrefix("PPTLabs Callout ");
+            foreach (Shape shape in shapes)
             {
-                List<Shape> shapes = slide.GetShapeWithName("PPTLabs Callout " + notesDeleted[i].Item1.Contents);
-                slide.RemoveAnimationsForShapes(shapes);
+                if (!notes.Any((nametag) => shape.Name.Contains(nametag.Contents)))
+                {
+                    shape.Delete();
+                }
             }
         }
 
@@ -79,6 +82,10 @@ namespace PowerPointLabs.CaptionsLab
             HashSet<string> shapes = new HashSet<string>();
             int count = mainEffects.Count();
             int notesCount = notes.Count();
+            if (notesCount == 0)
+            {
+                return;
+            }
             Dictionary<string, int> appearNameToIdx = new Dictionary<string, int>();
             Dictionary<int, Effect> disappearIdxToEffect = new Dictionary<int, Effect>();
             List<Effect> disappearEffectsToRemove = new List<Effect>();
