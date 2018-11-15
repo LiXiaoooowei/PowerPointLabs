@@ -10,6 +10,7 @@ using System.Threading;
 
 using PowerPointLabs.ActionFramework.Common.Log;
 using PowerPointLabs.Models;
+using PowerPointLabs.NarrationsLab;
 using PowerPointLabs.NarrationsLab.Data;
 using PowerPointLabs.NarrationsLab.ViewModel;
 
@@ -35,7 +36,6 @@ namespace PowerPointLabs.SpeechEngine
             TaggedText taggedNotes = new TaggedText(notesText);
             List<String> stringsToSave = taggedNotes.SplitByClicks();
             //MD5 md5 = MD5.Create();
-            Logger.Log("inside save string to wave files" + DefaultVoiceName);
 
             for (int i = 0; i < stringsToSave.Count; i++)
             {
@@ -46,14 +46,12 @@ namespace PowerPointLabs.SpeechEngine
                 String fileName = i > 0 ? baseFileName + " (OnClick)" : baseFileName;
 
                 String filePath = folderPath + "\\" + fileName + ".wav";
-                if (GetVoices().Contains(DefaultVoiceName))
+                if (!NotesToAudio.IsHumanVoiceSelected)
                 {
-                    Logger.Log("contains default voice name");
                     SaveStringToWaveFile(textToSave, filePath);
                 }
                 else
                 {
-                    Logger.Log("here" + DefaultVoiceName);
                     SaveStringToWaveFileWithHumanVoice(textToSave, filePath);
                 }
             }
@@ -80,6 +78,7 @@ namespace PowerPointLabs.SpeechEngine
         private static void SaveStringToWaveFileWithHumanVoice(string textToSave, string filePath)
         {
             string accessToken;
+            string textToSpeak = GetHumanSpeakNotesForText(textToSave);
             Authentication auth = new Authentication(UserAccount.GetInstance().GetEndpoint(), UserAccount.GetInstance().GetKey());
 
             try
@@ -105,7 +104,7 @@ namespace PowerPointLabs.SpeechEngine
             cortana.Speak(CancellationToken.None, new Synthesize.InputOptions()
             {
                 RequestUri = new Uri(requestUri),
-                Text = textToSave,
+                Text = textToSpeak,
                 VoiceType = humanVoice.voiceType,
                 Locale = humanVoice.Locale,
                 VoiceName = humanVoice.voiceName,
@@ -114,6 +113,13 @@ namespace PowerPointLabs.SpeechEngine
                 AuthorizationToken = "Bearer " + accessToken,
             }, filePath).Wait();
 
+        }
+
+        private static string GetHumanSpeakNotesForText(string textToSave)
+        {
+            TaggedText taggedText = new TaggedText(textToSave);
+            string strToSpeak = taggedText.ToPrettyString();
+            return strToSpeak;
         }
 
         private static PromptBuilder GetPromptForText(string textToConvert)

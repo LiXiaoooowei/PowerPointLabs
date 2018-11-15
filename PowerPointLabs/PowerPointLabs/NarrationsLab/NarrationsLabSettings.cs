@@ -20,12 +20,13 @@ namespace PowerPointLabs.NarrationsLab
                 VoiceSelectedIndex,
                 humanVoice,
                 VoiceNameList,
+                NotesToAudio.IsHumanVoiceSelected,
                 IsPreviewEnabled);
             NarrationsLabMainSettingsPage.GetInstance().DialogConfirmedHandler += OnSettingsDialogConfirmed;
             dialog.ShowDialog();
         }
 
-        private static void OnSettingsDialogConfirmed(string voiceName, HumanVoice voice, bool isPreviewCurrentSlide)
+        private static void OnSettingsDialogConfirmed(string voiceName, HumanVoice voice, bool isHumanVoiceSelected, bool isPreviewCurrentSlide)
         {
             IsPreviewEnabled = isPreviewCurrentSlide;
 
@@ -41,6 +42,7 @@ namespace PowerPointLabs.NarrationsLab
             {
                 humanVoice = voice;
                 NotesToAudio.SetDefaultVoice(humanVoice.voiceName, humanVoice);
+                NotesToAudio.IsHumanVoiceSelected = isHumanVoiceSelected;
             }
         }
     }

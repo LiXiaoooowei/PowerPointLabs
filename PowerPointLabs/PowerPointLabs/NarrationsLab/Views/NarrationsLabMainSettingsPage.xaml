@@ -27,7 +27,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <RadioButton Grid.Column="0" x:Name="RadioDefaultVoice" Margin="20,30,0,0" FontSize="12">
+                <RadioButton Grid.Column="0" x:Name="RadioDefaultVoice" Margin="20,30,0,0" FontSize="12" Checked="RadioDefaultVoice_Checked">
                     Default Voice
                 </RadioButton>
                 <controls:DropDownButton Grid.Column="1" x:Name="voiceSelectionInput" Height="23" Margin="0,25,20,0">
@@ -44,13 +44,39 @@
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="22*"/>
                 </Grid.ColumnDefinitions>
-                <RadioButton Grid.Column="0" x:Name="RadioHumanVoice" Margin="20,30,21,-0.333" FontSize="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <RadioButton Grid.Column="0" Grid.Row="0" x:Name="RadioHumanVoice" Margin="20,10,21,0" FontSize="12" Checked="RadioHumanVoice_Checked">
                     Human-Like Voice
                 </RadioButton>
-                <ComboBox x:Name="voiceList" Grid.Column="1" Padding="2" Margin="0.333,25,20,-0.333" Grid.ColumnSpan="2"/>
-                <Button Grid.Column="1" x:Name="humanVoiceBtn" Content="Click to Log In" Margin="0.333,25,20,-0.33" 
+                <Button x:Name="changeAcctBtn" Cursor="Hand" Grid.Column="0" Grid.Row="1" Click="Button_Click" Background="Transparent" BorderThickness="0" Margin="20, -10, 21, 0"
+                        FontWeight="Light" Content="Click to change user account" FontSize="7">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <ComboBox x:Name="voiceList" Grid.Column="1" Padding="2" Margin="0.333,10,20,-0.333" Grid.ColumnSpan="2"/>
+                <Button Cursor="Hand" Grid.Column="1" x:Name="humanVoiceBtn" Content="Click to Log In" Margin="0.333,10,20,-0.33" 
                         Grid.ColumnSpan="2" Click="HumanVoiceBtn_Click"
-                        BorderThickness="0" Background="Transparent"/>
+                        BorderThickness="0" Background="Transparent" FontWeight="Medium">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </Grid>
             <Grid>
                 <Grid.ColumnDefinitions>

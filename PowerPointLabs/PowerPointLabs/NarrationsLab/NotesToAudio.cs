@@ -28,6 +28,7 @@ namespace PowerPointLabs.NarrationsLab
         public const string SpeechShapePrefixOld = "AudioGen Speech";
 
         public static bool IsRemoveAudioEnabled { get; set; } = true;
+        public static bool IsHumanVoiceSelected { get; set; } = false;
 
         private static string TempFolderName
         {

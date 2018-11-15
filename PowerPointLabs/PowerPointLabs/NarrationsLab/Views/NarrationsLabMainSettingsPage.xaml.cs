@@ -16,7 +16,7 @@ namespace PowerPointLabs.NarrationsLab.Views
     /// </summary>
     public partial class NarrationsLabMainSettingsPage: Page
     {
-        public delegate void DialogConfirmedDelegate(string voiceName, HumanVoice humanVoiceName, bool preview);
+        public delegate void DialogConfirmedDelegate(string voiceName, HumanVoice humanVoiceName, bool isHumanVoiceSelected, bool preview);
         public DialogConfirmedDelegate DialogConfirmedHandler { get; set; }
        
         private static NarrationsLabMainSettingsPage instance;
@@ -30,11 +30,13 @@ namespace PowerPointLabs.NarrationsLab.Views
             {
                 voiceList.Visibility = Visibility.Collapsed;
                 humanVoiceBtn.Visibility = Visibility.Visible;
+                changeAcctBtn.Visibility = Visibility.Hidden;
             }
             else
             {
                 voiceList.Visibility = Visibility.Visible;
                 humanVoiceBtn.Visibility = Visibility.Collapsed;
+                changeAcctBtn.Visibility = Visibility.Visible;
             }
             voiceList.ItemsSource = voices;
             voiceList.DisplayMemberPath = "Voice";
@@ -51,17 +53,19 @@ namespace PowerPointLabs.NarrationsLab.Views
                 {
                     instance.voiceList.Visibility = Visibility.Collapsed;
                     instance.humanVoiceBtn.Visibility = Visibility.Visible;
+                    instance.changeAcctBtn.Visibility = Visibility.Hidden;
                 }
                 else
                 {
                     instance.voiceList.Visibility = Visibility.Visible;
                     instance.humanVoiceBtn.Visibility = Visibility.Collapsed;
+                    instance.changeAcctBtn.Visibility = Visibility.Visible;
                 }
             }
             return instance;
         }
 
-        public void SetNarrationsLabMainSettings(int selectedVoiceIndex, HumanVoice humanVoice, List<string> voices, bool isPreviewChecked)
+        public void SetNarrationsLabMainSettings(int selectedVoiceIndex, HumanVoice humanVoice, List<string> voices, bool isHumanVoiceSelected, bool isPreviewChecked)
         {
             voiceSelectionInput.ItemsSource = voices;
             voiceSelectionInput.ToolTip = NarrationsLabText.SettingsVoiceSelectionInputTooltip;
@@ -74,6 +78,10 @@ namespace PowerPointLabs.NarrationsLab.Views
 
             previewCheckbox.IsChecked = isPreviewChecked;
             previewCheckbox.ToolTip = NarrationsLabText.SettingsPreviewCheckboxTooltip;
+          
+                RadioHumanVoice.IsChecked = isHumanVoiceSelected;
+                RadioDefaultVoice.IsChecked = !isHumanVoiceSelected;
+            
         }
 
         public void Destroy()
@@ -85,7 +93,7 @@ namespace PowerPointLabs.NarrationsLab.Views
         {
             string defaultVoiceSelected = RadioDefaultVoice.IsChecked == true? voiceSelectionInput.Content.ToString() : null;
             HumanVoice humanVoiceSelected = RadioHumanVoice.IsChecked == true ? (HumanVoice)voiceList.SelectedItem : null;
-            DialogConfirmedHandler(defaultVoiceSelected, humanVoiceSelected, previewCheckbox.IsChecked.GetValueOrDefault());
+            DialogConfirmedHandler(defaultVoiceSelected, humanVoiceSelected, humanVoiceSelected != null, previewCheckbox.IsChecked.GetValueOrDefault());
             NarrationsLabSettingsDialogBox.GetInstance().Close();
             NarrationsLabSettingsDialogBox.GetInstance().Destroy();
         }
@@ -107,6 +115,21 @@ namespace PowerPointLabs.NarrationsLab.Views
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             NarrationsLabSettingsDialogBox.GetInstance().Destroy();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            NarrationsLabSettingsDialogBox.GetInstance().SetCurrentPage(NarrationsLabSettingsPage.LoginPage);
+        }
+
+        private void RadioDefaultVoice_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioHumanVoice.IsChecked = false;
+        }
+
+        private void RadioHumanVoice_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioDefaultVoice.IsChecked = false;
         }
     }
 }

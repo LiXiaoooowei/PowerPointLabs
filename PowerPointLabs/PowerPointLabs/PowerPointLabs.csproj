@@ -263,10 +263,6 @@
     <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsImageHandler.cs" />
     <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsLabelHandler.cs" />
     <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsSupertipHandler.cs" />
-    <Compile Include="ActionFramework\NarrationsLab\TestHumanNarrations\TestHumanNarrationsActionHandler.cs" />
-    <Compile Include="ActionFramework\NarrationsLab\TestHumanNarrations\TestHumanNarrationsImageHandler.cs" />
-    <Compile Include="ActionFramework\NarrationsLab\TestHumanNarrations\TestHumanNarrationsLabelHandler.cs" />
-    <Compile Include="ActionFramework\NarrationsLab\TestHumanNarrations\TestHumanNarrationsSupertipHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonActionHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonImageHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonLabelHandler.cs" />
