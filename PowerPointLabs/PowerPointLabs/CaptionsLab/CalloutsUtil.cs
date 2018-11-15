@@ -83,7 +83,7 @@ namespace PowerPointLabs.CaptionsLab
 
                 foreach (Shape shape in shapes)
                 {
-                    if (!shape.Name.Contains("PPTLabs Callout "))
+                    if (!shape.Name.Contains("PPTLabs Callout ") && !String.IsNullOrEmpty(shape.TextFrame.TextRange.Text))
                     {
                         string newNote = shape.TextFrame.TextRange.Text;
                         string uniqueTag = NameTagGenerator.GenerateUniqueName();
