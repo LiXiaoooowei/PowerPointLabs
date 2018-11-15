@@ -669,6 +669,7 @@
     <Compile Include="NarrationsLab\Data\LocaleMapping.cs" />
     <Compile Include="NarrationsLab\Data\UserAccount.cs" />
     <Compile Include="NarrationsLab\Data\Voice.cs" />
+    <Compile Include="NarrationsLab\Storage\NarrationsLabStorageConfig.cs" />
     <Compile Include="NarrationsLab\ViewModel\Authentication.cs" />
     <Compile Include="NarrationsLab\Data\NarrationsLabSettingsPage.cs" />
     <Compile Include="NarrationsLab\ViewModel\GenericEventArgs.cs" />

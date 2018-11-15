@@ -4,7 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using PowerPointLabs.NarrationsLab.Data;
 
 namespace PowerPointLabs.NarrationsLab.Storage
@@ -31,9 +32,39 @@ namespace PowerPointLabs.NarrationsLab.Storage
             {
                 Directory.CreateDirectory(GetAccessKeyStoragePath());
             }
-            if (!File.Exists(GetAccessKeyFilePath()))
+          
+            Dictionary<string, string> user = new Dictionary<string, string>()
             {
-                File.Create(GetAccessKeyFilePath());
+                { "endpoint", account.GetEndpoint() },
+                {"key",  account.GetKey() }
+            };
+            XElement root = new XElement("user", from kv in user select new XElement(kv.Key, kv.Value));
+            FileStream file = File.Open(GetAccessKeyFilePath(), FileMode.OpenOrCreate);
+            root.Save(file);
+            file.Close();
+        }
+
+        public static void LoadUserAccount()
+        {
+            Dictionary<string, string> user = new Dictionary<string, string>();
+            try
+            {
+                FileStream file = File.Open(GetAccessKeyFilePath(), FileMode.Open);
+                XElement root = XElement.Load(file);
+                foreach (XElement el in root.Elements())
+                {
+                    user.Add(el.Name.LocalName, el.Value);
+                }
+                string key = user.ContainsKey("key") ? user["key"] : null;
+                string endpoint = user.ContainsKey("endpoint") ? user["endpoint"] : null;
+                if (key != null && endpoint != null)
+                {
+                    UserAccount.GetInstance().SetUserKeyAndEndpoint(key, endpoint);
+                }
+            }
+            catch (Exception)
+            {
+                // handle exception
             }
         }
     }

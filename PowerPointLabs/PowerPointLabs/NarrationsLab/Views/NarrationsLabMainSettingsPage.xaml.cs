@@ -73,7 +73,14 @@ namespace PowerPointLabs.NarrationsLab.Views
 
         private void HumanVoiceBtn_Click(object sender, RoutedEventArgs e)
         {
-            NarrationsLabSettingsDialogBox.GetInstance().SetCurrentPage(NarrationsLabSettingsPage.LoginPage);
+            if (UserAccount.GetInstance().IsEmpty())
+            {
+                NarrationsLabSettingsDialogBox.GetInstance().SetCurrentPage(NarrationsLabSettingsPage.LoginPage);
+            }
+            else
+            {
+                NarrationsLabSettingsDialogBox.GetInstance().SetCurrentPage(NarrationsLabSettingsPage.VoiceSelectionPage);
+            }
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

@@ -41,5 +41,10 @@ namespace PowerPointLabs.NarrationsLab.Data
         {
             return EndpointToUriMapping.endpointToUriMapping[endpoint];
         }
+
+        public bool IsEmpty()
+        {
+            return key == null || endpoint == null;
+        }
     }
 }
