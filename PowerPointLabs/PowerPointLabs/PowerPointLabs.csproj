@@ -681,9 +681,6 @@
     <Compile Include="NarrationsLab\Views\HumanVoiceLoginPage.xaml.cs">
       <DependentUpon>HumanVoiceLoginPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="NarrationsLab\Views\HumanVoiceSelectionPage.xaml.cs">
-      <DependentUpon>HumanVoiceSelectionPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="NarrationsLab\Views\NarrationsLabMainSettingsPage.xaml.cs">
       <DependentUpon>NarrationsLabMainSettingsPage.xaml</DependentUpon>
     </Compile>
@@ -1464,10 +1461,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="NarrationsLab\Views\HumanVoiceLoginPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="NarrationsLab\Views\HumanVoiceSelectionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

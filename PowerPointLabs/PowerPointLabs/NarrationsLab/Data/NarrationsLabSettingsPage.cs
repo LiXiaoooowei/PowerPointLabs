@@ -13,6 +13,5 @@ namespace PowerPointLabs.NarrationsLab.Data
         /// </summary>
         MainSettingsPage = 0,
         LoginPage = 1,
-        VoiceSelectionPage = 2,
     }
 }

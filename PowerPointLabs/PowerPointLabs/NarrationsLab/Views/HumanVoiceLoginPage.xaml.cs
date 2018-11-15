@@ -62,7 +62,7 @@ namespace PowerPointLabs.NarrationsLab.Views
             UserAccount.GetInstance().SetUserKeyAndEndpoint(_key, _endpoint);
             NarrationsLabStorageConfig.SaveUserAccount(UserAccount.GetInstance());
             NarrationsLabSettingsDialogBox.GetInstance()
-                .SetCurrentPage(Data.NarrationsLabSettingsPage.VoiceSelectionPage);
+                .SetCurrentPage(Data.NarrationsLabSettingsPage.MainSettingsPage);
         }
     }
 }

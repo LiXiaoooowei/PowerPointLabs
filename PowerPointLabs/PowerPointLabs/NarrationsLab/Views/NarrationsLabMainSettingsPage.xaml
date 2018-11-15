@@ -3,7 +3,7 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                      xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"                    
                       mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
                       Height="150"
                       Width="350"
@@ -25,10 +25,12 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" x:Name="voiceLabel" FontSize="12" Margin="20,30,0,0">Default Voice</TextBlock>
-                <controls:DropDownButton Grid.Column="1" x:Name="voiceSelectionInput" Height="23" Width="200" Margin="0,25,20,0">
+                <RadioButton Grid.Column="0" x:Name="RadioDefaultVoice" Margin="20,30,0,0" FontSize="12">
+                    Default Voice
+                </RadioButton>
+                <controls:DropDownButton Grid.Column="1" x:Name="voiceSelectionInput" Height="23" Margin="0,25,20,0">
                     <controls:DropDownButton.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" MouseUp="VoiceSelectionInput_Item_MouseUp" />
@@ -38,11 +40,17 @@
             </Grid>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="25*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="22*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" x:Name="humanVoiceBtn" Content="Generate Human Voice" Margin="10 10 30 0" Click="HumanVoiceBtn_Click"/>
-                <TextBox Grid.Column="1" x:Name="humanVoiceChosen" Padding="2" Margin=" 0 10 30 0" ></TextBox>
+                <RadioButton Grid.Column="0" x:Name="RadioHumanVoice" Margin="20,30,21,-0.333" FontSize="12">
+                    Human-Like Voice
+                </RadioButton>
+                <ComboBox x:Name="voiceList" Grid.Column="1" Padding="2" Margin="0.333,25,20,-0.333" Grid.ColumnSpan="2"/>
+                <Button Grid.Column="1" x:Name="humanVoiceBtn" Content="Click to Log In" Margin="0.333,25,20,-0.33" 
+                        Grid.ColumnSpan="2" Click="HumanVoiceBtn_Click"
+                        BorderThickness="0" Background="Transparent"/>
             </Grid>
             <Grid>
                 <Grid.ColumnDefinitions>

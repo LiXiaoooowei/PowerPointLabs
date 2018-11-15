@@ -11,7 +11,6 @@ namespace PowerPointLabs.NarrationsLab
         public static int VoiceSelectedIndex = 0;
 
         public static bool IsPreviewEnabled = false;
-        public static string HumanVoiceSelected = "";
         public static HumanVoice humanVoice;
 
         public static void ShowSettingsDialog()
@@ -19,14 +18,14 @@ namespace PowerPointLabs.NarrationsLab
             NarrationsLabSettingsDialogBox dialog = NarrationsLabSettingsDialogBox.GetInstance();
             NarrationsLabMainSettingsPage.GetInstance().SetNarrationsLabMainSettings(
                 VoiceSelectedIndex,
-                HumanVoiceSelected,
+                humanVoice,
                 VoiceNameList,
                 IsPreviewEnabled);
             NarrationsLabMainSettingsPage.GetInstance().DialogConfirmedHandler += OnSettingsDialogConfirmed;
             dialog.ShowDialog();
         }
 
-        private static void OnSettingsDialogConfirmed(string voiceName, string voice, bool isPreviewCurrentSlide)
+        private static void OnSettingsDialogConfirmed(string voiceName, HumanVoice voice, bool isPreviewCurrentSlide)
         {
             IsPreviewEnabled = isPreviewCurrentSlide;
 
@@ -37,10 +36,11 @@ namespace PowerPointLabs.NarrationsLab
             }
             //TODO: This is a simplifying logic. As long as human voice textbox is non-empty, then human voice is always selected
             //To remove human voice, set text box to empty.
-            if (!string.IsNullOrEmpty(voice))
+
+            if (voice != null)
             {
-                NotesToAudio.SetDefaultVoice(voice, humanVoice);
-                HumanVoiceSelected = voice.Trim();
+                humanVoice = voice;
+                NotesToAudio.SetDefaultVoice(humanVoice.voiceName, humanVoice);
             }
         }
     }

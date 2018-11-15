@@ -11,17 +11,13 @@ namespace PowerPointLabs.NarrationsLab.ValueConverters
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.WriteLine("Inside converter");
             // Find the appropriate page
             switch ((NarrationsLabSettingsPage)value)
             {
                 case NarrationsLabSettingsPage.MainSettingsPage:
-                    Debug.WriteLine("reached main settings page");
                     return NarrationsLabMainSettingsPage.GetInstance();
                 case NarrationsLabSettingsPage.LoginPage:
-                    return HumanVoiceLoginPage.GetInstance();
-                case NarrationsLabSettingsPage.VoiceSelectionPage:
-                    return HumanVoiceSelectionPage.GetInstance();
+                    return HumanVoiceLoginPage.GetInstance();             
                 default:
                     Debugger.Break();
                     return null;
