@@ -13,6 +13,8 @@ using PowerPointLabs.Models;
 using PowerPointLabs.NarrationsLab;
 using PowerPointLabs.NarrationsLab.Data;
 using PowerPointLabs.NarrationsLab.ViewModel;
+using PowerPointLabs.TagMatchers;
+using PowerPointLabs.Tags;
 
 namespace PowerPointLabs.SpeechEngine
 {
@@ -36,15 +38,15 @@ namespace PowerPointLabs.SpeechEngine
             TaggedText taggedNotes = new TaggedText(notesText);
             List<String> stringsToSave = taggedNotes.SplitByClicks();
             //MD5 md5 = MD5.Create();
-
+            NameTagMatcher matcher = new NameTagMatcher();
             for (int i = 0; i < stringsToSave.Count; i++)
             {
                 String textToSave = stringsToSave[i];
+                List<NameTag> tags = matcher.NameTagMatches(textToSave);
                 String baseFileName = String.Format(fileNameFormat, i + 1);
-
                 // The first item will autoplay; everything else is triggered by a click.
                 String fileName = i > 0 ? baseFileName + " (OnClick)" : baseFileName;
-
+                fileName = tags.Count() > 0 ? fileName + "[" + tags[0].Contents + "]" : fileName;
                 String filePath = folderPath + "\\" + fileName + ".wav";
                 if (!NotesToAudio.IsHumanVoiceSelected)
                 {

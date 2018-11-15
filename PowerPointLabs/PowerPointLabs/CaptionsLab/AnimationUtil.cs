@@ -50,6 +50,7 @@ namespace PowerPointLabs.CaptionsLab
         {
             Sequence sequence = slide.TimeLine.MainSequence;
             Shape prevShape = null;
+            bool isAnimationListEmpty = sequence.Cast<Effect>().Count() == 0;
             for (int i = 0; i < notesInserted.Count; i++)
             {
                 List<Shape> shapes = slide.GetShapeWithName("PPTLabs Callout " + notesInserted[i].Item1.Contents);
@@ -61,6 +62,7 @@ namespace PowerPointLabs.CaptionsLab
                 if (!IsEffectExists(sequence.Cast<Effect>(), currShape.Name))
                 {
                     Effect showEffect = slide.TimeLine.MainSequence.AddEffect(currShape, MsoAnimEffect.msoAnimEffectAppear); 
+                    
                     if (prevShape != null)
                     {
                         Effect _effect = slide.TimeLine.MainSequence.AddEffect(prevShape, MsoAnimEffect.msoAnimEffectAppear,

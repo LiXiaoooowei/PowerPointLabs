@@ -114,7 +114,6 @@ namespace PowerPointLabs.NarrationsLab
             try
             {
                 String fileNameFormat = "Slide " + slide.ID + " Speech {0}";
-                Logger.Log(fileNameFormat);
                 TextToSpeech.SaveStringToWaveFiles(slide.NotesPageText, folderPath, fileNameFormat);
                 return true;
             }
@@ -211,7 +210,6 @@ namespace PowerPointLabs.NarrationsLab
         {
             String folderPath = Path.GetTempPath() + TempFolderName;
             String fileNameSearchPattern = String.Format("Slide {0} Speech", slide.ID);
-
             Directory.CreateDirectory(folderPath);
 
             // TODO:
@@ -249,13 +247,27 @@ namespace PowerPointLabs.NarrationsLab
                 {
                     String fileName = audioFiles[i];
                     bool isOnClick = fileName.Contains("OnClick");
-
+                    var match = Regex.Match(fileName, @"\[(.*)\]", RegexOptions.IgnoreCase);
+                    string tag = null;
+                    if (match.Success)
+                    {
+                        tag = match.Value.Substring(1, match.Value.Length - 2);
+                    }
                     try
                     {
                         Shape audioShape = InsertAudioFileOnSlide(slide, fileName);
                         audioShape.Name = String.Format("PowerPointLabs Speech {0}", i);
                         slide.RemoveAnimationsForShape(audioShape);
-
+                        if (tag != null)
+                        {
+                            Effect calloutEffect = slide.FindFirstCalloutAnimationForShapeWithPrefix(tag);
+                            if (calloutEffect != null)
+                            {
+                                Effect audioEffect = slide.TimeLine.MainSequence.AddEffect(audioShape, MsoAnimEffect.msoAnimEffectMediaPlay, trigger: MsoAnimTriggerType.msoAnimTriggerWithPrevious);
+                                audioEffect.MoveAfter(calloutEffect);
+                                continue;
+                            }
+                        }
                         if (isOnClick)
                         {
                             slide.SetShapeAsClickTriggered(audioShape, i, MsoAnimEffect.msoAnimEffectMediaPlay);

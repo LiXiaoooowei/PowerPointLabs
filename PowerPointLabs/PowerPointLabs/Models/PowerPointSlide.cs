@@ -332,6 +332,18 @@ namespace PowerPointLabs.Models
             }
         }
 
+        public Effect FindFirstCalloutAnimationForShapeWithPrefix(string prefix)
+        {
+            foreach (Effect effect in _slide.TimeLine.MainSequence.Cast<Effect>())
+            {
+                if (effect.Shape.Name.Contains(prefix) && effect.EffectType == MsoAnimEffect.msoAnimEffectAppear)
+                {
+                    return effect;
+                }
+            }
+            return null;
+        }
+
         public Effect SetShapeAsAutoplay(Shape shape)
         {
             Sequence mainSequence = _slide.TimeLine.MainSequence;

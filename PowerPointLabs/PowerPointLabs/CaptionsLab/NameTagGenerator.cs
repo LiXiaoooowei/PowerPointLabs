@@ -21,6 +21,7 @@ namespace PowerPointLabs.CaptionsLab
             }
             while (nameTags.Contains(count));
 
+            nameTags.Add(count);
             return "PPTLabs Callout " + count.ToString();
         }
 
