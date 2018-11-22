@@ -119,6 +119,7 @@ namespace PowerPointLabs.NarrationsLab
             }
             catch (InvalidOperationException)
             {
+                Logger.Log("exception in line 122");
                 ErrorParsingText();
             }
             return false;
@@ -316,6 +317,7 @@ namespace PowerPointLabs.NarrationsLab
             }
             catch (InvalidOperationException)
             {
+                Logger.Log("exception in line 320");
                 ErrorParsingText();
             }
         }

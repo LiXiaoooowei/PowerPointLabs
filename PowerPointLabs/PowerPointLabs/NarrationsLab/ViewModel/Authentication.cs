@@ -75,9 +75,10 @@ namespace PowerPointLabs.NarrationsLab.ViewModel
         private string HttpPost(string accessUri, string apiKey)
         {
             // Prepare OAuth request
-            WebRequest webRequest = WebRequest.Create(accessUri);
+            HttpWebRequest webRequest = WebRequest.CreateHttp(accessUri);
             webRequest.Method = "POST";
             webRequest.ContentLength = 0;
+            webRequest.UserAgent = "PowerPointLabs";
             webRequest.Headers["Ocp-Apim-Subscription-Key"] = apiKey;
 
             using (WebResponse webResponse = webRequest.GetResponse())

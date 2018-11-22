@@ -19,7 +19,7 @@ namespace PowerPointLabs.CaptionsLab
             {
                 Logger.Log(note.Item1.Contents + " " + note.Item2);
                 notes.Add(note.Item1, note.Item2);
-               
+             
             }
         }
 

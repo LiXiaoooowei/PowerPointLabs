@@ -6,8 +6,7 @@
                       xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"                    
                       mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
                       Height="150"
-                      Width="350"
-                      
+                      Width="350"     
                       Title="Narrations Lab Main Settings Page">
     <Page.Resources>
         <ResourceDictionary>

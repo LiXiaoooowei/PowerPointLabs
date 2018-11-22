@@ -169,7 +169,7 @@ namespace PowerPointLabs.CaptionsLab
             float slideWidth = PowerPointPresentation.Current.SlideWidth;
             float slideHeight = PowerPointPresentation.Current.SlideHeight;
 
-            Shape callout = s.Shapes.AddCallout(MsoCalloutType.msoCalloutThree, 10, 10, 100, 10);
+            Shape callout = s.Shapes.AddShape(MsoAutoShapeType.msoShapeOvalCallout, 10, 10, 200, 10);
             callout.Name = shapeName;
             callout.TextFrame.AutoSize = PpAutoSize.ppAutoSizeShapeToFitText;
             callout.TextFrame.TextRange.Text = note;
@@ -178,7 +178,7 @@ namespace PowerPointLabs.CaptionsLab
             callout.TextFrame.TextRange.Font.Size = 12;
             callout.Fill.BackColor.RGB = 0;
             callout.Fill.Transparency = 0.2f;
-            callout.TextFrame.TextRange.Font.Color.RGB = 0xffffff;
+            callout.TextFrame.TextRange.Font.Color.RGB = 0;
 
             return callout;
         }
