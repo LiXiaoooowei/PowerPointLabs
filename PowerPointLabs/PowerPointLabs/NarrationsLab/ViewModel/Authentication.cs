@@ -19,8 +19,18 @@ namespace PowerPointLabs.NarrationsLab.ViewModel
 
         //Access token expires every 10 minutes. Renew it every 9 minutes only.
         private const int RefreshTokenDuration = 9;
+        private static Authentication auth = null;
 
-        public Authentication(string issueTokenUri, string apiKey)
+        public static Authentication GetInstance(string issueTokenUri = null, string apiKey = null)
+        {
+            if (auth == null && issueTokenUri != null && apiKey != null)
+            {
+                auth = new Authentication(issueTokenUri, apiKey);
+            }
+            return auth;
+        }
+
+        private Authentication(string issueTokenUri, string apiKey)
         {
             this.accessUri = issueTokenUri;
             this.apiKey = apiKey;

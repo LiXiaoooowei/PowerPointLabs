@@ -46,7 +46,7 @@ namespace PowerPointLabs.NarrationsLab.Views
 
             try
             {
-                Authentication auth = new Authentication(_endpoint, _key);
+                Authentication auth = Authentication.GetInstance(_endpoint, _key);
                 string accessToken = auth.GetAccessToken();
                 Console.WriteLine("Token: {0}\n", accessToken);
             }

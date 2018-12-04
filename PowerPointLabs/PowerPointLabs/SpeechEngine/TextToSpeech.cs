@@ -84,7 +84,7 @@ namespace PowerPointLabs.SpeechEngine
 
             try
             {
-                Authentication auth = new Authentication(UserAccount.GetInstance().GetEndpoint(), UserAccount.GetInstance().GetKey());
+                Authentication auth = Authentication.GetInstance();
                 accessToken = auth.GetAccessToken();
                 Logger.Log("Token: " + accessToken);
             }
@@ -95,25 +95,25 @@ namespace PowerPointLabs.SpeechEngine
                 Logger.Log(ex.Message);
                 return;
             }
-                string requestUri = UserAccount.GetInstance().GetUri();
-                var cortana = new Synthesize();
+            string requestUri = UserAccount.GetInstance().GetUri();
+            var cortana = new Synthesize();
 
-                cortana.OnAudioAvailable += SaveAudioToWaveFile;
-                cortana.OnError += ErrorHandler;
+            cortana.OnAudioAvailable += SaveAudioToWaveFile;
+            cortana.OnError += ErrorHandler;
 
-                // Reuse Synthesize object to minimize latency
-                cortana.Speak(CancellationToken.None, new Synthesize.InputOptions()
-                {
-                    RequestUri = new Uri(requestUri),
-                    Text = textToSpeak,
-                    VoiceType = humanVoice.voiceType,
-                    Locale = humanVoice.Locale,
-                    VoiceName = humanVoice.voiceName,
-                    // Service can return audio in different output format.
-                    OutputFormat = AudioOutputFormat.Riff24Khz16BitMonoPcm,
-                    AuthorizationToken = "Bearer " + accessToken,
-                }, filePath).Wait();
-            Thread.Sleep(2000);
+            // Reuse Synthesize object to minimize latency
+            cortana.Speak(CancellationToken.None, new Synthesize.InputOptions()
+            {
+                RequestUri = new Uri(requestUri),
+                Text = textToSpeak,
+                VoiceType = humanVoice.voiceType,
+                Locale = humanVoice.Locale,
+                VoiceName = humanVoice.voiceName,
+                // Service can return audio in different output format.
+                OutputFormat = AudioOutputFormat.Riff24Khz16BitMonoPcm,
+                AuthorizationToken = "Bearer " + accessToken,
+            }, filePath).Wait();
+          //  Thread.Sleep(2000);
         }
 
         private static string GetHumanSpeakNotesForText(string textToSave)

@@ -7,6 +7,7 @@ using System.Windows.Input;
 
 
 using PowerPointLabs.NarrationsLab.Data;
+using PowerPointLabs.NarrationsLab.ViewModel;
 using PowerPointLabs.TextCollection;
 
 namespace PowerPointLabs.NarrationsLab.Views
@@ -34,6 +35,24 @@ namespace PowerPointLabs.NarrationsLab.Views
             }
             else
             {
+                string _key = UserAccount.GetInstance().GetKey();
+                string _endpoint = UserAccount.GetInstance().GetEndpoint();
+
+                try
+                {
+                    Authentication auth = Authentication.GetInstance(_endpoint, _key);
+                    string accessToken = auth.GetAccessToken();
+                    Console.WriteLine("Token: {0}\n", accessToken);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed authentication.");
+                    Console.WriteLine(ex.ToString());
+                    Console.WriteLine(ex.Message);
+                    MessageBox.Show("Failed authentication");
+                    return;
+                }
+
                 voiceList.Visibility = Visibility.Visible;
                 humanVoiceBtn.Visibility = Visibility.Collapsed;
                 changeAcctBtn.Visibility = Visibility.Visible;
