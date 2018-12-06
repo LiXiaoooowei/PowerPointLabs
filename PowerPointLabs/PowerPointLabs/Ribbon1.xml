@@ -52,7 +52,6 @@
                     getSupertip="GetSupertip"
                     onAction="OnAction"/>
           </menu>
-
           <menu id="ZoomLabMenu"
                 getLabel="GetLabel"
                 getImage="GetImage"
@@ -89,6 +88,14 @@
                     getSupertip="GetSupertip"
                     onAction="OnAction"/>
           </menu>
+            <button id="FYPLabButton"
+                   tag="FYPLab"
+                   getLabel="GetLabel"
+                   getImage="GetImage"
+                   getSupertip="GetSupertip"
+                   getEnabled="GetEnabled"
+                   onAction="OnAction"
+                   size="large"/>
 
         </group>
         <group id="AudioGroup"

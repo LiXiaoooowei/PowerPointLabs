@@ -263,6 +263,10 @@
     <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsImageHandler.cs" />
     <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsLabelHandler.cs" />
     <Compile Include="ActionFramework\CaptionsLab\AddCallouts\AddCalloutsSupertipHandler.cs" />
+    <Compile Include="ActionFramework\FYP\FYPLabActionHandler.cs" />
+    <Compile Include="ActionFramework\FYP\FYPLabImageHandler.cs" />
+    <Compile Include="ActionFramework\FYP\FYPLabLabelHandler.cs" />
+    <Compile Include="ActionFramework\FYP\FYPLabSupertipHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonActionHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonImageHandler.cs" />
     <Compile Include="ActionFramework\SaveLab\SaveLabButton\SaveLabButtonLabelHandler.cs" />
@@ -655,6 +659,21 @@
     <Compile Include="EffectsLab\EffectsLabSettings.cs" />
     <Compile Include="EffectsLab\EffectsLabUtil.cs" />
     <Compile Include="EffectsLab\EffectsLabRecolor.cs" />
+    <Compile Include="FYP\FYPMainWPF.xaml.cs">
+      <DependentUpon>FYPMainWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FYP\Views\FYPtaskpane.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FYP\Views\FYPtaskpane.Designer.cs">
+      <DependentUpon>FYPtaskpane.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FYP\Views\BlockPageView.xaml.cs">
+      <DependentUpon>BlockPageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FYP\Views\PPTLabsPageView.xaml.cs">
+      <DependentUpon>PPTLabsPageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HighlightLab\HighlightLabSettings.cs" />
     <Compile Include="CaptionsLab\Callouts.cs" />
     <Compile Include="NarrationsLab\Data\AudioOutputFormat.cs" />
@@ -1287,6 +1306,9 @@
       <DependentUpon>ColorPane.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FYP\Views\FYPtaskpane.resx">
+      <DependentUpon>FYPtaskpane.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PositionsLab\PositionsPane.resx">
       <DependentUpon>PositionsPane.cs</DependentUpon>
     </EmbeddedResource>
@@ -1455,6 +1477,18 @@
     <Page Include="EffectsLab\Views\BlurSettingsDialogBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FYP\FYPMainWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FYP\Views\BlockPageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FYP\Views\PPTLabsPageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NarrationsLab\Views\HumanVoiceLoginPage.xaml">
       <SubType>Designer</SubType>
@@ -2084,7 +2118,9 @@
   <ItemGroup>
     <None Include="Resources\FillSlide.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="FYP\Data\" />
+  </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
