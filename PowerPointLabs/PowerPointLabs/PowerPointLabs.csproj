@@ -659,6 +659,17 @@
     <Compile Include="EffectsLab\EffectsLabSettings.cs" />
     <Compile Include="EffectsLab\EffectsLabUtil.cs" />
     <Compile Include="EffectsLab\EffectsLabRecolor.cs" />
+    <Compile Include="FYP\Data\AnimationItem.cs" />
+    <Compile Include="FYP\Data\BlockItem.cs" />
+    <Compile Include="FYP\Data\BlockItemList.cs" />
+    <Compile Include="FYP\Data\CustomAnimationItem.cs" />
+    <Compile Include="FYP\Data\LabAnimationItem.cs" />
+    <Compile Include="FYP\Views\CustomAnimationItemCard.xaml.cs">
+      <DependentUpon>CustomAnimationItemCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FYP\Views\LabAnimationItemCard.xaml.cs">
+      <DependentUpon>LabAnimationItemCard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FYP\FYPMainWPF.xaml.cs">
       <DependentUpon>FYPMainWPF.xaml</DependentUpon>
     </Compile>
@@ -1478,6 +1489,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="FYP\Views\CustomAnimationItemCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FYP\Views\LabAnimationItemCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="FYP\FYPMainWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2118,9 +2137,7 @@
   <ItemGroup>
     <None Include="Resources\FillSlide.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FYP\Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>

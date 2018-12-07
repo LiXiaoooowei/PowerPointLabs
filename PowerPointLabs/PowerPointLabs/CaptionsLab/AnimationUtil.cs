@@ -103,7 +103,7 @@ namespace PowerPointLabs.CaptionsLab
                     string tag = notes.ElementAt(idx).Contents;                                     
                     shapes.Add(tag);
                    
-           
+         
                     if (animeEffect.Shape.Name != namescope + tag)
                     {
                         Tuple<Effect, int> tuple = GetFirstEffectWithShapeNameAndCriteria(tag, namescope, i, slide, isExit);
