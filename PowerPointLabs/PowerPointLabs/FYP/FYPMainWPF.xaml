@@ -11,19 +11,20 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TabControl Grid.Row="0">
+        <TabControl x:Name="tabControl" Grid.Row="0">
             <TabItem Header="BlockView" Height="50">
                 <TabItem.Content>
-                    <local:BlockPageView />
+                    <local:BlockPageView x:Name="blockView"/>
                 </TabItem.Content>
             </TabItem>
             <TabItem Header="PPTLabsView" Height="50">
                 <TabItem.Content>
-                    <local:PPTLabsPageView />
+                    <local:PPTLabsPageView x:Name="labView"/>
                 </TabItem.Content>
             </TabItem>
         </TabControl>
         <Button Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Right" Content="Sync" 
-                Width="80" Margin="0 20 20 0" Padding="2"/>
+                Width="80" Margin="0 20 20 0" Padding="2"
+                Click="Button_Click"/>
     </Grid>
 </UserControl>

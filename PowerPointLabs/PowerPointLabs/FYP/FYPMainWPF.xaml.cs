@@ -31,5 +31,13 @@ namespace PowerPointLabs.FYP
         {
 
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (tabControl.SelectedIndex == 0)
+            {
+                blockView.HandleButtonClick();
+            }
+        }
     }
 }

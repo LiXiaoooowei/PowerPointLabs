@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
+using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
 namespace PowerPointLabs.FYP.Data
 {
@@ -14,22 +15,47 @@ namespace PowerPointLabs.FYP.Data
         {
             get
             {
-                return animatedEffect.Shape.Name;
+                return shape.Name;
             }
         }
         public string EffectName
         {
             get
             {
-                return animatedEffect.EffectType.ToString();
+                return type.ToString();
             }
         }
 
-        private Effect animatedEffect;
+        private Shape shape;
+        private MsoAnimEffect type;
+        private MsoAnimateByLevel level;
+        private MsoTriState exit;
 
-        public CustomAnimationItem(Effect effect)
+        public CustomAnimationItem(Shape shape, MsoAnimEffect type, MsoAnimateByLevel level, MsoTriState exit):base()
         {
-            animatedEffect = effect;
+            this.shape = shape;
+            this.type = type;
+            this.level = level;
+            this.exit = exit;
+        }
+
+        public Shape GetShape()
+        {
+            return shape;
+        }
+        public MsoAnimEffect GetEffectType()
+        {
+            return type;
+        }
+
+        public MsoAnimateByLevel GetEffectLevel()
+        {
+            return level;
+        }
+
+        public MsoTriState GetExit()
+        {
+            return exit;
         }
     }
 }

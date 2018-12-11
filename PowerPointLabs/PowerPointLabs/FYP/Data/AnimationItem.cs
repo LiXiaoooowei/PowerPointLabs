@@ -10,6 +10,7 @@ namespace PowerPointLabs.FYP.Data
 {
     public class AnimationItem
     {
-        
+        public AnimationItem()
+        { }
     }
 }

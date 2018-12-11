@@ -82,7 +82,7 @@ namespace PowerPointLabs.FYP.Data
         private HashSet<Shape> associatedShapes;
 
         public LabAnimationItem(string text, bool isCaption = false, bool isCloudVoice = false,
-            bool isBuiltInVoice = false, bool isCallout = false, HashSet<Shape> shapes = null)
+            bool isBuiltInVoice = false, bool isCallout = false, HashSet<Shape> shapes = null):base()
         {
             this.text = text;
             this.isCaption = isCaption;

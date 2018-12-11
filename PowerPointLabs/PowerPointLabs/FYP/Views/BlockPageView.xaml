@@ -5,25 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PowerPointLabs.FYP.Data"
              xmlns:views="clr-namespace:PowerPointLabs.FYP.Views"
+             xmlns:converters="clr-namespace:PowerPointLabs.FYP.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="550">
+             d:DesignHeight="600" d:DesignWidth="550" Loaded="UserControl_Loaded">
     <Grid>
-        <ListView x:Name="listView" ItemsSource="{Binding BlockItems}" BorderThickness="0" Margin="0">
+        <ListView x:Name="listView" ItemsSource="{Binding BlockItems}" AlternationCount="{Binding BlockItems.Count}"
+                  BorderThickness="0" Margin="0" SelectionMode="Single"
+                  PreviewMouseLeftButtonDown="ListView_PreviewMouseLeftButtonDown">
             <ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:BlockItem}">
                     <Border BorderThickness="0.25" BorderBrush="Black">
                         <StackPanel Margin="2 2 2 2">
-                            <Label Content="{Binding ClickNo}"></Label>
-                            <ListBox ItemsSource="{Binding Items}" BorderThickness="0" Margin="0">
-                                <ListBox.Resources>
-                                    <DataTemplate DataType="{x:Type local:CustomAnimationItem}">
-                                        <views:CustomAnimationItemCard DataContext="{Binding}" />
-                                    </DataTemplate>
-                                    <DataTemplate DataType="{x:Type local:LabAnimationItem}">
-                                        <views:LabAnimationItemCard DataContext="{Binding}"/>
-                                    </DataTemplate>
-                                </ListBox.Resources>
-                            </ListBox>
+                            <Label Content="{Binding
+                                Path=.,
+                                Converter={converters:BlockItemIndexConverter},
+                                RelativeSource={RelativeSource FindAncestor, 
+                                         AncestorType={x:Type ListViewItem}}}" />
+                            <views:InnerBlockListView DataContext="{Binding}" />
                         </StackPanel>
                     </Border>
                 </DataTemplate>

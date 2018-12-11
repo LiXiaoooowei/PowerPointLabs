@@ -659,13 +659,22 @@
     <Compile Include="EffectsLab\EffectsLabSettings.cs" />
     <Compile Include="EffectsLab\EffectsLabUtil.cs" />
     <Compile Include="EffectsLab\EffectsLabRecolor.cs" />
+    <Compile Include="FYP\Converters\BlockItemIndexConverter.cs" />
     <Compile Include="FYP\Data\AnimationItem.cs" />
     <Compile Include="FYP\Data\BlockItem.cs" />
     <Compile Include="FYP\Data\BlockItemList.cs" />
     <Compile Include="FYP\Data\CustomAnimationItem.cs" />
     <Compile Include="FYP\Data\LabAnimationItem.cs" />
+    <Compile Include="FYP\Service\DragAdorner.cs" />
+    <Compile Include="FYP\Service\ListViewDragDropManager.cs" />
+    <Compile Include="FYP\Service\ListViewItemDragState.cs" />
+    <Compile Include="FYP\Service\MouseUtilities.cs" />
+    <Compile Include="FYP\Service\ProcessDropEventArgs.cs" />
     <Compile Include="FYP\Views\CustomAnimationItemCard.xaml.cs">
       <DependentUpon>CustomAnimationItemCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FYP\Views\InnerBlockListView.xaml.cs">
+      <DependentUpon>InnerBlockListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="FYP\Views\LabAnimationItemCard.xaml.cs">
       <DependentUpon>LabAnimationItemCard.xaml</DependentUpon>
@@ -1490,6 +1499,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="FYP\Views\CustomAnimationItemCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FYP\Views\InnerBlockListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
