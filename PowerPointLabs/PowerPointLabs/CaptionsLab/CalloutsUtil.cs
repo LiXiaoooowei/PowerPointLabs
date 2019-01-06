@@ -124,6 +124,25 @@ namespace PowerPointLabs.CaptionsLab
             }
         }
 
+        public static Shape InsertDefaultCalloutBoxToSlide(string tag, string note, PowerPointSlide s)
+        {
+            float slideWidth = PowerPointPresentation.Current.SlideWidth;
+            float slideHeight = PowerPointPresentation.Current.SlideHeight;
+
+            Shape callout = s.Shapes.AddShape(MsoAutoShapeType.msoShapeOvalCallout, 10, 10, 200, 10);
+            callout.Name = tag;
+            callout.TextFrame.AutoSize = PpAutoSize.ppAutoSizeShapeToFitText;
+            callout.TextFrame.TextRange.Text = note;
+            callout.TextFrame.WordWrap = MsoTriState.msoTrue;
+            callout.TextEffect.Alignment = MsoTextEffectAlignment.msoTextEffectAlignmentCentered;
+            callout.TextFrame.TextRange.Font.Size = 12;
+            callout.Fill.BackColor.RGB = 0;
+            callout.Fill.Transparency = 0.2f;
+            callout.TextFrame.TextRange.Font.Color.RGB = 0;
+
+            return callout;
+        }
+
         private static void ModifyCalloutBoxFromSlide(NameTag tag, string note, PowerPointSlide s)
         {
             string shapeName = "PPTLabs Callout " + tag.Contents;

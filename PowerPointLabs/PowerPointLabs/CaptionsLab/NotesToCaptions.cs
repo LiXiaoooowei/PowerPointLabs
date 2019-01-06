@@ -103,6 +103,27 @@ namespace PowerPointLabs.CaptionsLab
             }
         }
 
+        public static Shape AddCaptionBoxToSlide(string caption, string tag, PowerPointSlide s)
+        {
+            float slideWidth = PowerPointPresentation.Current.SlideWidth;
+            float slideHeight = PowerPointPresentation.Current.SlideHeight;
+
+            Shape textBox = s.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 0, slideHeight - 100,
+                slideWidth, 100);
+            textBox.Name = tag;
+            textBox.TextFrame.AutoSize = PpAutoSize.ppAutoSizeShapeToFitText;
+            textBox.TextFrame.TextRange.Text = caption;
+            textBox.TextFrame.WordWrap = MsoTriState.msoTrue;
+            textBox.TextEffect.Alignment = MsoTextEffectAlignment.msoTextEffectAlignmentCentered;
+            textBox.TextFrame.TextRange.Font.Size = 12;
+            textBox.Fill.BackColor.RGB = 0;
+            textBox.Fill.Transparency = 0.2f;
+            textBox.TextFrame.TextRange.Font.Color.RGB = 0xffffff;
+
+            textBox.Top = slideHeight - textBox.Height;
+            return textBox;
+        }
+
         // Returns true if the captions are successfully added
         private static bool EmbedCaptionsOnSlide(PowerPointSlide s)
         {

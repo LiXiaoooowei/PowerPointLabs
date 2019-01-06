@@ -130,6 +130,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>
     </NoWarn>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <!--
     This section defines properties that are set when the "Release" configuration is selected.
@@ -157,6 +158,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>618</NoWarn>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <!--
     This section enables pre- and post-build steps. However, in VSTO use
@@ -666,6 +668,11 @@
     <Compile Include="FYP\Data\CustomAnimationItem.cs" />
     <Compile Include="FYP\Data\LabAnimationItem.cs" />
     <Compile Include="FYP\Service\DragAdorner.cs" />
+    <Compile Include="FYP\Service\GenerateCalloutManager.cs" />
+    <Compile Include="FYP\Service\GenerateCaptionManager.cs" />
+    <Compile Include="FYP\Service\GenerateVoiceManager.cs" />
+    <Compile Include="FYP\Service\LabAnimationItemIdentifierManager.cs" />
+    <Compile Include="FYP\Service\LabCustomizationManager.cs" />
     <Compile Include="FYP\Service\ListViewDragDropManager.cs" />
     <Compile Include="FYP\Service\ListViewItemDragState.cs" />
     <Compile Include="FYP\Service\MouseUtilities.cs" />
@@ -744,6 +751,7 @@
     <Compile Include="SyncLab\ObjectFormats\SoftEdgeEffectFormat.cs" />
     <Compile Include="TagMatchers\NameTagMatcher.cs" />
     <Compile Include="Tags\NameTag.cs" />
+    <Compile Include="TextCollection\FYPText.cs" />
     <Compile Include="TextCollection\SaveLabText.cs" />
     <Compile Include="SyncLab\ObjectFormats\Format.cs" />
     <Compile Include="SyncLab\ObjectFormats\ArtisticEffectFormat.cs" />

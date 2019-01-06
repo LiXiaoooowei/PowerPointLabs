@@ -27,10 +27,8 @@
                 <CheckBox Grid.Column="1" Grid.Row="0" IsChecked="{Binding IsCallout, Mode=TwoWay}" FontSize="8" Content="Callout"
                           VerticalContentAlignment="Center"/>
 
-                <CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding IsCloudVoice, Mode=TwoWay}" FontSize="8"
-                              Content="CloudVoice" VerticalContentAlignment="Center" />
-                <CheckBox Grid.Column="1" Grid.Row="1" IsChecked="{Binding IsBuiltInVoice, Mode=TwoWay}" FontSize="8"
-                          Content="BuiltInVoice" VerticalContentAlignment="Center" /> 
+                <CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding IsVoice, Mode=TwoWay}" FontSize="8"
+                              Content="Voice" VerticalContentAlignment="Center" />
             </Grid>
         </StackPanel>
     </Grid>

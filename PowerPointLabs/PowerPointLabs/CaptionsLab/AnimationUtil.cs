@@ -34,6 +34,19 @@ namespace PowerPointLabs.CaptionsLab
             ReorderNotesOnSlideAnimationPane(notes, slide, Microsoft.Office.Core.MsoTriState.msoFalse);
         }
 
+        public static void AppendAnimationsForCalloutsToSlide(Shape shape, PowerPointSlide slide, bool byClick)
+        {
+            if (byClick)
+            {
+                slide.TimeLine.MainSequence.AddEffect(shape, MsoAnimEffect.msoAnimEffectAppear,
+                    trigger: MsoAnimTriggerType.msoAnimTriggerOnPageClick);
+            }
+            else
+            {
+                slide.TimeLine.MainSequence.AddEffect(shape, MsoAnimEffect.msoAnimEffectAppear);
+            }
+        }
+
         private static void DeleteNotesFromSlideAnimationPane(IEnumerable<NameTag> notes, PowerPointSlide slide)
         {
             List<Shape> shapes = slide.GetShapesWithPrefix("PPTLabs Callout ");

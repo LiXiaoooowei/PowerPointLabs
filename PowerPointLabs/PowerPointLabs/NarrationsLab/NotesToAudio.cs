@@ -19,7 +19,7 @@ using PowerPointLabs.Views;
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
 namespace PowerPointLabs.NarrationsLab
-{
+{ 
     internal static class NotesToAudio
     {
 #pragma warning disable 0618
@@ -125,6 +125,22 @@ namespace PowerPointLabs.NarrationsLab
             return false;
         }
 
+        public static bool OutputSlideNotesToFiles(string text, PowerPointSlide slide, String folderPath)
+        {
+            try
+            {
+                String fileNameFormat = "Slide " + slide.ID + " Speech {0}";
+                TextToSpeech.SaveStringToWaveFiles(text, folderPath, fileNameFormat);
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                Logger.Log("exception in line 122");
+                ErrorParsingText();
+            }
+            return false;
+        }
+
         public static void SpeakSelectedText()
         {
             try
@@ -199,7 +215,78 @@ namespace PowerPointLabs.NarrationsLab
                 selectedShape.Delete();
             }
         }
+        public static void EmbedSlideNotes(string notetag, string note, PowerPointSlide slide)
+        {
+            String folderPath = Path.GetTempPath() + TempFolderName;
+            String fileNameSearchPattern = String.Format("Slide {0} Speech", slide.ID);
+            Directory.CreateDirectory(folderPath);
 
+            string[] audiosInCurrentSlide = Directory.GetFiles(folderPath);
+            foreach (string audio in audiosInCurrentSlide)
+            {
+                if (audio.Contains(fileNameSearchPattern))
+                {
+                    try
+                    {
+                        File.Delete(audio);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.LogException(e, "Failed to delete audio, it may be still playing. " + e.Message);
+                    }
+                }
+            }
+
+            bool isSaveSuccessful = OutputSlideNotesToFiles(note, slide, folderPath);
+            string[] audioFiles = null;
+
+            if (isSaveSuccessful)
+            {
+                slide.DeleteShapesWithPrefix(SpeechShapePrefix);
+
+                audioFiles = GetAudioFilePaths(folderPath, fileNameSearchPattern);
+
+                for (int i = 0; i < audioFiles.Length; i++)
+                {
+                    String fileName = audioFiles[i];
+                    bool isOnClick = fileName.Contains("OnClick");
+                    var match = Regex.Match(fileName, @"\[(.*)\]", RegexOptions.IgnoreCase);
+                    string tag = null;
+                    if (match.Success)
+                    {
+                        tag = match.Value.Substring(1, match.Value.Length - 2);
+                    }
+                    try
+                    {
+                        Shape audioShape = InsertAudioFileOnSlide(slide, fileName);
+                        audioShape.Name = String.Format("PowerPointLabs Speech {0}", i);
+                        slide.RemoveAnimationsForShape(audioShape);
+                        if (tag != null)
+                        {
+                            Effect calloutEffect = slide.FindFirstCalloutAnimationForShapeWithPrefix(tag);
+                            if (calloutEffect != null)
+                            {
+                                Effect audioEffect = slide.TimeLine.MainSequence.AddEffect(audioShape, MsoAnimEffect.msoAnimEffectMediaPlay, trigger: MsoAnimTriggerType.msoAnimTriggerWithPrevious);
+                                audioEffect.MoveAfter(calloutEffect);
+                                continue;
+                            }
+                        }
+                        if (isOnClick)
+                        {
+                            slide.SetShapeAsClickTriggered(audioShape, i, MsoAnimEffect.msoAnimEffectMediaPlay);
+                        }
+                        else
+                        {
+                            slide.SetAudioAsAutoplay(audioShape);
+                        }
+                    }
+                    catch (COMException)
+                    {
+                        // Adding the file failed for one reason or another - probably cancelled by the user.
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// This function will embed the auto generated speech to the current slide.

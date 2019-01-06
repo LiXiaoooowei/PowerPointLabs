@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using Microsoft.Office.Interop.PowerPoint;
 using PowerPointLabs.ActionFramework.Common.Log;
+using PowerPointLabs.FYP.Service;
+using PowerPointLabs.Models;
 
 namespace PowerPointLabs.FYP.Data
 {
@@ -20,6 +22,9 @@ namespace PowerPointLabs.FYP.Data
             set
             {
                 text = value;
+                generateCaptionManager.text = value;
+                generateCalloutManager.text = value;
+                GenerateVoiceManager.text = value;
             }
         }
         public bool IsCaption
@@ -31,30 +36,22 @@ namespace PowerPointLabs.FYP.Data
             set
             {
                 isCaption = (bool)value;
+                generateCaptionManager.isActivated = (bool)value;
             }
         }
-        public bool IsCloudVoice
+        public bool IsVoice
         {
             get
             {
-                return isCloudVoice;
+                return isVoice;
             }
             set
             {
-                isCloudVoice = (bool) value;
+                isVoice = (bool) value;
+                GenerateVoiceManager.isActivated = (bool)value;
             }
         }
-        public bool IsBuiltInVoice
-        {
-            get
-            {
-                return isBuiltInVoice;
-            }
-            set
-            {
-                isBuiltInVoice = (bool)value;
-            }
-        }
+
         public bool IsCallout
         {
             get
@@ -64,6 +61,7 @@ namespace PowerPointLabs.FYP.Data
             set
             {
                 isCallout = (bool)value;
+                generateCalloutManager.isActivated = (bool)value;
             }
         }
         public HashSet<Shape> AssociatedShapes
@@ -74,22 +72,36 @@ namespace PowerPointLabs.FYP.Data
             }
         }
 
+        public GenerateCalloutManager generateCalloutManager;
+        public GenerateCaptionManager generateCaptionManager;
+        public GenerateVoiceManager GenerateVoiceManager;
+        public int TagNo;
+
         private string text;
         private bool isCaption;
-        private bool isCloudVoice;
-        private bool isBuiltInVoice;
+        private bool isVoice;
         private bool isCallout;
         private HashSet<Shape> associatedShapes;
 
-        public LabAnimationItem(string text, bool isCaption = false, bool isCloudVoice = false,
-            bool isBuiltInVoice = false, bool isCallout = false, HashSet<Shape> shapes = null):base()
+        public LabAnimationItem(string text, int tagNo, bool isCaption = false, bool isVoice = false,
+            bool isCallout = false, HashSet<Shape> shapes = null):base()
         {
             this.text = text;
+            TagNo = tagNo;
             this.isCaption = isCaption;
-            this.isCloudVoice = isCloudVoice;
-            this.isBuiltInVoice = isBuiltInVoice;
+            this.isVoice = isVoice;
             this.isCallout = isCallout;
             associatedShapes = shapes;
+            generateCalloutManager = new GenerateCalloutManager(text, tagNo, isCaption);
+            generateCaptionManager = new GenerateCaptionManager(text, tagNo, isCaption);
+            GenerateVoiceManager = new GenerateVoiceManager(text, tagNo, isVoice);
+        }
+
+        public void Execute(PowerPointSlide slide, bool byClick)
+        {
+            generateCalloutManager.PerformAction(slide, byClick);
+            generateCaptionManager.PerformAction(slide, byClick);
+            GenerateVoiceManager.PerformAction(slide, byClick);
         }
 
     }

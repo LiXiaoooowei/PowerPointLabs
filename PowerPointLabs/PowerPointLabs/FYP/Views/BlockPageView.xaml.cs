@@ -16,6 +16,7 @@ using PowerPointLabs.ActionFramework.Common.Log;
 using PowerPointLabs.FYP.Data;
 using PowerPointLabs.FYP.Service;
 using PowerPointLabs.Models;
+using PowerPointLabs.TextCollection;
 
 namespace PowerPointLabs.FYP.Views
 {
@@ -51,7 +52,6 @@ namespace PowerPointLabs.FYP.Views
 
         public void HandleButtonClick()
         {
-            Logger.Log("clicked");
             PowerPointSlide slide = PowerPointCurrentPresentationInfo.CurrentSlide;
             IEnumerable<Effect> effects = slide.TimeLine.MainSequence.Cast<Effect>();
             IEnumerable<Shape> shapes = slide.Shapes.Cast<Shape>();
@@ -64,33 +64,58 @@ namespace PowerPointLabs.FYP.Views
                 BlockItem blockItem = animationItems.ElementAt(i);
                 for (int j = 0; j < blockItem.Items.Count; j++)
                 {
-                    CustomAnimationItem item = blockItem.Items.ElementAt(j) as CustomAnimationItem;
-                    if (j == 0)
+                    AnimationItem item = blockItem.Items.ElementAt(j) as AnimationItem;
+                    if (item.GetType() == typeof(CustomAnimationItem))
                     {
-                        Effect effect = slide.TimeLine.MainSequence.AddEffect(item.GetShape(), item.GetEffectType(), 
-                            item.GetEffectLevel(), MsoAnimTriggerType.msoAnimTriggerOnPageClick);
-                        effect.Exit = item.GetExit();
+                        SyncCustomAnimationItemToSlide(item as CustomAnimationItem, slide, j);
                     }
                     else
                     {
-                        Effect effect = slide.TimeLine.MainSequence.AddEffect(item.GetShape(), item.GetEffectType(), 
-                            item.GetEffectLevel(), MsoAnimTriggerType.msoAnimTriggerAfterPrevious);
-                        try
-                        {
-                            effect.Exit = item.GetExit();
-                        }
-                        catch
-                        { }
+                        SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, j);
                     }
                 }
             }
         }
 
+        public void AddLabAnimationItem(LabAnimationItem item)
+        {
+            (listView.ItemsSource as ObservableCollection<BlockItem>)
+                .Add(new BlockItem(-1, new ObservableCollection<AnimationItem>() { item}));
+        }
+
+        private void SyncCustomAnimationItemToSlide(CustomAnimationItem item, PowerPointSlide slide, int j)
+        {
+            if (j == 0)
+            {
+                Effect effect = slide.TimeLine.MainSequence.AddEffect(item.GetShape(), item.GetEffectType(),
+                    item.GetEffectLevel(), MsoAnimTriggerType.msoAnimTriggerOnPageClick);
+                effect.Exit = item.GetExit();
+            }
+            else
+            {
+                Effect effect = slide.TimeLine.MainSequence.AddEffect(item.GetShape(), item.GetEffectType(),
+                    item.GetEffectLevel(), MsoAnimTriggerType.msoAnimTriggerAfterPrevious);
+                try
+                {
+                    effect.Exit = item.GetExit();
+                }
+                catch
+                { }
+            }
+        }
+
+        private void SyncLabAnimationItemToSlide(LabAnimationItem item, PowerPointSlide slide, int j)
+        {
+            item.Execute(slide, j == 0);
+        }
+
         private BlockItemList InitializeBlockItemList()
         {
+            LabAnimationItemIdentifierManager.EmptyTagsCollection();
             IEnumerable<Effect> effects = PowerPointCurrentPresentationInfo.CurrentSlide.TimeLine.MainSequence.Cast<Effect>();
             BlockItemList list = new BlockItemList();
             ObservableCollection<AnimationItem> items = new ObservableCollection<AnimationItem>();
+            Dictionary<int, LabAnimationItem> labItems = new Dictionary<int, LabAnimationItem>();
             int clickNo = 0;
             for (int i = 0; i < effects.Count(); i++)
             {              
@@ -104,8 +129,42 @@ namespace PowerPointLabs.FYP.Views
                     items.Clear();
                     clickNo++;
                 }
-                items.Add(new CustomAnimationItem(effect.Shape,
-                           effect.EffectType, effect.EffectInformation.BuildByLevelEffect, effect.Exit));
+                if (LabAnimationItemIdentifierManager.GetTagNo(effect.Shape.Name) != -1)
+                {
+                    int tagNo = LabAnimationItemIdentifierManager.GetTagNo(effect.Shape.Name);
+                    string functionMatch = LabAnimationItemIdentifierManager.GetTagFunction(effect.Shape.Name);
+                    bool isCaption = functionMatch == FYPText.CaptionIdentifier;
+                    bool isCallout = functionMatch == FYPText.CalloutIdentifier;
+                    bool isVoice = functionMatch == FYPText.AudioIdentifier;
+                    LabAnimationItem labItem;
+                    if (labItems.ContainsKey(tagNo))
+                    {
+                        labItem = labItems[tagNo];
+                        if (isCaption)
+                        {
+                            labItem.IsCaption = true;
+                        }
+                        if (isCallout)
+                        {
+                            labItem.IsCallout = true;
+                        }
+                        if (isVoice)
+                        {
+                            labItem.IsVoice = true;
+                        }
+                    }
+                    else
+                    {
+                        labItem = new LabAnimationItem(effect.Shape.TextFrame.TextRange.Text, tagNo, isCaption, isVoice, isCallout);
+                        labItems.Add(tagNo, labItem);
+                        items.Add(labItem);
+                    }                    
+                }
+                else
+                {
+                    items.Add(new CustomAnimationItem(effect.Shape,
+                               effect.EffectType, effect.EffectInformation.BuildByLevelEffect, effect.Exit));
+                }
             }
             if (items.Count > 0)
             {
@@ -141,7 +200,9 @@ namespace PowerPointLabs.FYP.Views
                     label.Content = i.ToString();
                 }
             }
-            CustomAnimationItem data = e.Data.GetData(typeof(CustomAnimationItem)) as CustomAnimationItem;
+            AnimationItem data = e.Data.GetDataPresent(typeof(CustomAnimationItem)) ?
+                e.Data.GetData(typeof(CustomAnimationItem)) as AnimationItem :
+                e.Data.GetData(typeof(LabAnimationItem)) as AnimationItem;
             if (data == null)
             {
                 return;

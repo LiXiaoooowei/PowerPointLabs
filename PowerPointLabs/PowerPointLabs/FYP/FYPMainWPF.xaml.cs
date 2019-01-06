@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using PowerPointLabs.FYP.Service;
 using PowerPointLabs.FYP.Views;
 
 namespace PowerPointLabs.FYP
@@ -37,6 +37,21 @@ namespace PowerPointLabs.FYP
             if (tabControl.SelectedIndex == 0)
             {
                 blockView.HandleButtonClick();
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (tabControl.SelectedIndex == 0)
+            {
+                string note = textBox.Text.Trim();
+                if (note == "")
+                {
+                    MessageBox.Show("Notes must not be empty!");
+                    return;
+                }               
+                blockView.AddLabAnimationItem(
+                    new Data.LabAnimationItem(note, LabAnimationItemIdentifierManager.GenerateUniqueNumber()));
             }
         }
     }
