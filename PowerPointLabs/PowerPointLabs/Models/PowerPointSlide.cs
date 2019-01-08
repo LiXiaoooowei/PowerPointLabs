@@ -84,6 +84,13 @@ namespace PowerPointLabs.Models
             return powerPointSlide;
         }
 
+        public bool IsFirstAnimationTriggeredByClick()
+        {
+            IEnumerable<Effect> effects = _slide.TimeLine.MainSequence.Cast<Effect>();
+            return effects.Count() > 0 &&
+                effects.ElementAt(0).Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerOnPageClick;
+        }
+
         public String NotesPageText
         {
             get

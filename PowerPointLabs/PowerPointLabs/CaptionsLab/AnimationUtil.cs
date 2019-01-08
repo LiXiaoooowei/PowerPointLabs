@@ -43,7 +43,7 @@ namespace PowerPointLabs.CaptionsLab
             }
             else
             {
-                slide.TimeLine.MainSequence.AddEffect(shape, MsoAnimEffect.msoAnimEffectAppear);
+                slide.TimeLine.MainSequence.AddEffect(shape, MsoAnimEffect.msoAnimEffectAppear, trigger: MsoAnimTriggerType.msoAnimTriggerAfterPrevious);
             }
         }
 

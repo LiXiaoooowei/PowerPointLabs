@@ -107,7 +107,11 @@ namespace PowerPointLabs.CaptionsLab
         {
             float slideWidth = PowerPointPresentation.Current.SlideWidth;
             float slideHeight = PowerPointPresentation.Current.SlideHeight;
-
+            List<Shape> shapes = s.GetShapeWithName(tag);
+            if (shapes.Count() > 0)
+            {
+                return shapes[0];
+            }
             Shape textBox = s.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 0, slideHeight - 100,
                 slideWidth, 100);
             textBox.Name = tag;

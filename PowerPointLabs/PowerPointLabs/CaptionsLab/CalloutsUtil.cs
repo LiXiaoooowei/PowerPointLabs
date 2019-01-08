@@ -128,7 +128,11 @@ namespace PowerPointLabs.CaptionsLab
         {
             float slideWidth = PowerPointPresentation.Current.SlideWidth;
             float slideHeight = PowerPointPresentation.Current.SlideHeight;
-
+            List<Shape> shapes = s.GetShapeWithName(tag);
+            if (shapes.Count() > 0)
+            {
+                return shapes[0];
+            }
             Shape callout = s.Shapes.AddShape(MsoAutoShapeType.msoShapeOvalCallout, 10, 10, 200, 10);
             callout.Name = tag;
             callout.TextFrame.AutoSize = PpAutoSize.ppAutoSizeShapeToFitText;

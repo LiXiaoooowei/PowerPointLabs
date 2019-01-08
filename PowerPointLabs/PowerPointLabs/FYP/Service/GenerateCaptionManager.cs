@@ -18,7 +18,7 @@ namespace PowerPointLabs.FYP.Service
             this.tag = tag;
             this.isActivated = isActivated;
         }
-        public override void PerformAction(PowerPointSlide slide, bool byClick = false)
+        public override void PerformAction(PowerPointSlide slide, bool byClick)
         {
             if (isActivated)
             {
