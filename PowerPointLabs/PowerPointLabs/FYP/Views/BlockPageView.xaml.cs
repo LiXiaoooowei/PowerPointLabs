@@ -135,6 +135,10 @@ namespace PowerPointLabs.FYP.Views
                 }
                 if (LabAnimationItemIdentifierManager.GetTagNo(effect.Shape.Name) != -1)
                 {
+                    if (effect.Exit == Microsoft.Office.Core.MsoTriState.msoTrue)
+                    {
+                        continue;
+                    }
                     int tagNo = LabAnimationItemIdentifierManager.GetTagNo(effect.Shape.Name);
                     string functionMatch = LabAnimationItemIdentifierManager.GetTagFunction(effect.Shape.Name);
                     bool isCaption = functionMatch == FYPText.CaptionIdentifier;

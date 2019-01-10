@@ -247,7 +247,6 @@ namespace PowerPointLabs.NarrationsLab
                     slide.SetAudioAsAutoplay(audioShape);
                 }
             }
-
             catch (Exception e)
             {
                 Logger.Log(e.Message);

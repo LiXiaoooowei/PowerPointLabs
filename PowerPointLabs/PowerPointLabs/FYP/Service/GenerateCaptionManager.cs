@@ -26,6 +26,8 @@ namespace PowerPointLabs.FYP.Service
                     FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.CaptionIdentifier,
                     slide);
                 AnimationUtil.AppendAnimationsForCalloutsToSlide(shape, slide, clickNo);
+                Effect effect = slide.SetShapeAsClickTriggered(shape, clickNo + 1, MsoAnimEffect.msoAnimEffectAppear);
+                effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
             }
         }
     }
