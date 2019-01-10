@@ -19,7 +19,7 @@ using PowerPointLabs.Views;
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
 namespace PowerPointLabs.NarrationsLab
-{ 
+{
     internal static class NotesToAudio
     {
 #pragma warning disable 0618
@@ -54,7 +54,7 @@ namespace PowerPointLabs.NarrationsLab
         public static string[] EmbedCurrentSlideNotes()
         {
             PowerPointSlide currentSlide = PowerPointCurrentPresentationInfo.CurrentSlide;
-            
+
             if (currentSlide != null)
             {
                 return EmbedSlideNotes(currentSlide);
@@ -211,80 +211,46 @@ namespace PowerPointLabs.NarrationsLab
                 Shape newAudio = InsertAudioFileOnSlide(currentSlide, selectedFile);
 
                 currentSlide.TransferAnimation(selectedShape[1], newAudio);
-                
+
                 selectedShape.Delete();
             }
         }
-        public static void EmbedSlideNotes(string notetag, string note, PowerPointSlide slide)
-        {
-            String folderPath = Path.GetTempPath() + TempFolderName;
-            String fileNameSearchPattern = String.Format("Slide {0} Speech", slide.ID);
-            Directory.CreateDirectory(folderPath);
 
-            string[] audiosInCurrentSlide = Directory.GetFiles(folderPath);
-            foreach (string audio in audiosInCurrentSlide)
+        public static void EmbedSlideNote(string notetag, string note, PowerPointSlide slide, int clickNo, int seqNo)
+        {
+            string folderPath = Path.GetTempPath() + TempFolderName;
+            string fileNameSearchPattern = string.Format("Slide {0} ClickNo {1} SeqNo {2} Speech", slide.ID, clickNo, seqNo);
+            Directory.CreateDirectory(folderPath);
+            string filePath = folderPath + "\\" + fileNameSearchPattern + ".wav";
+
+            try
             {
-                if (audio.Contains(fileNameSearchPattern))
+                if (!IsHumanVoiceSelected)
                 {
-                    try
-                    {
-                        File.Delete(audio);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.LogException(e, "Failed to delete audio, it may be still playing. " + e.Message);
-                    }
+                    TextToSpeech.SaveStringToWaveFile(note, filePath);
+                }
+                else
+                {
+                    TextToSpeech.SaveStringToWaveFileWithHumanVoice(note, filePath);
+                }
+
+                Shape audioShape = InsertAudioFileOnSlide(slide, filePath);
+                audioShape.Name = string.Format("PowerPointLabs Speech ClickNo {0} SeqNo {1}", clickNo, seqNo);
+                slide.RemoveAnimationsForShape(audioShape);
+
+                if (clickNo > 0)
+                {
+                    slide.SetShapeAsClickTriggered(audioShape, clickNo, MsoAnimEffect.msoAnimEffectMediaPlay);
+                }
+                else
+                {
+                    slide.SetAudioAsAutoplay(audioShape);
                 }
             }
 
-            bool isSaveSuccessful = OutputSlideNotesToFiles(note, slide, folderPath);
-            string[] audioFiles = null;
-
-            if (isSaveSuccessful)
+            catch (Exception e)
             {
-                slide.DeleteShapesWithPrefix(SpeechShapePrefix);
-
-                audioFiles = GetAudioFilePaths(folderPath, fileNameSearchPattern);
-
-                for (int i = 0; i < audioFiles.Length; i++)
-                {
-                    String fileName = audioFiles[i];
-                    bool isOnClick = fileName.Contains("OnClick");
-                    var match = Regex.Match(fileName, @"\[(.*)\]", RegexOptions.IgnoreCase);
-                    string tag = null;
-                    if (match.Success)
-                    {
-                        tag = match.Value.Substring(1, match.Value.Length - 2);
-                    }
-                    try
-                    {
-                        Shape audioShape = InsertAudioFileOnSlide(slide, fileName);
-                        audioShape.Name = String.Format("PowerPointLabs Speech {0}", i);
-                        slide.RemoveAnimationsForShape(audioShape);
-                        if (tag != null)
-                        {
-                            Effect calloutEffect = slide.FindFirstCalloutAnimationForShapeWithPrefix(tag);
-                            if (calloutEffect != null)
-                            {
-                                Effect audioEffect = slide.TimeLine.MainSequence.AddEffect(audioShape, MsoAnimEffect.msoAnimEffectMediaPlay, trigger: MsoAnimTriggerType.msoAnimTriggerWithPrevious);
-                                audioEffect.MoveAfter(calloutEffect);
-                                continue;
-                            }
-                        }
-                        if (isOnClick)
-                        {
-                            slide.SetShapeAsClickTriggered(audioShape, i, MsoAnimEffect.msoAnimEffectMediaPlay);
-                        }
-                        else
-                        {
-                            slide.SetAudioAsAutoplay(audioShape);
-                        }
-                    }
-                    catch (COMException)
-                    {
-                        // Adding the file failed for one reason or another - probably cancelled by the user.
-                    }
-                }
+                Logger.Log(e.Message);
             }
         }
 
@@ -411,9 +377,9 @@ namespace PowerPointLabs.NarrationsLab
 
         private static void ErrorParsingText()
         {
-            MessageBox.Show(TextCollection.NarrationsLabText.RecorderErrorCannotParseText, 
+            MessageBox.Show(TextCollection.NarrationsLabText.RecorderErrorCannotParseText,
                             TextCollection.NarrationsLabText.RecorderErrorCannotParseTextTitle,
-                            MessageBoxButtons.OK, 
+                            MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
         }
     }

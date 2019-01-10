@@ -14,6 +14,6 @@ namespace PowerPointLabs.FYP.Service
         public int tag;
         public bool isActivated;
 
-        public abstract void PerformAction(PowerPointSlide slide, bool byClick = false);
+        public abstract void PerformAction(PowerPointSlide slide, int clickNo, int seqNo);
     }
 }

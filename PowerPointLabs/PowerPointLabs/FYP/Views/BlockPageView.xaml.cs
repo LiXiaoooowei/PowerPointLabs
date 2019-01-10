@@ -76,7 +76,7 @@ namespace PowerPointLabs.FYP.Views
                         }
                         else
                         {
-                            SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo != 0 && j == 0);
+                            SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo, j);
                         }
                     }
                 }
@@ -108,9 +108,9 @@ namespace PowerPointLabs.FYP.Views
             }
         }
 
-        private void SyncLabAnimationItemToSlide(LabAnimationItem item, PowerPointSlide slide, bool byClick)
+        private void SyncLabAnimationItemToSlide(LabAnimationItem item, PowerPointSlide slide, int clickNo, int seqNo)
         {
-            item.Execute(slide, byClick);
+            item.Execute(slide, clickNo, seqNo);
         }
 
         private BlockItemList InitializeBlockItemList()

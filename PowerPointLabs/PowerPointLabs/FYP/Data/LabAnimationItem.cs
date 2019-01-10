@@ -97,11 +97,11 @@ namespace PowerPointLabs.FYP.Data
             GenerateVoiceManager = new GenerateVoiceManager(text, tagNo, isVoice);
         }
 
-        public void Execute(PowerPointSlide slide, bool byClick)
+        public void Execute(PowerPointSlide slide, int clickNo, int seqNo)
         {
-            generateCalloutManager.PerformAction(slide, byClick);
-            generateCaptionManager.PerformAction(slide, byClick);
-            GenerateVoiceManager.PerformAction(slide, byClick);
+            generateCalloutManager.PerformAction(slide, clickNo);
+            generateCaptionManager.PerformAction(slide, clickNo);
+            GenerateVoiceManager.PerformAction(slide, clickNo, seqNo);
         }
 
     }

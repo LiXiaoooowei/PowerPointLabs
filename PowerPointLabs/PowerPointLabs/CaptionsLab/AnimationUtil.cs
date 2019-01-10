@@ -34,12 +34,13 @@ namespace PowerPointLabs.CaptionsLab
             ReorderNotesOnSlideAnimationPane(notes, slide, Microsoft.Office.Core.MsoTriState.msoFalse);
         }
 
-        public static void AppendAnimationsForCalloutsToSlide(Shape shape, PowerPointSlide slide, bool byClick)
+        public static void AppendAnimationsForCalloutsToSlide(Shape shape, PowerPointSlide slide, int clickNo)
         {
-            if (byClick)
+            if (clickNo > 0)
             {
-                slide.TimeLine.MainSequence.AddEffect(shape, MsoAnimEffect.msoAnimEffectAppear,
-                    trigger: MsoAnimTriggerType.msoAnimTriggerOnPageClick);
+                //  slide.TimeLine.MainSequence.AddEffect(shape, MsoAnimEffect.msoAnimEffectAppear,
+                //     trigger: MsoAnimTriggerType.msoAnimTriggerOnPageClick);
+                slide.SetShapeAsClickTriggered(shape, clickNo, MsoAnimEffect.msoAnimEffectAppear);
             }
             else
             {

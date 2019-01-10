@@ -18,13 +18,13 @@ namespace PowerPointLabs.FYP.Service
             this.tag = tag;
             this.isActivated = isActivated;
         }
-        public override void PerformAction(PowerPointSlide slide, bool byClick)
+        public override void PerformAction(PowerPointSlide slide, int clickNo, int seqNo)
         {
             if (isActivated)
             {
-                NotesToAudio.EmbedSlideNotes(
+                NotesToAudio.EmbedSlideNote(
                     FYPText.Identifier+FYPText.Underscore+tag.ToString()+FYPText.Underscore+FYPText.AudioIdentifier,
-                    text, slide);
+                    text, slide, clickNo, seqNo);
             }
         }
     }

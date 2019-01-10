@@ -18,14 +18,14 @@ namespace PowerPointLabs.FYP.Service
             this.tag = tag;
             this.isActivated = isActivated;
         }
-        public override void PerformAction(PowerPointSlide slide, bool byClick)
+        public override void PerformAction(PowerPointSlide slide, int clickNo, int seqNo = -1)
         {
             if (isActivated)
             {
                 Shape shape = CalloutsUtil.InsertDefaultCalloutBoxToSlide(
                     FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.CalloutIdentifier,
                     text, slide);
-                AnimationUtil.AppendAnimationsForCalloutsToSlide(shape, slide, byClick);
+                AnimationUtil.AppendAnimationsForCalloutsToSlide(shape, slide, clickNo);
             }
         }
     }

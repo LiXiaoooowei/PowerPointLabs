@@ -77,7 +77,7 @@ namespace PowerPointLabs.SpeechEngine
         }
 
 
-        private static void SaveStringToWaveFileWithHumanVoice(string textToSave, string filePath)
+        public static void SaveStringToWaveFileWithHumanVoice(string textToSave, string filePath)
         {
             string accessToken;
             string textToSpeak = GetHumanSpeakNotesForText(textToSave);
