@@ -20,11 +20,11 @@ namespace PowerPointLabs.FYP.Service
         }
         public override void PerformAction(PowerPointSlide slide, int clickNo, int seqNo)
         {
+            string name = FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.AudioIdentifier;
+            slide.DeleteShapeWithName(name);
             if (isActivated)
-            {
-                NotesToAudio.EmbedSlideNote(
-                    FYPText.Identifier+FYPText.Underscore+tag.ToString()+FYPText.Underscore+FYPText.AudioIdentifier,
-                    text, slide, clickNo, seqNo);
+            {             
+                NotesToAudio.EmbedSlideNote(name, text, slide, clickNo, seqNo);
             }
         }
     }

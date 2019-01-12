@@ -710,20 +710,27 @@ namespace PowerPointLabs.FYP.Service
         Visual EnumVisual(Visual myVisual)
         {
             Visual visual = null;
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(myVisual); i++)
+            try
             {
-                // Retrieve child visual at specified index value.
-                Visual childVisual = (Visual)VisualTreeHelper.GetChild(myVisual, i);
-
-                // Do processing of the child visual object.
-                if (childVisual.GetType() == typeof(Label))
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(myVisual); i++)
                 {
-                    return childVisual;
-                }
+                    // Retrieve child visual at specified index value.
+                    Visual childVisual = (Visual)VisualTreeHelper.GetChild(myVisual, i);
 
-                // Enumerate children of the child visual object.
-                Visual visualElement = EnumVisual(childVisual);
-                visual = visualElement == null ? visual : visualElement;
+                    // Do processing of the child visual object.
+                    if (childVisual.GetType() == typeof(Label))
+                    {
+                        return childVisual;
+                    }
+
+                    // Enumerate children of the child visual object.
+                    Visual visualElement = EnumVisual(childVisual);
+                    visual = visualElement == null ? visual : visualElement;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message);
             }
             return visual;
         }

@@ -110,6 +110,7 @@ namespace PowerPointLabs.CaptionsLab
             List<Shape> shapes = s.GetShapeWithName(tag);
             if (shapes.Count() > 0)
             {
+                shapes[0].TextFrame.TextRange.Text = caption;
                 return shapes[0];
             }
             Shape textBox = s.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 0, slideHeight - 100,

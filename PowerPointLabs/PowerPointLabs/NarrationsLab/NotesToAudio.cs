@@ -235,17 +235,10 @@ namespace PowerPointLabs.NarrationsLab
                 }
 
                 Shape audioShape = InsertAudioFileOnSlide(slide, filePath);
-                audioShape.Name = string.Format("PowerPointLabs Speech ClickNo {0} SeqNo {1}", clickNo, seqNo);
+                //  audioShape.Name = string.Format("PowerPointLabs Speech ClickNo {0} SeqNo {1}", clickNo, seqNo);
+                audioShape.Name = notetag;
                 slide.RemoveAnimationsForShape(audioShape);
-
-                if (clickNo > 0)
-                {
-                    slide.SetShapeAsClickTriggered(audioShape, clickNo, MsoAnimEffect.msoAnimEffectMediaPlay);
-                }
-                else
-                {
-                    slide.SetAudioAsAutoplay(audioShape);
-                }
+                slide.SetShapeAsClickTriggered(audioShape, clickNo, MsoAnimEffect.msoAnimEffectMediaPlay);
             }
             catch (Exception e)
             {

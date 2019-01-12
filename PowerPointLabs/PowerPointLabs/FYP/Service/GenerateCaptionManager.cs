@@ -20,14 +20,17 @@ namespace PowerPointLabs.FYP.Service
         }
         public override void PerformAction(PowerPointSlide slide, int clickNo, int seqNo = -1)
         {
+            string name = FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.CaptionIdentifier;
             if (isActivated)
             {
-                Shape shape = NotesToCaptions.AddCaptionBoxToSlide(text,
-                    FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.CaptionIdentifier,
-                    slide);
+                Shape shape = NotesToCaptions.AddCaptionBoxToSlide(text, name, slide);
                 AnimationUtil.AppendAnimationsForCalloutsToSlide(shape, slide, clickNo);
                 Effect effect = slide.SetShapeAsClickTriggered(shape, clickNo + 1, MsoAnimEffect.msoAnimEffectAppear);
                 effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
+            }
+            else
+            {
+                slide.DeleteShapeWithName(name);
             }
         }
     }

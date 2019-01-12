@@ -20,14 +20,17 @@ namespace PowerPointLabs.FYP.Service
         }
         public override void PerformAction(PowerPointSlide slide, int clickNo, int seqNo = -1)
         {
+            string name = FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.CalloutIdentifier;
             if (isActivated)
             {
-                Shape shape = CalloutsUtil.InsertDefaultCalloutBoxToSlide(
-                    FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.CalloutIdentifier,
-                    text, slide);
+                Shape shape = CalloutsUtil.InsertDefaultCalloutBoxToSlide(name, text, slide);
                 AnimationUtil.AppendAnimationsForCalloutsToSlide(shape, slide, clickNo);
                 Effect effect = slide.SetShapeAsClickTriggered(shape, clickNo + 1, MsoAnimEffect.msoAnimEffectAppear);
-                effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue; 
+                effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
+            }
+            else
+            {
+                slide.DeleteShapeWithName(name);
             }
         }
     }

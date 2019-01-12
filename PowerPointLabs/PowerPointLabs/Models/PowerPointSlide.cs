@@ -444,7 +444,11 @@ namespace PowerPointLabs.Models
             bool hasClicksAfter = nextClickEffect != null;
             bool hasClickBefore = previousClickEffect != null;
 
-            if (hasClicksAfter)
+            if (clickNumber == 0 && !hasClickBefore && !hasClicksAfter)
+            {
+                addedEffect = mainSequence.AddEffect(shape, effect, trigger: MsoAnimTriggerType.msoAnimTriggerAfterPrevious);
+            }
+            else if (hasClicksAfter)
             {
                 addedEffect = InsertAnimationBeforeExisting(shape, nextClickEffect, effect);
             }

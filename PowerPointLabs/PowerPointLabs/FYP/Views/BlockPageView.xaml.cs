@@ -56,7 +56,7 @@ namespace PowerPointLabs.FYP.Views
             IEnumerable<Effect> effects = slide.TimeLine.MainSequence.Cast<Effect>();
             IEnumerable<Shape> shapes = slide.Shapes.Cast<Shape>();
             slide.RemoveAnimationsForShapes(shapes.ToList());
-            
+
             ObservableCollection<BlockItem> animationItems = listView.ItemsSource as ObservableCollection<BlockItem>;
 
             for (int i = 0; i < listView.Items.Count; ++i)
@@ -86,26 +86,14 @@ namespace PowerPointLabs.FYP.Views
         public void AddLabAnimationItem(LabAnimationItem item)
         {
             (listView.ItemsSource as ObservableCollection<BlockItem>)
-                .Add(new BlockItem(-1, new ObservableCollection<AnimationItem>() { item}));
+                .Add(new BlockItem(-1, new ObservableCollection<AnimationItem>() { item }));
         }
 
         private void SyncCustomAnimationItemToSlide(CustomAnimationItem item, PowerPointSlide slide, int clickNo, int j)
         {
-            if (clickNo == 0 || j != 0)
-            {
-                Effect effect = slide.TimeLine.MainSequence.AddEffect(item.GetShape(), item.GetEffectType(),
-                    item.GetEffectLevel(), MsoAnimTriggerType.msoAnimTriggerAfterPrevious);
-                if (item.GetExit() == Microsoft.Office.Core.MsoTriState.msoTrue)
-                {
-                    effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
-                }
-            }
-            else 
-            {
-                Effect effect = slide.TimeLine.MainSequence.AddEffect(item.GetShape(), item.GetEffectType(),
-                    item.GetEffectLevel(), MsoAnimTriggerType.msoAnimTriggerOnPageClick);
-                effect.Exit = item.GetExit();
-            }
+            Effect effect = slide.SetShapeAsClickTriggered(item.GetShape(), clickNo, item.GetEffectType());
+            effect.Exit = item.GetExit();
+
         }
 
         private void SyncLabAnimationItemToSlide(LabAnimationItem item, PowerPointSlide slide, int clickNo, int seqNo)
@@ -122,7 +110,7 @@ namespace PowerPointLabs.FYP.Views
             Dictionary<int, LabAnimationItem> labItems = new Dictionary<int, LabAnimationItem>();
             int clickNo = PowerPointCurrentPresentationInfo.CurrentSlide.IsFirstAnimationTriggeredByClick() ? 1 : 0;
             for (int i = 0; i < effects.Count(); i++)
-            {              
+            {
                 Effect effect = effects.ElementAt(i);
                 if (effect.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerOnPageClick)
                 {
@@ -166,7 +154,7 @@ namespace PowerPointLabs.FYP.Views
                         labItem = new LabAnimationItem(effect.Shape.TextFrame.TextRange.Text, tagNo, isCaption, isVoice, isCallout);
                         labItems.Add(tagNo, labItem);
                         items.Add(labItem);
-                    }                    
+                    }
                 }
                 else
                 {
@@ -206,7 +194,7 @@ namespace PowerPointLabs.FYP.Views
                 Label label = GetChildOfType<Label>(item);
                 if (label != null)
                 {
-                    label.Content = PowerPointCurrentPresentationInfo.CurrentSlide.IsFirstAnimationTriggeredByClick()? (i+1).ToString(): i.ToString();
+                    label.Content = PowerPointCurrentPresentationInfo.CurrentSlide.IsFirstAnimationTriggeredByClick() ? (i + 1).ToString() : i.ToString();
                 }
             }
             AnimationItem data = e.Data.GetDataPresent(typeof(CustomAnimationItem)) ?
@@ -228,8 +216,8 @@ namespace PowerPointLabs.FYP.Views
                     {
                         (listView.ItemsSource as ObservableCollection<BlockItem>).RemoveAt(draggedListViewIndex);
                     }
-                }               
-            }         
+                }
+            }
         }
 
         private void ListView_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -242,7 +230,7 @@ namespace PowerPointLabs.FYP.Views
                 {
                     draggedListView = view;
                     draggedListViewIndex = i;
-                }              
+                }
             }
         }
 

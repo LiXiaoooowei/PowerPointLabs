@@ -92,7 +92,7 @@ namespace PowerPointLabs.FYP.Data
             this.isVoice = isVoice;
             this.isCallout = isCallout;
             associatedShapes = shapes;
-            generateCalloutManager = new GenerateCalloutManager(text, tagNo, isCaption);
+            generateCalloutManager = new GenerateCalloutManager(text, tagNo, isCallout);
             generateCaptionManager = new GenerateCaptionManager(text, tagNo, isCaption);
             GenerateVoiceManager = new GenerateVoiceManager(text, tagNo, isVoice);
         }

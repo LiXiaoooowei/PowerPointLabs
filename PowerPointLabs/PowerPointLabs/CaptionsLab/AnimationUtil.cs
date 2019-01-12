@@ -36,16 +36,7 @@ namespace PowerPointLabs.CaptionsLab
 
         public static void AppendAnimationsForCalloutsToSlide(Shape shape, PowerPointSlide slide, int clickNo)
         {
-            if (clickNo > 0)
-            {
-                //  slide.TimeLine.MainSequence.AddEffect(shape, MsoAnimEffect.msoAnimEffectAppear,
-                //     trigger: MsoAnimTriggerType.msoAnimTriggerOnPageClick);
                 slide.SetShapeAsClickTriggered(shape, clickNo, MsoAnimEffect.msoAnimEffectAppear);
-            }
-            else
-            {
-                slide.TimeLine.MainSequence.AddEffect(shape, MsoAnimEffect.msoAnimEffectAppear, trigger: MsoAnimTriggerType.msoAnimTriggerAfterPrevious);
-            }
         }
 
         private static void DeleteNotesFromSlideAnimationPane(IEnumerable<NameTag> notes, PowerPointSlide slide)

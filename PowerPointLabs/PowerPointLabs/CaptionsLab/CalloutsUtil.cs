@@ -131,6 +131,7 @@ namespace PowerPointLabs.CaptionsLab
             List<Shape> shapes = s.GetShapeWithName(tag);
             if (shapes.Count() > 0)
             {
+                shapes[0].TextFrame.TextRange.Text = note;
                 return shapes[0];
             }
             Shape callout = s.Shapes.AddShape(MsoAutoShapeType.msoShapeOvalCallout, 10, 10, 200, 10);
