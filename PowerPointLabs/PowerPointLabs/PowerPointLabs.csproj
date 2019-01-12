@@ -686,7 +686,7 @@
     <Compile Include="FYP\Views\LabAnimationItemCard.xaml.cs">
       <DependentUpon>LabAnimationItemCard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FYP\FYPMainWPF.xaml.cs">
+    <Compile Include="FYP\Views\FYPMainWPF.xaml.cs">
       <DependentUpon>FYPMainWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="FYP\Views\FYPtaskpane.cs">
@@ -1518,7 +1518,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="FYP\FYPMainWPF.xaml">
+    <Page Include="FYP\Views\FYPMainWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

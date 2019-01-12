@@ -124,6 +124,7 @@ namespace PowerPointLabs.FYP.Service
                     this.listView.DragLeave -= ListView_DragLeave;
                     this.listView.DragEnter -= ListView_DragEnter;
                     this.listView.Drop -= ListView_Drop;
+                  //  listView.PreviewDrop += ListView_Drop;
 
                     #endregion // Unhook Events
                 }
@@ -293,7 +294,7 @@ namespace PowerPointLabs.FYP.Service
         #endregion // listView_DragEnter
 
         #region listView_Drop
-
+    
         void ListView_Drop(object sender, DragEventArgs e)
         {
             if (this.ItemUnderDragCursor != null)
@@ -453,7 +454,11 @@ namespace PowerPointLabs.FYP.Service
             {
                 return null;
             }
-            return this.listView.ItemContainerGenerator.ContainerFromIndex(index) as ListViewItem;
+            if (listView.ItemContainerGenerator.ContainerFromIndex(index) == null)
+            {
+                listView.UpdateLayout();
+            }
+            return listView.ItemContainerGenerator.ContainerFromIndex(index) as ListViewItem;
         }
 
         ListViewItem GetListViewItem(ItemType dataItem)
@@ -573,6 +578,7 @@ namespace PowerPointLabs.FYP.Service
             // We need to use MouseUtilities to figure out the cursor
             // coordinates because, during a drag-drop operation, the WPF
             // mechanisms for getting the coordinates behave strangely.
+            
             Rect bounds = VisualTreeHelper.GetDescendantBounds(target);
             Point mousePos = MouseUtilities.GetMousePosition(target);
             return bounds.Contains(mousePos);

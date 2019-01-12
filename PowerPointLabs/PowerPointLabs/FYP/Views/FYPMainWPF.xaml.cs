@@ -36,7 +36,11 @@ namespace PowerPointLabs.FYP
         {
             if (tabControl.SelectedIndex == 0)
             {
-                blockView.HandleButtonClick();
+                blockView.HandleSyncButtonClick();
+            }
+            else if (tabControl.SelectedIndex == 1)
+            {
+                labView.HandleSyncButtonClick();
             }
         }
 

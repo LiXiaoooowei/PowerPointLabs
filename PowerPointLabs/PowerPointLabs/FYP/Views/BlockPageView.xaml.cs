@@ -50,7 +50,7 @@ namespace PowerPointLabs.FYP.Views
             }
         }
 
-        public void HandleButtonClick()
+        public void HandleSyncButtonClick()
         {
             PowerPointSlide slide = PowerPointCurrentPresentationInfo.CurrentSlide;
             IEnumerable<Effect> effects = slide.TimeLine.MainSequence.Cast<Effect>();

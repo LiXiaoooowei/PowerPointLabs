@@ -3,10 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:PowerPointLabs.FYP.Views"
+             xmlns:local="clr-namespace:PowerPointLabs.FYP.Data"
+             xmlns:views="clr-namespace:PowerPointLabs.FYP.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="500">
+             d:DesignHeight="600" d:DesignWidth="500" Loaded="UserControl_Loaded">
     <Grid>
-        <Label>Labs Page</Label>
+        <ListView x:Name="labListView" ItemsSource="{Binding Items}"
+                  BorderThickness="0" Margin="0" SelectionMode="Single">
+            <ListBox.Resources>
+                <DataTemplate DataType="{x:Type local:CustomAnimationItem}">
+                    <views:CustomAnimationItemCard DataContext="{Binding}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type local:LabAnimationItem}">
+                    <views:LabAnimationItemCard DataContext="{Binding}"/>
+                </DataTemplate>
+            </ListBox.Resources>
+
+        </ListView>
     </Grid>
 </UserControl>
