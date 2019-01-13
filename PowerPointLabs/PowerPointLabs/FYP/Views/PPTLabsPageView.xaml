@@ -9,13 +9,14 @@
              d:DesignHeight="600" d:DesignWidth="500" Loaded="UserControl_Loaded">
     <Grid>
         <ListView x:Name="labListView" ItemsSource="{Binding Items}"
-                  BorderThickness="0" Margin="0" SelectionMode="Single">
+                  BorderThickness="0" Margin="0" SelectionMode="Single"
+                 MouseLeftButtonUp="LabListView_MouseLeftButtonUp">
             <ListBox.Resources>
                 <DataTemplate DataType="{x:Type local:CustomAnimationItem}">
                     <views:CustomAnimationItemCard DataContext="{Binding}" />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:LabAnimationItem}">
-                    <views:LabAnimationItemCard DataContext="{Binding}"/>
+                    <views:LabItemCreationCard DataContext="{Binding}"/>
                 </DataTemplate>
             </ListBox.Resources>
 

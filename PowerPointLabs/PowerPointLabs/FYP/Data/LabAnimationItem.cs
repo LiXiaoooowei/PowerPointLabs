@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,34 +65,27 @@ namespace PowerPointLabs.FYP.Data
                 generateCalloutManager.isActivated = (bool)value;
             }
         }
-        public HashSet<Shape> AssociatedShapes
-        {
-            get
-            {
-                return associatedShapes;
-            }
-        }
 
         public GenerateCalloutManager generateCalloutManager;
         public GenerateCaptionManager generateCaptionManager;
         public GenerateVoiceManager GenerateVoiceManager;
         public int TagNo;
+        public ObservableCollection<string> AssociatedShapes { get; set; }
 
         private string text;
         private bool isCaption;
         private bool isVoice;
         private bool isCallout;
-        private HashSet<Shape> associatedShapes;
 
         public LabAnimationItem(string text, int tagNo, bool isCaption = false, bool isVoice = false,
-            bool isCallout = false, HashSet<Shape> shapes = null):base()
+            bool isCallout = false):base()
         {
             this.text = text;
             TagNo = tagNo;
             this.isCaption = isCaption;
             this.isVoice = isVoice;
             this.isCallout = isCallout;
-            associatedShapes = shapes;
+            AssociatedShapes = new ObservableCollection<string>();
             generateCalloutManager = new GenerateCalloutManager(text, tagNo, isCallout);
             generateCaptionManager = new GenerateCaptionManager(text, tagNo, isCaption);
             GenerateVoiceManager = new GenerateVoiceManager(text, tagNo, isVoice);

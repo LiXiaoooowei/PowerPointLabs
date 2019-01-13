@@ -210,6 +210,7 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="RestSharp, Version=105.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.1.0\lib\net4-client\RestSharp.dll</HintPath>
       <Private>True</Private>
@@ -682,6 +683,9 @@
     </Compile>
     <Compile Include="FYP\Views\InnerBlockListView.xaml.cs">
       <DependentUpon>InnerBlockListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FYP\Views\LabItemCreationCard.xaml.cs">
+      <DependentUpon>LabItemCreationCard.xaml</DependentUpon>
     </Compile>
     <Compile Include="FYP\Views\LabAnimationItemCard.xaml.cs">
       <DependentUpon>LabAnimationItemCard.xaml</DependentUpon>
@@ -1513,6 +1517,10 @@
     <Page Include="FYP\Views\InnerBlockListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FYP\Views\LabItemCreationCard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="FYP\Views\LabAnimationItemCard.xaml">
       <SubType>Designer</SubType>
