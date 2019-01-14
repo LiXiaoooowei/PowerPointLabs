@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,5 +54,11 @@ namespace PowerPointLabs.FYP.Views
             HorizontalScroller.LineRight();
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var siblings = ((sender as FrameworkElement).Parent as Panel).Children;
+            var textBlock = siblings.OfType<TextBlock>().First();
+            (itemsControl.ItemsSource as ObservableCollection<string>).Remove(textBlock.Text.ToString());
+        }
     }
 }

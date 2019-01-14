@@ -44,7 +44,7 @@
 				HorizontalScrollBarVisibility="Hidden"
 				CanContentScroll="True" 
 				Loaded="HorizontalScrollViewer_Loaded" >
-                <ItemsControl ItemsSource="{Binding AssociatedShapes}">
+                <ItemsControl x:Name="itemsControl" ItemsSource="{Binding AssociatedShapes}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"/>
@@ -52,7 +52,28 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                                <Button Width="10"  BorderThickness="0"
+                                        VerticalAlignment="Center" Height="10" Click="Button_Click">
+                                    <Canvas Name="canvas" Height="10"  Width="10" Margin="0 0 0 0">
+                                        <Path Stroke="Black" StrokeThickness="1">
+                                            <Path.Data>
+                                                <PathGeometry>
+                                                    <PathGeometry.Figures>
+                                                        <PathFigure StartPoint="2,2">
+                                                            <LineSegment Point="8, 8"/>
+                                                        </PathFigure>
+                                                        <PathFigure StartPoint="2,8">
+                                                            <LineSegment Point="8,2"/>
+                                                        </PathFigure>
+                                                    </PathGeometry.Figures>
+                                                </PathGeometry>
+                                            </Path.Data>
+                                        </Path>
+                                    </Canvas>
+                                </Button>
+                            </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
