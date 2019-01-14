@@ -46,21 +46,92 @@ namespace PowerPointLabs.FYP.Views
                 labListView.ItemsSource = Items;
             }
         }
-        internal void HandleSyncButtonClick()
+        public void HandleSyncButtonClick()
         {
-            throw new NotImplementedException();
+            ObservableCollection<AnimationItem> animationItems =
+                labListView.ItemsSource as ObservableCollection<AnimationItem>;
+            PowerPointSlide slide = PowerPointCurrentPresentationInfo.CurrentSlide;
+            IEnumerable<Effect> effects = slide.TimeLine.MainSequence.Cast<Effect>();
+            IEnumerable<Shape> shapes = slide.Shapes.Cast<Shape>();
+            slide.RemoveAnimationsForShapes(shapes.ToList());
+            int clickNo = 0;
+            foreach (AnimationItem item in animationItems)
+            {
+                if (item is LabAnimationItem)
+                {
+                    LabAnimationItem labItem = item as LabAnimationItem;
+                    labItem.Execute(slide, clickNo, 0);
+                    foreach (string shapeName in labItem.AssociatedShapes)
+                    {
+                        List<Shape> _shapes = slide.GetShapeWithName(shapeName);
+                        if (_shapes.Count > 0)
+                        {
+                            Shape shape = _shapes[0];
+                            slide.SetShapeAsClickTriggered(shape, clickNo, MsoAnimEffect.msoAnimEffectAppear);
+                        }
+                    }
+                    clickNo++;
+                }
+                else
+                {
+                    CustomAnimationItem customItem = item as CustomAnimationItem;
+                    Effect effect = slide.SetShapeAsClickTriggered(customItem.GetShape(),
+                        clickNo, customItem.GetEffectType());
+                    effect.Exit = customItem.GetExit();
+                }
+            }
+        }
+
+        public void AddLabAnimationItem(LabAnimationItem labAnimationItem)
+        {
+            (labListView.ItemsSource as ObservableCollection<AnimationItem>)
+                .Add(labAnimationItem);
         }
 
         private ObservableCollection<AnimationItem> InitializeBlockItemList()
         {
             LabAnimationItemIdentifierManager.EmptyTagsCollection();
             IEnumerable<Effect> effects = PowerPointCurrentPresentationInfo.CurrentSlide.TimeLine.MainSequence.Cast<Effect>();
+            ObservableCollection<AnimationItem> list = new ObservableCollection<AnimationItem>();
             ObservableCollection<AnimationItem> items = new ObservableCollection<AnimationItem>();
             Dictionary<int, LabAnimationItem> labItems = new Dictionary<int, LabAnimationItem>();
+            int clickNo = PowerPointCurrentPresentationInfo.CurrentSlide.IsFirstAnimationTriggeredByClick() ? 1 : 0;
+            int labItemTag = -1;
+            ObservableCollection<string> shapeNames = new ObservableCollection<string>();
             for (int i = 0; i < effects.Count(); i++)
             {
                 Effect effect = effects.ElementAt(i);
-
+                if (effect.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerOnPageClick)
+                {
+                    if (items.Count > 0 && labItemTag > -1)
+                    {
+                        foreach (string name in shapeNames)
+                        {
+                            if (!labItems[labItemTag].AssociatedShapes.Contains(name))
+                            {
+                                labItems[labItemTag].AssociatedShapes.Add(name);
+                            }
+                        }
+                        foreach (AnimationItem item in items)
+                        {
+                            if (item is LabAnimationItem)
+                            {
+                                list.Add(item);
+                            }
+                        }
+                    }
+                    else if (items.Count > 0)
+                    {
+                        foreach (AnimationItem item in items)
+                        {
+                            list.Add(item);
+                        }
+                    }
+                    items.Clear();
+                    shapeNames.Clear();
+                    clickNo++;
+                    labItemTag = -1;
+                }
                 if (LabAnimationItemIdentifierManager.GetTagNo(effect.Shape.Name) != -1)
                 {
                     if (effect.Exit == Microsoft.Office.Core.MsoTriState.msoTrue)
@@ -86,7 +157,7 @@ namespace PowerPointLabs.FYP.Views
                         }
                         if (isVoice)
                         {
-                            labItem.IsVoice = true;
+                            labItem.IsVoice = isVoice;
                         }
                     }
                     else
@@ -95,15 +166,40 @@ namespace PowerPointLabs.FYP.Views
                         labItems.Add(tagNo, labItem);
                         items.Add(labItem);
                     }
+                    labItemTag = tagNo;
                 }
                 else
                 {
                     items.Add(new CustomAnimationItem(effect.Shape,
                                effect.EffectType, effect.EffectInformation.BuildByLevelEffect, effect.Exit));
+                    shapeNames.Add(effect.Shape.Name);
                 }
-
             }
-            return items;
+            if (items.Count > 0 && labItemTag > -1)
+            {
+                foreach (string name in shapeNames)
+                {
+                    if (!labItems[labItemTag].AssociatedShapes.Contains(name))
+                    {
+                        labItems[labItemTag].AssociatedShapes.Add(name);
+                    }
+                }
+                foreach (AnimationItem item in items)
+                {
+                    if (item is LabAnimationItem)
+                    {
+                        list.Add(item);
+                    }
+                }
+            }
+            else if (items.Count > 0)
+            {
+                foreach (AnimationItem item in items)
+                {
+                    list.Add(item);
+                }
+            }
+            return list;
         }
 
         private void Handle(SlideRange sldRange)
@@ -125,24 +221,28 @@ namespace PowerPointLabs.FYP.Views
         {
             Selection selection = PowerPointCurrentPresentationInfo.CurrentSelection;
             if ((selection.Type != PpSelectionType.ppSelectionShapes &&
-                selection.Type != PpSelectionType.ppSelectionText) ||
-                selection.ShapeRange.Count != 1)
+                selection.Type != PpSelectionType.ppSelectionText))
             {
-                MessageBox.Show(SyncLabText.ErrorCopySelectionInvalid, SyncLabText.ErrorDialogTitle);
                 return;
             }
-
-            Shape shape = selection.ShapeRange[1];
             int index = IndexUnderDragCursor;
+            LabAnimationItem labAnimationItem = null;
             if (index > -1)
             {
-                LabAnimationItem labAnimationItem = (labListView.ItemsSource as ObservableCollection<AnimationItem>)
+                labAnimationItem = (labListView.ItemsSource as ObservableCollection<AnimationItem>)
                     .ElementAt(index) as LabAnimationItem;
-                
-                if (labAnimationItem != null && !labAnimationItem.AssociatedShapes.Contains(shape.Name))
+            }
+            foreach (Shape shape in selection.ShapeRange)
+            {
+                if (LabAnimationItemIdentifierManager.GetTagNo(shape.Name) != -1)
+                {
+                    continue;
+                }
+                    if (labAnimationItem != null && !labAnimationItem.AssociatedShapes.Contains(shape.Name))
                 {
                     labAnimationItem.AssociatedShapes.Add(shape.Name);
                 }
+
             }
         }
         ListViewItem GetListViewItem(int index)

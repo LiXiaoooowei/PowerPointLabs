@@ -93,7 +93,6 @@ namespace PowerPointLabs.FYP.Views
         {
             Effect effect = slide.SetShapeAsClickTriggered(item.GetShape(), clickNo, item.GetEffectType());
             effect.Exit = item.GetExit();
-
         }
 
         private void SyncLabAnimationItemToSlide(LabAnimationItem item, PowerPointSlide slide, int clickNo, int seqNo)
@@ -146,7 +145,7 @@ namespace PowerPointLabs.FYP.Views
                         }
                         if (isVoice)
                         {
-                            labItem.IsVoice = true;
+                            labItem.IsVoice = isVoice;
                         }
                     }
                     else

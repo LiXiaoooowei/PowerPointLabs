@@ -46,17 +46,23 @@ namespace PowerPointLabs.FYP
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (tabControl.SelectedIndex == 0)
+            string note = textBox.Text.Trim();
+            if (note == "")
             {
-                string note = textBox.Text.Trim();
-                if (note == "")
-                {
-                    MessageBox.Show("Notes must not be empty!");
-                    return;
-                }               
+                MessageBox.Show("Notes must not be empty!");
+                return;
+            }
+            if (tabControl.SelectedIndex == 0)
+            {                           
                 blockView.AddLabAnimationItem(
                     new Data.LabAnimationItem(note, LabAnimationItemIdentifierManager.GenerateUniqueNumber()));
             }
+            else if (tabControl.SelectedIndex == 1)
+            {
+                labView.AddLabAnimationItem(
+                    new Data.LabAnimationItem(note, LabAnimationItemIdentifierManager.GenerateUniqueNumber()));
+            }
+            textBox.Text = "";
         }
     }
 }
