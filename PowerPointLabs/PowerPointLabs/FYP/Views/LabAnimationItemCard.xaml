@@ -10,8 +10,16 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="150" />
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="0" Text="{Binding Text}" MaxWidth="290" Width="290"
-                 TextWrapping="Wrap" FontSize="10" />
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" Text="{Binding Text}" MaxWidth="290" Width="290"
+                 TextWrapping="Wrap" FontSize="10" BorderThickness="0 0 0.5 0"/>
+            <TextBox Grid.Row="1" Text="{Binding Text}" MaxWidth="290" Width="290"
+                 TextWrapping="Wrap" FontSize="10" BorderThickness="0 0.5 0.5 0"/>
+        </Grid>
         <StackPanel Grid.Column="1">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -22,11 +30,22 @@
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="20" />
                 </Grid.RowDefinitions>
-                <CheckBox Grid.Column="0" Grid.Row="0" IsChecked="{Binding IsCaption, Mode=TwoWay}" FontSize="8" Content="Caption"
-                          VerticalContentAlignment="Center" />
-                <CheckBox Grid.Column="1" Grid.Row="0" IsChecked="{Binding IsCallout, Mode=TwoWay}" FontSize="8" Content="Callout"
+                <CheckBox Grid.Column="0" Grid.Row="0" IsChecked="{Binding IsCallout, Mode=TwoWay}" FontSize="8" Content="Callout"
                           VerticalContentAlignment="Center"/>
-
+                <Grid Grid.Column="1" Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="Up" Margin="2 2 2 2" FontSize="6" BorderThickness="0.5 0.5 0.5 0.5"
+                            Click="UpBtn_Click" CommandParameter="{Binding .}"/>
+                    <Button Grid.Column="1" Content="Down" Margin="2 2 2 2" FontSize="6" BorderThickness="0.5 0.5 0.5 0.5"
+                            Click="DownBtn_Click" CommandParameter="{Binding .}"/>
+                    <Button Grid.Column="2" Content="X" Margin=" 2 2 2 2" FontSize="10" BorderThickness="0.5 0.5 0.5 0.5"/>
+                </Grid>
+                <CheckBox Grid.Column="1" Grid.Row="1" IsChecked="{Binding IsCaption, Mode=TwoWay}" FontSize="8" Content="Caption"
+                          VerticalContentAlignment="Center" />
                 <CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding IsVoice, Mode=TwoWay}" FontSize="8"
                               Content="Voice" VerticalContentAlignment="Center" />
             </Grid>

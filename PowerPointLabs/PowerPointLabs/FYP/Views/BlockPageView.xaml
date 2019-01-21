@@ -7,6 +7,8 @@
              xmlns:views="clr-namespace:PowerPointLabs.FYP.Views"
              xmlns:converters="clr-namespace:PowerPointLabs.FYP.Converters"
              mc:Ignorable="d" 
+             views:InnerBlockListView.UpBtnClickedHandlerParent="HandleUpBtnClickedEvent"
+             views:InnerBlockListView.DownBtnClickedHandlerParent="HandleDownBtnClickedEvent"
              d:DesignHeight="600" d:DesignWidth="550" Loaded="UserControl_Loaded">
     <Grid>
         <ListView x:Name="listView" ItemsSource="{Binding BlockItems}" AlternationCount="{Binding BlockItems.Count}"
@@ -21,7 +23,7 @@
                                 Converter={converters:BlockItemIndexConverter},
                                 RelativeSource={RelativeSource FindAncestor, 
                                          AncestorType={x:Type ListViewItem}}}" />
-                            <views:InnerBlockListView DataContext="{Binding}" />
+                            <views:InnerBlockListView DataContext="{Binding}"/>
                         </StackPanel>
                     </Border>
                 </DataTemplate>

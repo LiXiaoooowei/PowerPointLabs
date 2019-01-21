@@ -92,9 +92,12 @@ namespace PowerPointLabs.FYP.Views
         private void SyncCustomAnimationItemToSlide(CustomAnimationItem item, PowerPointSlide slide, int clickNo, int j)
         {
             Effect effect = slide.SetShapeAsClickTriggered(item.GetShape(), clickNo, item.GetEffectType());
-            effect.Exit = item.GetExit();
+            if (item.GetExit() == Microsoft.Office.Core.MsoTriState.msoTrue)
+            {
+                effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
+            }
         }
-
+         
         private void SyncLabAnimationItemToSlide(LabAnimationItem item, PowerPointSlide slide, int clickNo, int seqNo)
         {
             item.Execute(slide, clickNo, seqNo);
@@ -182,6 +185,89 @@ namespace PowerPointLabs.FYP.Views
         {
             blockDragManager = new ListViewDragDropManager<BlockItem>(listView);
             listView.Drop += ListView_Drop;
+        }
+
+        private void HandleUpBtnClickedEvent(object sender, RoutedEventArgs e)
+        {
+            LabAnimationItem labItem = ((Button)e.OriginalSource).CommandParameter as LabAnimationItem;
+            ObservableCollection<BlockItem> blockItems = listView.ItemsSource as ObservableCollection<BlockItem>;
+            for (int i = 0; i < listView.Items.Count; i++)
+            {
+                ListViewItem item = GetListViewItem(listView, i);
+                ListView view = GetChildOfType<ListView>(item);
+                if (IsMouseDirectOver(view))
+                {
+                    ObservableCollection<AnimationItem> list = view.ItemsSource as ObservableCollection<AnimationItem>;
+                    list.Remove(labItem);
+                    if (i > 0)
+                    {
+                        ListViewItem prevItem = GetListViewItem(listView, i - 1);
+                        ListView prevView = GetChildOfType<ListView>(prevItem);
+                        ObservableCollection<AnimationItem> prevList = prevView.ItemsSource as ObservableCollection<AnimationItem>;
+                        prevList.Add(labItem);
+                    }
+                    else
+                    {
+                        blockItems.Insert(0, new BlockItem(0, new ObservableCollection<AnimationItem>() { labItem}));
+                    }
+                    if (list.Count() == 0)
+                    {
+                        (listView.ItemsSource as ObservableCollection<BlockItem>).RemoveAt(i);
+                    }
+                    break;
+                }
+            }
+            for (int i = 0; i < this.listView.Items.Count; ++i)
+            {
+                ListViewItem item = GetListViewItem(listView, i);
+                Label label = GetChildOfType<Label>(item);
+                if (label != null)
+                {
+                    label.Content = PowerPointCurrentPresentationInfo.CurrentSlide.IsFirstAnimationTriggeredByClick() ? (i + 1).ToString() : i.ToString();
+                }
+            }
+        }
+
+        private void HandleDownBtnClickedEvent(object sender, RoutedEventArgs e)
+        {
+            LabAnimationItem labItem = ((Button)e.OriginalSource).CommandParameter as LabAnimationItem;
+            ObservableCollection<BlockItem> blockItems = listView.ItemsSource as ObservableCollection<BlockItem>;
+            for (int i = 0; i < listView.Items.Count; i++)
+            {
+                ListViewItem item = GetListViewItem(listView, i);
+                ListView view = GetChildOfType<ListView>(item);
+                if (IsMouseDirectOver(view))
+                {
+                    ObservableCollection<AnimationItem> list = view.ItemsSource as ObservableCollection<AnimationItem>;
+                    list.Remove(labItem);
+                    if (i < listView.Items.Count - 1)
+                    {
+                        Logger.Log((i + 1).ToString());
+                        ListViewItem nextItem = GetListViewItem(listView, i + 1);
+                        ListView nextView = GetChildOfType<ListView>(nextItem);
+                        ObservableCollection<AnimationItem> nextList = nextView.ItemsSource as ObservableCollection<AnimationItem>;
+                        nextList.Insert(0, labItem);
+                    }
+                    else
+                    {
+                        blockItems.Add(new BlockItem(0, new ObservableCollection<AnimationItem>() { labItem }));
+                    }
+                    if (list.Count() == 0)
+                    {
+                        (listView.ItemsSource as ObservableCollection<BlockItem>).RemoveAt(i);
+                    }
+                    break;
+                }
+            }
+            for (int i = 0; i < this.listView.Items.Count; ++i)
+            {
+                ListViewItem item = GetListViewItem(listView, i);
+                Label label = GetChildOfType<Label>(item);
+                if (label != null)
+                {
+                    label.Content = PowerPointCurrentPresentationInfo.CurrentSlide.IsFirstAnimationTriggeredByClick() ? (i + 1).ToString() : i.ToString();
+                }
+            }
         }
 
         private void ListView_Drop(object sender, DragEventArgs e)

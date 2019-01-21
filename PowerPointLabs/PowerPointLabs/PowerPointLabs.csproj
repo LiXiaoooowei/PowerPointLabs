@@ -668,6 +668,7 @@
     <Compile Include="FYP\Data\BlockItemList.cs" />
     <Compile Include="FYP\Data\CustomAnimationItem.cs" />
     <Compile Include="FYP\Data\LabAnimationItem.cs" />
+    <Compile Include="FYP\Data\LabItemClickEventArgs.cs" />
     <Compile Include="FYP\Service\DragAdorner.cs" />
     <Compile Include="FYP\Service\GenerateCalloutManager.cs" />
     <Compile Include="FYP\Service\GenerateCaptionManager.cs" />

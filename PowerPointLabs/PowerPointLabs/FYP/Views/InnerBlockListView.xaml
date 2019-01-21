@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:PowerPointLabs.FYP.Data"
              xmlns:views="clr-namespace:PowerPointLabs.FYP.Views"
              mc:Ignorable="d"
+             views:LabAnimationItemCard.UpBtnClickedHandler="HandleUpBtnClickedEvent"
+             views:LabAnimationItemCard.DownBtnClickedHandler="HandleDownBtnClickedEvent"
              Loaded="UserControl_Loaded">
     <ListView x:Name="listBox" ItemsSource="{Binding Items}"
                       BorderThickness="0" Margin="0" SelectionMode="Single">
