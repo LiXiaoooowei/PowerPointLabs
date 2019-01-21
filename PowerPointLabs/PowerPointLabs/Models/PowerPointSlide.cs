@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
-
+using PowerPointLabs.ActionFramework.Common.Log;
 using PowerPointLabs.NarrationsLab;
 using PowerPointLabs.TextCollection;
 using PowerPointLabs.Utils;
@@ -433,7 +433,7 @@ namespace PowerPointLabs.Models
             return slidePicture;
         }
 
-        public Effect SetShapeAsClickTriggered(Shape shape, int clickNumber, MsoAnimEffect effect)
+        public Effect SetShapeAsClickTriggered(Shape shape, int clickNumber, MsoAnimEffect effect, bool isSeperateClick = false)
         {
             Effect addedEffect;
 
@@ -444,7 +444,7 @@ namespace PowerPointLabs.Models
             bool hasClicksAfter = nextClickEffect != null;
             bool hasClickBefore = previousClickEffect != null;
 
-            if (clickNumber == 0 && !hasClickBefore && !hasClicksAfter)
+            if (clickNumber <= 0 && !hasClickBefore && !hasClicksAfter)
             {
                 addedEffect = mainSequence.AddEffect(shape, effect, trigger: MsoAnimTriggerType.msoAnimTriggerAfterPrevious);
             }

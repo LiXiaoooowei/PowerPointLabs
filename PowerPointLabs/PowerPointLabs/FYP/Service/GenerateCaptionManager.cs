@@ -18,19 +18,21 @@ namespace PowerPointLabs.FYP.Service
             this.tag = tag;
             this.isActivated = isActivated;
         }
-        public override void PerformAction(PowerPointSlide slide, int clickNo, int seqNo = -1)
+        public override List<Effect> PerformAction(PowerPointSlide slide, int clickNo, int seqNo = -1, bool isSeperateClick = false)
         {
             string name = FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.CaptionIdentifier;
             if (isActivated)
             {
                 Shape shape = NotesToCaptions.AddCaptionBoxToSlide(text, name, slide);
-                AnimationUtil.AppendAnimationsForCalloutsToSlide(shape, slide, clickNo);
-                Effect effect = slide.SetShapeAsClickTriggered(shape, clickNo + 1, MsoAnimEffect.msoAnimEffectAppear);
+                Effect effectAppear = AnimationUtil.AppendAnimationsForCalloutsToSlide(shape, slide, clickNo);
+                Effect effect = slide.SetShapeAsClickTriggered(shape, clickNo + 1, MsoAnimEffect.msoAnimEffectAppear, isSeperateClick);
                 effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
+                return new List<Effect>() { effectAppear };
             }
             else
             {
                 slide.DeleteShapeWithName(name);
+                return new List<Effect>() { };
             }
         }
     }

@@ -216,7 +216,7 @@ namespace PowerPointLabs.NarrationsLab
             }
         }
 
-        public static void EmbedSlideNote(string notetag, string note, PowerPointSlide slide, int clickNo, int seqNo)
+        public static List<Effect> EmbedSlideNote(string notetag, string note, PowerPointSlide slide, int clickNo, int seqNo, bool isSeperateClick = false)
         {
             string folderPath = Path.GetTempPath() + TempFolderName;
             string fileNameSearchPattern = string.Format("Slide {0} ClickNo {1} SeqNo {2} Speech", slide.ID, clickNo, seqNo);
@@ -238,11 +238,13 @@ namespace PowerPointLabs.NarrationsLab
                 //  audioShape.Name = string.Format("PowerPointLabs Speech ClickNo {0} SeqNo {1}", clickNo, seqNo);
                 audioShape.Name = notetag;
                 slide.RemoveAnimationsForShape(audioShape);
-                slide.SetShapeAsClickTriggered(audioShape, clickNo, MsoAnimEffect.msoAnimEffectMediaPlay);
+                Effect effect = slide.SetShapeAsClickTriggered(audioShape, clickNo, MsoAnimEffect.msoAnimEffectMediaPlay, isSeperateClick);
+                return new List<Effect>() { effect };
             }
             catch (Exception e)
             {
                 Logger.Log(e.Message);
+                return new List<Effect>();
             }
         }
 

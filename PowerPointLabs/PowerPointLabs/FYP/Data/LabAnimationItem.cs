@@ -91,11 +91,23 @@ namespace PowerPointLabs.FYP.Data
             GenerateVoiceManager = new GenerateVoiceManager(text, tagNo, isVoice);
         }
 
-        public void Execute(PowerPointSlide slide, int clickNo, int seqNo)
-        {
-            generateCalloutManager.PerformAction(slide, clickNo);
-            generateCaptionManager.PerformAction(slide, clickNo);
-            GenerateVoiceManager.PerformAction(slide, clickNo, seqNo);
+        public void Execute(PowerPointSlide slide, int clickNo, int seqNo, bool isSeperateClick = false)
+        {         
+            bool firstAnimationTriggeredByClick = slide.IsFirstAnimationTriggeredByClick();
+            List<Effect> effects = generateCalloutManager.PerformAction(slide, clickNo, isSeperateClick: isSeperateClick);
+            effects = effects.Concat(generateCaptionManager.PerformAction(slide, clickNo, 
+                isSeperateClick: isSeperateClick && !generateCalloutManager.isActivated)).ToList();
+            effects = effects.Concat(GenerateVoiceManager.PerformAction(slide, clickNo, seqNo, 
+                isSeperateClick: isSeperateClick && !generateCalloutManager.isActivated && !generateCaptionManager.isActivated)).ToList();
+            IEnumerable<Effect> allEffects = slide.TimeLine.MainSequence.Cast<Effect>();
+            if (clickNo <= 0 && isSeperateClick && !firstAnimationTriggeredByClick)
+            {
+                allEffects.ElementAt(effects.Count()).Timing.TriggerType = MsoAnimTriggerType.msoAnimTriggerOnPageClick;
+            }
+            else if (isSeperateClick && effects.Count() > 0)
+            {
+                effects[0].Timing.TriggerType = MsoAnimTriggerType.msoAnimTriggerOnPageClick;
+            }
         }
 
     }

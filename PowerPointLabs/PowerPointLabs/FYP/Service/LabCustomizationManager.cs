@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Microsoft.Office.Interop.PowerPoint;
 using PowerPointLabs.Models;
 
 namespace PowerPointLabs.FYP.Service
@@ -14,6 +15,6 @@ namespace PowerPointLabs.FYP.Service
         public int tag;
         public bool isActivated;
 
-        public abstract void PerformAction(PowerPointSlide slide, int clickNo, int seqNo);
+        public abstract List<Effect> PerformAction(PowerPointSlide slide, int clickNo, int seqNo, bool isSeperateClick = false);
     }
 }

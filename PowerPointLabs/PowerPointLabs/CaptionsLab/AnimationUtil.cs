@@ -34,9 +34,9 @@ namespace PowerPointLabs.CaptionsLab
             ReorderNotesOnSlideAnimationPane(notes, slide, Microsoft.Office.Core.MsoTriState.msoFalse);
         }
 
-        public static void AppendAnimationsForCalloutsToSlide(Shape shape, PowerPointSlide slide, int clickNo)
+        public static Effect AppendAnimationsForCalloutsToSlide(Shape shape, PowerPointSlide slide, int clickNo)
         {
-                slide.SetShapeAsClickTriggered(shape, clickNo, MsoAnimEffect.msoAnimEffectAppear);
+             return slide.SetShapeAsClickTriggered(shape, clickNo, MsoAnimEffect.msoAnimEffectAppear);
         }
 
         private static void DeleteNotesFromSlideAnimationPane(IEnumerable<NameTag> notes, PowerPointSlide slide)

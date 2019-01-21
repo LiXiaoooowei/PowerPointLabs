@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Microsoft.Office.Interop.PowerPoint;
 using PowerPointLabs.Models;
 using PowerPointLabs.NarrationsLab;
 using PowerPointLabs.TextCollection;
@@ -18,14 +19,15 @@ namespace PowerPointLabs.FYP.Service
             this.tag = tag;
             this.isActivated = isActivated;
         }
-        public override void PerformAction(PowerPointSlide slide, int clickNo, int seqNo)
+        public override List<Effect> PerformAction(PowerPointSlide slide, int clickNo, int seqNo, bool isSeperateClick = false)
         {
             string name = FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.AudioIdentifier;
             slide.DeleteShapeWithName(name);
             if (isActivated)
             {             
-                NotesToAudio.EmbedSlideNote(name, text, slide, clickNo, seqNo);
+                return NotesToAudio.EmbedSlideNote(name, text, slide, clickNo, seqNo, isSeperateClick);
             }
+            return new List<Effect>();
         }
     }
 }
