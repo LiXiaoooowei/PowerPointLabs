@@ -238,7 +238,17 @@ namespace PowerPointLabs.NarrationsLab
                 //  audioShape.Name = string.Format("PowerPointLabs Speech ClickNo {0} SeqNo {1}", clickNo, seqNo);
                 audioShape.Name = notetag;
                 slide.RemoveAnimationsForShape(audioShape);
-                Effect effect = slide.SetShapeAsClickTriggered(audioShape, clickNo, MsoAnimEffect.msoAnimEffectMediaPlay, isSeperateClick);
+                Effect effect;
+                if (clickNo == 0)
+                {
+                    effect = slide.SetAudioAsAutoplay(audioShape);
+                }
+                else
+                {
+                    effect = slide.SetShapeAsClickTriggered(audioShape, clickNo, 
+                        MsoAnimEffect.msoAnimEffectMediaPlay, isSeperateClick);
+                }
+                effect.Timing.TriggerType = MsoAnimTriggerType.msoAnimTriggerWithPrevious;
                 return new List<Effect>() { effect };
             }
             catch (Exception e)

@@ -84,8 +84,7 @@ namespace PowerPointLabs.FYP.Views
                             SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo, j);
                         }
                         else if (item.GetType() == typeof(LabAnimationItem) && !ContainsCustomAnimationInBlock(blockItem))
-                        {
-                            Logger.Log("Click number is " + clickNo.ToString());
+                        {              
                             SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo - 1, j, j == 0);
                         }
                     }
@@ -117,7 +116,7 @@ namespace PowerPointLabs.FYP.Views
             Effect effect = slide.SetShapeAsClickTriggered(item.GetShape(), clickNo, item.GetEffectType());
             if (item.GetExit() == Microsoft.Office.Core.MsoTriState.msoTrue)
             {
-                effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
+                effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;               
             }
         }
          
@@ -165,21 +164,37 @@ namespace PowerPointLabs.FYP.Views
                         if (isCaption)
                         {
                             labItem.IsCaption = true;
+                            labItem.Note = effect.Shape.TextFrame.TextRange.Text.Trim();
                         }
                         if (isCallout)
                         {
                             labItem.IsCallout = true;
+                            labItem.Text = effect.Shape.TextFrame.TextRange.Text.Trim();
                         }
                         if (isVoice)
                         {
                             labItem.IsVoice = isVoice;
+                            Shape shape = PowerPointCurrentPresentationInfo.CurrentSlide
+                                .GetShapeWithName(FYPText.Identifier + FYPText.Underscore + tagNo.ToString() + FYPText.Underscore + FYPText.CaptionIdentifier)[0];
+                            labItem.Note = shape.TextFrame.TextRange.Text.Trim();
                         }
                     }
                     else
                     {
-                        labItem = new LabAnimationItem(effect.Shape.TextFrame.TextRange.Text, tagNo, isCaption, isVoice, isCallout);
-                        labItems.Add(tagNo, labItem);
-                        items.Add(labItem);
+                        try
+                        {
+                            string text = isCallout ? effect.Shape.TextFrame.TextRange.Text.Trim() : "";
+                            Shape shape = PowerPointCurrentPresentationInfo.CurrentSlide
+                                .GetShapeWithName(FYPText.Identifier + FYPText.Underscore + tagNo.ToString() + FYPText.Underscore + FYPText.CaptionIdentifier)[0];
+                            string note = shape.TextFrame.TextRange.Text.Trim();
+                            labItem = new LabAnimationItem(text, tagNo, note, isCaption, isVoice, isCallout);
+                            labItems.Add(tagNo, labItem);
+                            items.Add(labItem);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Log(e.Message);
+                        }
                     }
                 }
                 else

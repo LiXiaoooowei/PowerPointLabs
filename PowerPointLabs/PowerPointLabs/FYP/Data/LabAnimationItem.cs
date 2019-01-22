@@ -23,8 +23,20 @@ namespace PowerPointLabs.FYP.Data
             set
             {
                 text = value;
-                generateCaptionManager.text = value;
                 generateCalloutManager.text = value;
+            }
+        }
+
+        public string Note
+        {
+            get
+            {
+                return note;
+            }
+            set
+            {
+                note = value;
+                generateCaptionManager.text = value;
                 GenerateVoiceManager.text = value;
             }
         }
@@ -73,14 +85,16 @@ namespace PowerPointLabs.FYP.Data
         public ObservableCollection<string> AssociatedShapes { get; set; }
 
         private string text;
+        private string note;
         private bool isCaption;
         private bool isVoice;
         private bool isCallout;
 
-        public LabAnimationItem(string text, int tagNo, bool isCaption = false, bool isVoice = false,
+        public LabAnimationItem(string text, int tagNo, string note = "", bool isCaption = false, bool isVoice = false,
             bool isCallout = false):base()
         {
             this.text = text;
+            this.note = note;
             TagNo = tagNo;
             this.isCaption = isCaption;
             this.isVoice = isVoice;

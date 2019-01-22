@@ -370,7 +370,7 @@ namespace PowerPointLabs.Models
             return effect;
         }
 
-        public void SetAudioAsAutoplay(Shape shape)
+        public Effect SetAudioAsAutoplay(Shape shape)
         {
             Sequence mainSequence = _slide.TimeLine.MainSequence;
 
@@ -379,11 +379,11 @@ namespace PowerPointLabs.Models
 
             if (hasNoClicksOnSlide)
             {
-                AddShapeAsLastAutoplaying(shape, MsoAnimEffect.msoAnimEffectMediaPlay);
+                return AddShapeAsLastAutoplaying(shape, MsoAnimEffect.msoAnimEffectMediaPlay);
             }
             else
             {
-                InsertAnimationBeforeExisting(shape, firstClickEvent, MsoAnimEffect.msoAnimEffectMediaPlay);
+                return InsertAnimationBeforeExisting(shape, firstClickEvent, MsoAnimEffect.msoAnimEffectMediaPlay);
             }
         }
 

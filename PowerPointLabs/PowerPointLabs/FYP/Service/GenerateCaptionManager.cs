@@ -24,6 +24,7 @@ namespace PowerPointLabs.FYP.Service
             if (isActivated)
             {
                 Shape shape = NotesToCaptions.AddCaptionBoxToSlide(text, name, slide);
+                shape.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
                 Effect effectAppear = AnimationUtil.AppendAnimationsForCalloutsToSlide(shape, slide, clickNo);
                 Effect effect = slide.SetShapeAsClickTriggered(shape, clickNo + 1, MsoAnimEffect.msoAnimEffectAppear, isSeperateClick);
                 effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
@@ -31,7 +32,8 @@ namespace PowerPointLabs.FYP.Service
             }
             else
             {
-                slide.DeleteShapeWithName(name);
+                Shape shapeToHide = NotesToCaptions.AddCaptionBoxToSlide(text, name, slide);
+                shapeToHide.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
                 return new List<Effect>() { };
             }
         }

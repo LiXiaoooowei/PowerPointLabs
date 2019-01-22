@@ -67,5 +67,9 @@ namespace PowerPointLabs.FYP.Views
             RaiseEvent(eventArgs);
         }
 
+        private void VoicePreviewButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

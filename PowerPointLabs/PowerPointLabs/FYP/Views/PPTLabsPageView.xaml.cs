@@ -162,7 +162,9 @@ namespace PowerPointLabs.FYP.Views
                     }
                     else
                     {
-                        labItem = new LabAnimationItem(effect.Shape.TextFrame.TextRange.Text, tagNo, isCaption, isVoice, isCallout);
+                        string text = isCallout ? effect.Shape.TextFrame.TextRange.Text.Trim() : "";
+                        string note = isCaption ? effect.Shape.TextFrame.TextRange.Text.Trim() : "";
+                        labItem = new LabAnimationItem(text, tagNo, note, isCaption, isVoice, isCallout);
                         labItems.Add(tagNo, labItem);
                         items.Add(labItem);
                     }

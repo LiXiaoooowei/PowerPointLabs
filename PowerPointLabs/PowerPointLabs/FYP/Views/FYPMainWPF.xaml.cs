@@ -46,8 +46,8 @@ namespace PowerPointLabs.FYP
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            string note = textBox.Text.Trim();
-            if (note == "")
+            string text = textBox.Text.Trim();
+            if (text == "")
             {
                 MessageBox.Show("Notes must not be empty!");
                 return;
@@ -55,12 +55,12 @@ namespace PowerPointLabs.FYP
             if (tabControl.SelectedIndex == 0)
             {                           
                 blockView.AddLabAnimationItem(
-                    new Data.LabAnimationItem(note, LabAnimationItemIdentifierManager.GenerateUniqueNumber()));
+                    new Data.LabAnimationItem(text, LabAnimationItemIdentifierManager.GenerateUniqueNumber()));
             }
             else if (tabControl.SelectedIndex == 1)
             {
                 labView.AddLabAnimationItem(
-                    new Data.LabAnimationItem(note, LabAnimationItemIdentifierManager.GenerateUniqueNumber()));
+                    new Data.LabAnimationItem(text, LabAnimationItemIdentifierManager.GenerateUniqueNumber()));
             }
             textBox.Text = "";
         }
