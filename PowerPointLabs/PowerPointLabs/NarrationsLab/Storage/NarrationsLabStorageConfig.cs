@@ -6,6 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+
+
+using PowerPointLabs.ActionFramework.Common.Log;
+
 using PowerPointLabs.NarrationsLab.Data;
 
 namespace PowerPointLabs.NarrationsLab.Storage
@@ -35,7 +39,7 @@ namespace PowerPointLabs.NarrationsLab.Storage
           
             Dictionary<string, string> user = new Dictionary<string, string>()
             {
-                { "endpoint", account.GetEndpoint() },
+                { "endpoint", account.GetRegion() },
                 {"key",  account.GetKey() }
             };
             XElement root = new XElement("user", from kv in user select new XElement(kv.Key, kv.Value));
@@ -59,12 +63,14 @@ namespace PowerPointLabs.NarrationsLab.Storage
                 string endpoint = user.ContainsKey("endpoint") ? user["endpoint"] : null;
                 if (key != null && endpoint != null)
                 {
-                    UserAccount.GetInstance().SetUserKeyAndEndpoint(key, endpoint);
+                    UserAccount.GetInstance().SetUserKeyAndRegion(key, endpoint);
                 }
+                Logger.Log("valid user account found");
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 // handle exception
+                Logger.Log(e.Message);
             }
         }
     }

@@ -13,8 +13,10 @@ using PowerPointLabs.Models;
 using PowerPointLabs.NarrationsLab;
 using PowerPointLabs.NarrationsLab.Data;
 using PowerPointLabs.NarrationsLab.ViewModel;
+
 using PowerPointLabs.TagMatchers;
 using PowerPointLabs.Tags;
+
 
 namespace PowerPointLabs.SpeechEngine
 {
@@ -48,21 +50,16 @@ namespace PowerPointLabs.SpeechEngine
                 String fileName = i > 0 ? baseFileName + " (OnClick)" : baseFileName;
                 fileName = tags.Count() > 0 ? fileName + "[" + tags[0].Contents + "]" : fileName;
                 String filePath = folderPath + "\\" + fileName + ".wav";
-                if (!NotesToAudio.IsHumanVoiceSelected)
-                {
-                    SaveStringToWaveFile(textToSave, filePath);
-                }
-                else
+
+                if (NotesToAudio.IsHumanVoiceSelected)
                 {
                     SaveStringToWaveFileWithHumanVoice(textToSave, filePath);
                 }
+                else
+                {
+                    SaveStringToWaveFile(textToSave, filePath);
+                }
             }
-        }
-
-        public static void SaveStringToWaveFile(String textToSave, String filePath)
-        {
-            PromptBuilder builder = GetPromptForText(textToSave);
-            PromptToAudio.SaveAsWav(builder, filePath);
         }
 
         public static void SpeakString(String textToSpeak)
@@ -113,7 +110,13 @@ namespace PowerPointLabs.SpeechEngine
                 OutputFormat = AudioOutputFormat.Riff24Khz16BitMonoPcm,
                 AuthorizationToken = "Bearer " + accessToken,
             }, filePath).Wait();
-          //  Thread.Sleep(2000);
+
+        }
+      
+        public static void SaveStringToWaveFile(String textToSave, String filePath)
+        {
+            PromptBuilder builder = GetPromptForText(textToSave);
+            PromptToAudio.SaveAsWav(builder, filePath);
         }
 
         private static string GetHumanSpeakNotesForText(string textToSave)
@@ -128,6 +131,15 @@ namespace PowerPointLabs.SpeechEngine
             TaggedText taggedText = new TaggedText(textToConvert);
             PromptBuilder builder = taggedText.ToPromptBuilder(DefaultVoiceName);
             return builder;
+        }
+
+
+        private static void SaveAudioToWaveFile(object sender, GenericEventArgs<Stream> args)
+        {
+            Console.WriteLine(args.EventData);
+            SaveStreamToFile(args.FilePath, args.EventData);
+            Console.WriteLine("saving to wav");
+            args.EventData.Dispose();
         }
 
         private static byte[] ReadFully(Stream input)
@@ -160,30 +172,7 @@ namespace PowerPointLabs.SpeechEngine
                 Debug.WriteLine(e.Message);
             }
         }
-        /// <summary>
-        /// This method is called once the audio returned from the service.
-        /// It will then attempt to play that audio file.
-        /// Note that the playback will fail if the output audio format is not pcm encoded.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="args">The <see cref="GenericEventArgs{Stream}"/> instance containing the event data.</param>
-        private static void SaveAudioToWaveFile(object sender, GenericEventArgs<Stream> args)
-        {
-            Console.WriteLine(args.EventData);
-            SaveStreamToFile(args.FilePath, args.EventData);
-            Console.WriteLine("saving to wav");
-            // For SoundPlayer to be able to play the wav file, it has to be encoded in PCM.
-            // Use output audio format AudioOutputFormat.Riff16Khz16BitMonoPcm to do that.
-            //   SoundPlayer player = new SoundPlayer(args.EventData);
-            //  player.PlaySync();
-            args.EventData.Dispose();
-        }
 
-        /// <summary>
-        /// Handler an error when a TTS request failed.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="GenericEventArgs{Exception}"/> instance containing the event data.</param>
         private static void ErrorHandler(object sender, GenericEventArgs<Exception> e)
         {
             Console.WriteLine("Unable to complete the TTS request: [{0}]", e.ToString());

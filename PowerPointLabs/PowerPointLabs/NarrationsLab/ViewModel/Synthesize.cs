@@ -17,9 +17,6 @@ namespace PowerPointLabs.NarrationsLab.ViewModel
         private HttpClient client;
         private HttpClientHandler handler;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Synthesize"/> class.
-        /// </summary>
         public Synthesize()
         {
             var cookieContainer = new CookieContainer();
@@ -33,21 +30,10 @@ namespace PowerPointLabs.NarrationsLab.ViewModel
             handler.Dispose();
         }
 
-        /// <summary>
-        /// Called when a TTS request has been completed and audio is available.
-        /// </summary>
         public event EventHandler<GenericEventArgs<Stream>> OnAudioAvailable;
 
-        /// <summary>
-        /// Called when an error has occured. e.g this could be an HTTP error.
-        /// </summary>
         public event EventHandler<GenericEventArgs<Exception>> OnError;
 
-        /// <summary>
-        /// Sends the specified text to be spoken to the TTS service and saves the response audio to a file.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A Task</returns>
         public Task Speak(CancellationToken cancellationToken, InputOptions inputOptions, string filepath)
         {
             client.DefaultRequestHeaders.Clear();
@@ -107,13 +93,6 @@ namespace PowerPointLabs.NarrationsLab.ViewModel
 
             return saveTask;
         }
-        /// <summary>
-        /// Generates SSML.
-        /// </summary>
-        /// <param name="locale">The locale.</param>
-        /// <param name="gender">The gender.</param>
-        /// <param name="name">The voice name.</param>
-        /// <param name="text">The text input.</param>
         private string GenerateSsml(string locale, string gender, string name, string text)
         {
             var ssmlDoc = new XDocument(
@@ -128,23 +107,15 @@ namespace PowerPointLabs.NarrationsLab.ViewModel
             return ssmlDoc.ToString();
         }
 
-        /// <summary>
-        /// Called when a TTS requst has been successfully completed and audio is available.
-        /// </summary>
         private void AudioAvailable(GenericEventArgs<Stream> e)
         {
             EventHandler<GenericEventArgs<Stream>> handler = this.OnAudioAvailable;
             if (handler != null)
             {
                 handler(this, e);
-                //SaveStreamToFile(@"C:\Users\xiaov\Desktop\test.wav", e.EventData);
             }
         }
 
-        /// <summary>
-        /// Error handler function
-        /// </summary>
-        /// <param name="e">The exception</param>
         private void Error(GenericEventArgs<Exception> e)
         {
             EventHandler<GenericEventArgs<Exception>> handler = this.OnError;
@@ -154,14 +125,8 @@ namespace PowerPointLabs.NarrationsLab.ViewModel
             }
         }
 
-        /// <summary>
-        /// Inputs Options for the TTS Service.
-        /// </summary>
         public class InputOptions
         {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Input"/> class.
-            /// </summary>
             public InputOptions()
             {
                 this.Locale = "en-us";
@@ -170,19 +135,9 @@ namespace PowerPointLabs.NarrationsLab.ViewModel
                 this.OutputFormat = AudioOutputFormat.Riff16Khz16BitMonoPcm;
             }
 
-            /// <summary>
-            /// Gets or sets the request URI.
-            /// </summary>
             public Uri RequestUri { get; set; }
-
-            /// <summary>
-            /// Gets or sets the audio output format.
-            /// </summary>
             public AudioOutputFormat OutputFormat { get; set; }
 
-            /// <summary>
-            /// Gets or sets the headers.
-            /// </summary>
             public IEnumerable<KeyValuePair<string, string>> Headers
             {
                 get
@@ -279,29 +234,11 @@ namespace PowerPointLabs.NarrationsLab.ViewModel
                 }
             }
 
-            /// <summary>
-            /// Gets or sets the locale.
-            /// </summary>
-            public String Locale { get; set; }
 
-            /// <summary>
-            /// Gets or sets the type of the voice; male/female.
-            /// </summary>
+            public string Locale { get; set; }
             public Gender VoiceType { get; set; }
-
-            /// <summary>
-            /// Gets or sets the name of the voice.
-            /// </summary>
             public string VoiceName { get; set; }
-
-            /// <summary>
-            /// Authorization Token.
-            /// </summary>
             public string AuthorizationToken { get; set; }
-
-            /// <summary>
-            /// Gets or sets the text.
-            /// </summary>
             public string Text { get; set; }
         }
     }

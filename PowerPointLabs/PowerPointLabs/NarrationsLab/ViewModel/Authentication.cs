@@ -23,7 +23,8 @@ namespace PowerPointLabs.NarrationsLab.ViewModel
 
         public static Authentication GetInstance(string issueTokenUri = null, string apiKey = null)
         {
-            if (auth == null && issueTokenUri != null && apiKey != null)
+
+            if (issueTokenUri != null && apiKey != null)
             {
                 auth = new Authentication(issueTokenUri, apiKey);
             }

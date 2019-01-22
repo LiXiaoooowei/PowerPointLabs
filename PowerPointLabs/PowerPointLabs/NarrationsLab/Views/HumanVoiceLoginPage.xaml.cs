@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
+using PowerPointLabs.ActionFramework.Common.Log;
+
 using PowerPointLabs.NarrationsLab.Data;
 using PowerPointLabs.NarrationsLab.Storage;
 using PowerPointLabs.NarrationsLab.ViewModel;
@@ -41,14 +43,17 @@ namespace PowerPointLabs.NarrationsLab.Views
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            string _key = key.Text;
-            string _endpoint = endpoint.Text + "/issueToken";
+            string _key = key.Text.Trim();
+            string region = ((ComboBoxItem)endpoint.SelectedItem).Content.ToString().Trim();
+            string _endpoint = EndpointToUriMapping.regionToEndpointMapping[region];
 
             try
             {
                 Authentication auth = Authentication.GetInstance(_endpoint, _key);
                 string accessToken = auth.GetAccessToken();
                 Console.WriteLine("Token: {0}\n", accessToken);
+
+                Logger.Log("auth passed" + _key + " " + _endpoint);
             }
             catch (Exception ex)
             {
@@ -56,13 +61,15 @@ namespace PowerPointLabs.NarrationsLab.Views
                 Console.WriteLine(ex.ToString());
                 Console.WriteLine(ex.Message);
                 MessageBox.Show("Failed authentication");
+                Logger.Log("auth failed");
                 return;
             }
             
-            UserAccount.GetInstance().SetUserKeyAndEndpoint(_key, _endpoint);
+            UserAccount.GetInstance().SetUserKeyAndRegion(_key, region);
             NarrationsLabStorageConfig.SaveUserAccount(UserAccount.GetInstance());
             NarrationsLabSettingsDialogBox.GetInstance()
-                .SetCurrentPage(Data.NarrationsLabSettingsPage.MainSettingsPage);
+                .SetCurrentPage(NarrationsLabSettingsPage.MainSettingsPage);
+
         }
     }
 }

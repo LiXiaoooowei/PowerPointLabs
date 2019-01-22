@@ -27,35 +27,24 @@ namespace PowerPointLabs.NarrationsLab.Views
         private NarrationsLabMainSettingsPage()
         {
             InitializeComponent();
-            if (UserAccount.GetInstance().IsEmpty())
+
+            if (UserAccount.GetInstance().IsEmpty() || !IsValidUserAccount())
             {
                 voiceList.Visibility = Visibility.Collapsed;
                 humanVoiceBtn.Visibility = Visibility.Visible;
                 changeAcctBtn.Visibility = Visibility.Hidden;
+                RadioHumanVoice.IsEnabled = false;
+
             }
             else
             {
                 string _key = UserAccount.GetInstance().GetKey();
-                string _endpoint = UserAccount.GetInstance().GetEndpoint();
-
-                try
-                {
-                    Authentication auth = Authentication.GetInstance(_endpoint, _key);
-                    string accessToken = auth.GetAccessToken();
-                    Console.WriteLine("Token: {0}\n", accessToken);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Failed authentication.");
-                    Console.WriteLine(ex.ToString());
-                    Console.WriteLine(ex.Message);
-                    MessageBox.Show("Failed authentication");
-                    return;
-                }
+                string _endpoint = UserAccount.GetInstance().GetRegion();
 
                 voiceList.Visibility = Visibility.Visible;
                 humanVoiceBtn.Visibility = Visibility.Collapsed;
                 changeAcctBtn.Visibility = Visibility.Visible;
+                RadioHumanVoice.IsEnabled = true;
             }
             voiceList.ItemsSource = voices;
             voiceList.DisplayMemberPath = "Voice";
@@ -73,12 +62,14 @@ namespace PowerPointLabs.NarrationsLab.Views
                     instance.voiceList.Visibility = Visibility.Collapsed;
                     instance.humanVoiceBtn.Visibility = Visibility.Visible;
                     instance.changeAcctBtn.Visibility = Visibility.Hidden;
+                    instance.RadioHumanVoice.IsEnabled = false;
                 }
                 else
                 {
                     instance.voiceList.Visibility = Visibility.Visible;
                     instance.humanVoiceBtn.Visibility = Visibility.Collapsed;
                     instance.changeAcctBtn.Visibility = Visibility.Visible;
+                    instance.RadioHumanVoice.IsEnabled = true;
                 }
             }
             return instance;
@@ -106,6 +97,28 @@ namespace PowerPointLabs.NarrationsLab.Views
         public void Destroy()
         {
             instance = null;
+        }
+
+        private bool IsValidUserAccount()
+        {
+            string _key = UserAccount.GetInstance().GetKey();
+            string _endpoint = EndpointToUriMapping.regionToEndpointMapping[UserAccount.GetInstance().GetRegion()];
+
+            try
+            {
+                Authentication auth = Authentication.GetInstance(_endpoint, _key);
+                string accessToken = auth.GetAccessToken();
+                Console.WriteLine("Token: {0}\n", accessToken);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed authentication.");
+                Console.WriteLine(ex.ToString());
+                Console.WriteLine(ex.Message);
+                MessageBox.Show("Failed authentication");
+                return false;
+            }
+            return true;
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
