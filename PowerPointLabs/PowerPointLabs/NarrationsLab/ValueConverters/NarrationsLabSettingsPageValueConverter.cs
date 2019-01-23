@@ -17,7 +17,9 @@ namespace PowerPointLabs.NarrationsLab.ValueConverters
                 case NarrationsLabSettingsPage.MainSettingsPage:
                     return NarrationsLabMainSettingsPage.GetInstance();
                 case NarrationsLabSettingsPage.LoginPage:
-                    return HumanVoiceLoginPage.GetInstance();             
+                    return HumanVoiceLoginPage.GetInstance();
+                case NarrationsLabSettingsPage.VoicePreviewPage:
+                    return VoicePreviewPage.GetInstance();
                 default:
                     Debugger.Break();
                     return null;

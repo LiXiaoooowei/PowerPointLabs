@@ -15,6 +15,9 @@ using System.Windows.Shapes;
 
 using PowerPointLabs.ActionFramework.Common.Log;
 using PowerPointLabs.FYP.Data;
+using PowerPointLabs.NarrationsLab;
+using PowerPointLabs.NarrationsLab.Storage;
+using PowerPointLabs.NarrationsLab.Views;
 
 namespace PowerPointLabs.FYP.Views
 {
@@ -69,7 +72,25 @@ namespace PowerPointLabs.FYP.Views
 
         private void VoicePreviewButton_Click(object sender, RoutedEventArgs e)
         {
+            NarrationsLabStorageConfig.LoadUserAccount();
 
+            NarrationsLabSettingsDialogBox dialog = NarrationsLabSettingsDialogBox.GetInstance(
+                NarrationsLab.Data.NarrationsLabSettingsPage.VoicePreviewPage);
+            dialog.Height = 250;
+            VoicePreviewPage.GetInstance().SetVoicePreviewSettings(
+               NarrationsLabSettings.VoiceSelectedIndex,
+               NarrationsLabSettings.humanVoice,
+               NarrationsLabSettings.VoiceNameList,
+               NotesToAudio.IsHumanVoiceSelected,
+               NarrationsLabSettings.IsPreviewEnabled);
+            VoicePreviewPage.GetInstance().DialogConfirmedHandler += NarrationsLabSettings.OnSettingsDialogConfirmed;
+            VoicePreviewPage.GetInstance().spokenText.Text = explanatoryNote.Text;
+
+            if (dialog.ShowDialog() == true)
+            {
+                previewVoiceLabel.Content = VoicePreviewPage.GetInstance().voicePreviewLabel;
+                explanatoryNote.Text = VoicePreviewPage.GetInstance().spokenText.Text;
+            }
         }
     }
 }

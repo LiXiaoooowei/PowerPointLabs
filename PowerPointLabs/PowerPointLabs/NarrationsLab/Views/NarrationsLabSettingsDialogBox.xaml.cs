@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-
+using PowerPointLabs.FYP.Data;
 using PowerPointLabs.NarrationsLab.Data;
 
 namespace PowerPointLabs.NarrationsLab.Views
@@ -24,18 +24,25 @@ namespace PowerPointLabs.NarrationsLab.Views
                 PropertyChanged(this, new PropertyChangedEventArgs("CurrentPage"));
             }
         }
+        public LabAnimationItem labAnimationItem;
+
         private static NarrationsLabSettingsDialogBox instance;
+        
         private NarrationsLabSettingsPage _currentPage { get; set; } = NarrationsLabSettingsPage.MainSettingsPage;
         public void SetCurrentPage(NarrationsLabSettingsPage page)
         {
             CurrentPage = page;
         }
 
-        public static NarrationsLabSettingsDialogBox GetInstance()
+        public static NarrationsLabSettingsDialogBox GetInstance(
+            NarrationsLabSettingsPage page = NarrationsLabSettingsPage.MainSettingsPage,
+            LabAnimationItem item = null)
         {
             if (instance == null)
             {
                 instance = new NarrationsLabSettingsDialogBox();
+                instance._currentPage = page;
+                instance.labAnimationItem = item;
             }
             return instance;
         }

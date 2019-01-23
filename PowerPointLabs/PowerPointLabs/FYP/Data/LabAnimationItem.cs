@@ -40,6 +40,18 @@ namespace PowerPointLabs.FYP.Data
                 GenerateVoiceManager.text = value;
             }
         }
+
+        public string VoiceLabel
+        {
+            get
+            {
+                return voiceLabel;
+            }
+            set
+            {
+                voiceLabel = value;
+            }
+        }
         public bool IsCaption
         {
             get
@@ -86,6 +98,7 @@ namespace PowerPointLabs.FYP.Data
 
         private string text;
         private string note;
+        private string voiceLabel;
         private bool isCaption;
         private bool isVoice;
         private bool isCallout;
@@ -96,6 +109,7 @@ namespace PowerPointLabs.FYP.Data
             this.text = text;
             this.note = note;
             TagNo = tagNo;
+            voiceLabel = "";
             this.isCaption = isCaption;
             this.isVoice = isVoice;
             this.isCallout = isCallout;

@@ -26,7 +26,7 @@ namespace PowerPointLabs.NarrationsLab
             dialog.ShowDialog();
         }
 
-        private static void OnSettingsDialogConfirmed(string voiceName, HumanVoice voice, bool isHumanVoiceSelected, bool isPreviewCurrentSlide)
+        public static void OnSettingsDialogConfirmed(string voiceName, HumanVoice voice, bool isHumanVoiceSelected, bool isPreviewCurrentSlide)
         {
             IsPreviewEnabled = isPreviewCurrentSlide;
 

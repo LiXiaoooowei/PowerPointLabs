@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Security.Cryptography;
 using System.Speech.Synthesis;
 using System.Text;
@@ -73,6 +74,17 @@ namespace PowerPointLabs.SpeechEngine
             PromptToAudio.Speak(builder);
         }
 
+        public static void SpeakString(string textToSpeak, string voiceName)
+        {
+            if (string.IsNullOrWhiteSpace(textToSpeak))
+            {
+                return;
+            }
+
+            PromptBuilder builder = GetSystemPromptForText(textToSpeak, voiceName);
+            PromptToAudio.Speak(builder);
+        }
+
 
         public static void SaveStringToWaveFileWithHumanVoice(string textToSave, string filePath)
         {
@@ -112,6 +124,43 @@ namespace PowerPointLabs.SpeechEngine
             }, filePath).Wait();
 
         }
+
+        public static void SpeakTextWithAzureVoice(string textToSpeak, HumanVoice humanVoice)
+        {
+            string accessToken;
+
+            try
+            {
+                Authentication auth = Authentication.GetInstance();
+                accessToken = auth.GetAccessToken();
+                Logger.Log("Token: " + accessToken);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Failed authentication.");
+                Logger.Log(ex.ToString());
+                Logger.Log(ex.Message);
+                return;
+            }
+            string requestUri = UserAccount.GetInstance().GetUri();
+            var cortana = new Synthesize();
+
+            cortana.OnAudioAvailable += PlayAudio;
+            cortana.OnError += ErrorHandler;
+
+            // Reuse Synthesize object to minimize latency
+            cortana.Speak(CancellationToken.None, new Synthesize.InputOptions()
+            {
+                RequestUri = new Uri(requestUri),
+                Text = textToSpeak,
+                VoiceType = humanVoice.voiceType,
+                Locale = humanVoice.Locale,
+                VoiceName = humanVoice.voiceName,
+                // Service can return audio in different output format.
+                OutputFormat = AudioOutputFormat.Riff24Khz16BitMonoPcm,
+                AuthorizationToken = "Bearer " + accessToken,
+            }).Wait();
+        }
       
         public static void SaveStringToWaveFile(String textToSave, String filePath)
         {
@@ -126,10 +175,28 @@ namespace PowerPointLabs.SpeechEngine
             return strToSpeak;
         }
 
+        private static void PlayAudio(object sender, GenericEventArgs<Stream> args)
+        {
+            Console.WriteLine(args.EventData);
+
+            // For SoundPlayer to be able to play the wav file, it has to be encoded in PCM.
+            // Use output audio format AudioOutputFormat.Riff16Khz16BitMonoPcm to do that.
+            SoundPlayer player = new SoundPlayer(args.EventData);
+            player.PlaySync();
+            args.EventData.Dispose();
+        }
+
         private static PromptBuilder GetPromptForText(string textToConvert)
         {
             TaggedText taggedText = new TaggedText(textToConvert);
             PromptBuilder builder = taggedText.ToPromptBuilder(DefaultVoiceName);
+            return builder;
+        }
+
+        private static PromptBuilder GetSystemPromptForText(string textToConvert, string voiceName)
+        {
+            TaggedText taggedText = new TaggedText(textToConvert);
+            PromptBuilder builder = taggedText.ToPromptBuilder(voiceName);
             return builder;
         }
 
