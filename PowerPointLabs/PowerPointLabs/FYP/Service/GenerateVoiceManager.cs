@@ -22,6 +22,10 @@ namespace PowerPointLabs.FYP.Service
         public override List<Effect> PerformAction(PowerPointSlide slide, int clickNo, int seqNo, string voiceName, bool isSeperateClick = false,
             bool syncAppearance = true)
         {
+            if (!syncAppearance)
+            {
+                return new List<Effect>();
+            }
             string name = FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.AudioIdentifier;
             slide.DeleteShapeWithName(name);
             if (isActivated)

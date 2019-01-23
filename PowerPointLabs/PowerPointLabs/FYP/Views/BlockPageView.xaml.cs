@@ -93,7 +93,7 @@ namespace PowerPointLabs.FYP.Views
                     bool containsCustomAnimationInBlock = ContainsCustomAnimationInBlock(blockItem);
                     if (i == 0 && effects.Count() > 0)
                     {
-                        effects.ElementAt(0).Timing.TriggerType = containsCustomAnimationInBlock? MsoAnimTriggerType.msoAnimTriggerWithPrevious:
+                        effects.ElementAt(0).Timing.TriggerType = containsCustomAnimationInBlock && clickNo == 0? MsoAnimTriggerType.msoAnimTriggerWithPrevious:
                             MsoAnimTriggerType.msoAnimTriggerOnPageClick;
                     }
 
@@ -106,7 +106,7 @@ namespace PowerPointLabs.FYP.Views
                         }
                         else if (item.GetType() == typeof(LabAnimationItem) && !containsCustomAnimationInBlock)
                         {
-                            if (i == 0)
+                            if ((i == 0 && clickNo == 0) || j != 0)
                             {
                                 SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo, j, false);
                             }
