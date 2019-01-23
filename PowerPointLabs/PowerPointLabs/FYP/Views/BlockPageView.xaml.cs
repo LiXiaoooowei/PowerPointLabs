@@ -66,7 +66,69 @@ namespace PowerPointLabs.FYP.Views
                 }
             }
             //end for new version
+            AddAppearanceLabAnimation();
+            AddDisappearanceLabAnimation();
+        }
+
+        public void AddLabAnimationItem(LabAnimationItem item)
+        {
+            (listView.ItemsSource as ObservableCollection<BlockItem>)
+                .Add(new BlockItem(-1, new ObservableCollection<AnimationItem>() { item }));
+        }
+
+        private void AddAppearanceLabAnimation()
+        {
             ObservableCollection<BlockItem> animationItems = listView.ItemsSource as ObservableCollection<BlockItem>;
+            PowerPointSlide slide = PowerPointCurrentPresentationInfo.CurrentSlide;
+            IEnumerable<Effect> effects = slide.TimeLine.MainSequence.Cast<Effect>();
+
+            for (int i = 0; i < listView.Items.Count; ++i)
+            {
+                ListViewItem listViewItem = GetListViewItem(listView, i);
+                Label label = GetChildOfType<Label>(listViewItem);
+                if (label != null)
+                {
+                    int clickNo = Convert.ToInt32(label.Content.ToString());
+                    BlockItem blockItem = animationItems.ElementAt(i);
+                    bool containsCustomAnimationInBlock = ContainsCustomAnimationInBlock(blockItem);
+                    if (i == 0 && effects.Count() > 0)
+                    {
+                        effects.ElementAt(0).Timing.TriggerType = containsCustomAnimationInBlock? MsoAnimTriggerType.msoAnimTriggerWithPrevious:
+                            MsoAnimTriggerType.msoAnimTriggerOnPageClick;
+                    }
+
+                    for (int j = 0; j < blockItem.Items.Count; j++)
+                    {
+                        AnimationItem item = blockItem.Items.ElementAt(j) as AnimationItem;
+                        if (item.GetType() == typeof(LabAnimationItem) && containsCustomAnimationInBlock)
+                        {
+                            SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo, j);
+                        }
+                        else if (item.GetType() == typeof(LabAnimationItem) && !containsCustomAnimationInBlock)
+                        {
+                            if (i == 0)
+                            {
+                                SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo, j, false);
+                            }
+                            else if (j == 0)
+                            {
+                                SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo - 1, j, true);
+                            }
+                            else
+                            {
+                                SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo - 1, j, false);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AddDisappearanceLabAnimation()
+        {
+            ObservableCollection<BlockItem> animationItems = listView.ItemsSource as ObservableCollection<BlockItem>;
+            PowerPointSlide slide = PowerPointCurrentPresentationInfo.CurrentSlide;
+            IEnumerable<Effect> effects = slide.TimeLine.MainSequence.Cast<Effect>();
 
             for (int i = 0; i < listView.Items.Count; ++i)
             {
@@ -79,23 +141,13 @@ namespace PowerPointLabs.FYP.Views
                     for (int j = 0; j < blockItem.Items.Count; j++)
                     {
                         AnimationItem item = blockItem.Items.ElementAt(j) as AnimationItem;
-                        if (item.GetType() == typeof(LabAnimationItem) && ContainsCustomAnimationInBlock(blockItem))
+                        if (item.GetType() == typeof(LabAnimationItem))
                         {
-                            SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo, j);
-                        }
-                        else if (item.GetType() == typeof(LabAnimationItem) && !ContainsCustomAnimationInBlock(blockItem))
-                        {              
-                            SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo - 1, j, j == 0);
-                        }
+                            SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo, j, false, false);
+                        }                        
                     }
                 }
             }
-        }
-
-        public void AddLabAnimationItem(LabAnimationItem item)
-        {
-            (listView.ItemsSource as ObservableCollection<BlockItem>)
-                .Add(new BlockItem(-1, new ObservableCollection<AnimationItem>() { item }));
         }
 
         private bool ContainsCustomAnimationInBlock(BlockItem blockItem)
@@ -121,9 +173,9 @@ namespace PowerPointLabs.FYP.Views
         }
          
         private void SyncLabAnimationItemToSlide(LabAnimationItem item, PowerPointSlide slide, int clickNo, int seqNo, 
-            bool isSeperateClick = false)
+            bool isSeperateClick = false, bool syncAppearance = true)
         {
-            item.Execute(slide, clickNo, seqNo, isSeperateClick);
+            item.Execute(slide, clickNo, seqNo, isSeperateClick, syncAppearance);
         }
 
         private BlockItemList InitializeBlockItemList()

@@ -18,24 +18,33 @@ namespace PowerPointLabs.FYP.Service
             this.tag = tag;
             this.isActivated = isActivated;
         }
-        public override List<Effect> PerformAction(PowerPointSlide slide, int clickNo, int seqNo = -1, string voiceName = null, bool isSeperateClick = false)
+        public override List<Effect> PerformAction(PowerPointSlide slide, int clickNo, int seqNo = -1, string voiceName = null, 
+            bool isSeperateClick = false, bool syncAppearance = true)
         {
             string name = FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.CaptionIdentifier;
             if (isActivated)
             {
                 Shape shape = NotesToCaptions.AddCaptionBoxToSlide(text, name, slide);
                 shape.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
-                Effect effectAppear = AnimationUtil.AppendAnimationsForCalloutsToSlide(shape, slide, clickNo);
-                Effect effect = slide.SetShapeAsClickTriggered(shape, clickNo + 1, MsoAnimEffect.msoAnimEffectAppear, isSeperateClick);
-                effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
-                return new List<Effect>() { effectAppear };
+                if (syncAppearance)
+                {
+                    Effect effectAppear = AnimationUtil.AppendAnimationsForCalloutsToSlide(shape, slide, clickNo);
+                    return new List<Effect>() { effectAppear };
+                }
+                else
+                {
+                    Effect effect = slide.SetShapeAsClickTriggered(shape, clickNo + 1, MsoAnimEffect.msoAnimEffectAppear, isSeperateClick);
+                    effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
+                }
+                
             }
             else
             {
                 Shape shapeToHide = NotesToCaptions.AddCaptionBoxToSlide(text, name, slide);
                 shapeToHide.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
-                return new List<Effect>() { };
+                
             }
+            return new List<Effect>() { };
         }
     }
 }

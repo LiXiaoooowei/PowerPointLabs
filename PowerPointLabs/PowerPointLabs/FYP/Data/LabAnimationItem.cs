@@ -117,20 +117,15 @@ namespace PowerPointLabs.FYP.Data
             GenerateVoiceManager = new GenerateVoiceManager(text, tagNo, isVoice);
         }
 
-        public void Execute(PowerPointSlide slide, int clickNo, int seqNo, bool isSeperateClick = false)
+        public void Execute(PowerPointSlide slide, int clickNo, int seqNo, bool isSeperateClick = false, bool syncAppearance = true)
         {         
             bool firstAnimationTriggeredByClick = slide.IsFirstAnimationTriggeredByClick();
-            List<Effect> effects = generateCalloutManager.PerformAction(slide, clickNo, isSeperateClick: isSeperateClick);
+            List<Effect> effects = generateCalloutManager.PerformAction(slide, clickNo, isSeperateClick: isSeperateClick, syncAppearance: syncAppearance);
             effects = effects.Concat(generateCaptionManager.PerformAction(slide, clickNo, 
-                isSeperateClick: isSeperateClick && !generateCalloutManager.isActivated)).ToList();
+                isSeperateClick: isSeperateClick && !generateCalloutManager.isActivated, syncAppearance: syncAppearance)).ToList();
             effects = effects.Concat(GenerateVoiceManager.PerformAction(slide, clickNo, seqNo, VoiceLabel,
-                isSeperateClick: isSeperateClick && !generateCalloutManager.isActivated && !generateCaptionManager.isActivated)).ToList();
-            IEnumerable<Effect> allEffects = slide.TimeLine.MainSequence.Cast<Effect>();
-            if (clickNo <= 0 && isSeperateClick && !firstAnimationTriggeredByClick)
-            {
-                allEffects.ElementAt(effects.Count()).Timing.TriggerType = MsoAnimTriggerType.msoAnimTriggerOnPageClick;
-            }
-            else if (isSeperateClick && effects.Count() > 0)
+                isSeperateClick: isSeperateClick && !generateCalloutManager.isActivated && !generateCaptionManager.isActivated, syncAppearance: syncAppearance)).ToList();
+            if (effects.Count() > 0 && isSeperateClick)
             {
                 effects[0].Timing.TriggerType = MsoAnimTriggerType.msoAnimTriggerOnPageClick;
             }
