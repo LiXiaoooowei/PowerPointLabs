@@ -173,10 +173,12 @@ namespace PowerPointLabs.FYP.Views
                         }
                         if (isVoice)
                         {
+                            string voiceName = LabAnimationItemIdentifierManager.GetVoiceName(effect.Shape.Name); 
                             labItem.IsVoice = isVoice;
                             Shape shape = PowerPointCurrentPresentationInfo.CurrentSlide
                                 .GetShapeWithName(FYPText.Identifier + FYPText.Underscore + tagNo.ToString() + FYPText.Underscore + FYPText.CaptionIdentifier)[0];
                             labItem.Note = shape.TextFrame.TextRange.Text.Trim();
+                            labItem.VoiceLabel = voiceName;
                         }
                     }
                     else
@@ -187,7 +189,8 @@ namespace PowerPointLabs.FYP.Views
                             Shape shape = PowerPointCurrentPresentationInfo.CurrentSlide
                                 .GetShapeWithName(FYPText.Identifier + FYPText.Underscore + tagNo.ToString() + FYPText.Underscore + FYPText.CaptionIdentifier)[0];
                             string note = shape.TextFrame.TextRange.Text.Trim();
-                            labItem = new LabAnimationItem(text, tagNo, note, isCaption, isVoice, isCallout);
+                            string voiceName = LabAnimationItemIdentifierManager.GetVoiceName(effect.Shape.Name); 
+                            labItem = new LabAnimationItem(text, tagNo, note, isCaption, isVoice, isCallout, voiceLabel: voiceName);
                             labItems.Add(tagNo, labItem);
                             items.Add(labItem);
                         }

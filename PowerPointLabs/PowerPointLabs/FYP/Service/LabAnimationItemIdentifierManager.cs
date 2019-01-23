@@ -55,7 +55,7 @@ namespace PowerPointLabs.FYP.Service
                FYPText.Underscore + @"[1-9][0-9]*" +FYPText.Underscore
                + "(" + FYPText.CalloutIdentifier + "|"
                + FYPText.CaptionIdentifier + "|"
-               + FYPText.AudioIdentifier + ")", RegexOptions.IgnoreCase);
+               + FYPText.AudioIdentifier + ")" + @".*", RegexOptions.IgnoreCase);
             Match match = regex.Match(name);
             string value = "";
             if (match.Success)
@@ -68,6 +68,22 @@ namespace PowerPointLabs.FYP.Service
         public static void EmptyTagsCollection()
         {
             nameTags.Clear();
+        }
+
+        public static string GetVoiceName(string name)
+        {
+            Regex regex = new Regex(FYPText.Identifier +
+              FYPText.Underscore + @"[1-9][0-9]*" + FYPText.Underscore
+              + FYPText.CalloutIdentifier + "|"
+              + FYPText.CaptionIdentifier + "|"
+              + FYPText.AudioIdentifier + FYPText.Underscore + @"(.*)", RegexOptions.IgnoreCase);
+            Match match = regex.Match(name);
+            string value = "";
+            if (match.Success)
+            {
+                value = match.Groups[1].Value.Trim();
+            }
+            return value;
         }
     }
 }

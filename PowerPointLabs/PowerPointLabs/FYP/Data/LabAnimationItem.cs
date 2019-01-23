@@ -9,6 +9,7 @@ using Microsoft.Office.Interop.PowerPoint;
 using PowerPointLabs.ActionFramework.Common.Log;
 using PowerPointLabs.FYP.Service;
 using PowerPointLabs.Models;
+using PowerPointLabs.NarrationsLab.Data;
 
 namespace PowerPointLabs.FYP.Data
 {
@@ -26,7 +27,6 @@ namespace PowerPointLabs.FYP.Data
                 generateCalloutManager.text = value;
             }
         }
-
         public string Note
         {
             get
@@ -40,7 +40,6 @@ namespace PowerPointLabs.FYP.Data
                 GenerateVoiceManager.text = value;
             }
         }
-
         public string VoiceLabel
         {
             get
@@ -76,7 +75,6 @@ namespace PowerPointLabs.FYP.Data
                 GenerateVoiceManager.isActivated = (bool)value;
             }
         }
-
         public bool IsCallout
         {
             get
@@ -104,15 +102,15 @@ namespace PowerPointLabs.FYP.Data
         private bool isCallout;
 
         public LabAnimationItem(string text, int tagNo, string note = "", bool isCaption = false, bool isVoice = false,
-            bool isCallout = false):base()
+            bool isCallout = false, string voiceLabel = ""):base()
         {
             this.text = text;
             this.note = note;
             TagNo = tagNo;
-            voiceLabel = "";
             this.isCaption = isCaption;
             this.isVoice = isVoice;
             this.isCallout = isCallout;
+            this.voiceLabel = voiceLabel;
             AssociatedShapes = new ObservableCollection<string>();
             generateCalloutManager = new GenerateCalloutManager(text, tagNo, isCallout);
             generateCaptionManager = new GenerateCaptionManager(text, tagNo, isCaption);
@@ -125,7 +123,7 @@ namespace PowerPointLabs.FYP.Data
             List<Effect> effects = generateCalloutManager.PerformAction(slide, clickNo, isSeperateClick: isSeperateClick);
             effects = effects.Concat(generateCaptionManager.PerformAction(slide, clickNo, 
                 isSeperateClick: isSeperateClick && !generateCalloutManager.isActivated)).ToList();
-            effects = effects.Concat(GenerateVoiceManager.PerformAction(slide, clickNo, seqNo, 
+            effects = effects.Concat(GenerateVoiceManager.PerformAction(slide, clickNo, seqNo, VoiceLabel,
                 isSeperateClick: isSeperateClick && !generateCalloutManager.isActivated && !generateCaptionManager.isActivated)).ToList();
             IEnumerable<Effect> allEffects = slide.TimeLine.MainSequence.Cast<Effect>();
             if (clickNo <= 0 && isSeperateClick && !firstAnimationTriggeredByClick)

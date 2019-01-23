@@ -18,6 +18,7 @@ using PowerPointLabs.FYP.Data;
 using PowerPointLabs.NarrationsLab;
 using PowerPointLabs.NarrationsLab.Storage;
 using PowerPointLabs.NarrationsLab.Views;
+using PowerPointLabs.SpeechEngine;
 
 namespace PowerPointLabs.FYP.Views
 {
@@ -91,6 +92,23 @@ namespace PowerPointLabs.FYP.Views
                 previewVoiceLabel.Content = VoicePreviewPage.GetInstance().voicePreviewLabel;
                 explanatoryNote.Text = VoicePreviewPage.GetInstance().spokenText.Text;
             }
+        }
+
+        private void VoiceCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (NotesToAudio.IsHumanVoiceSelected && string.IsNullOrEmpty(previewVoiceLabel.Content.ToString()))
+            {
+                previewVoiceLabel.Content = TextToSpeech.humanVoice.Voice;
+            }
+            else if (string.IsNullOrEmpty(previewVoiceLabel.Content.ToString()))
+            {
+                previewVoiceLabel.Content = TextToSpeech.DefaultVoiceName;
+            }
+        }
+
+        private void VoiceCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            previewVoiceLabel.Content = "";
         }
     }
 }

@@ -719,6 +719,7 @@
     <Compile Include="NarrationsLab\Data\NarrationVoices.cs" />
     <Compile Include="NarrationsLab\Data\UserAccount.cs" />
     <Compile Include="NarrationsLab\Data\Voice.cs" />
+    <Compile Include="NarrationsLab\Data\VoiceNameToObjectMapping.cs" />
     <Compile Include="NarrationsLab\NarrationsLabSettings.cs" />
     <Compile Include="NarrationsLab\Storage\NarrationsLabStorageConfig.cs" />
     <Compile Include="NarrationsLab\ValueConverters\BaseValueConverter.cs" />

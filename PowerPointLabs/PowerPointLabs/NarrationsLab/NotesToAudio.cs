@@ -14,6 +14,7 @@ using PowerPointLabs.AudioMisc;
 using PowerPointLabs.Models;
 using PowerPointLabs.NarrationsLab.Data;
 using PowerPointLabs.SpeechEngine;
+using PowerPointLabs.TextCollection;
 using PowerPointLabs.Views;
 
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
@@ -216,27 +217,32 @@ namespace PowerPointLabs.NarrationsLab
             }
         }
 
-        public static List<Effect> EmbedSlideNote(string notetag, string note, PowerPointSlide slide, int clickNo, int seqNo, bool isSeperateClick = false)
+        public static List<Effect> EmbedSlideNote(string notetag, string note, string voiceName, PowerPointSlide slide, int clickNo, int seqNo, bool isSeperateClick = false)
         {
             string folderPath = Path.GetTempPath() + TempFolderName;
             string fileNameSearchPattern = string.Format("Slide {0} ClickNo {1} SeqNo {2} Speech", slide.ID, clickNo, seqNo);
             Directory.CreateDirectory(folderPath);
             string filePath = folderPath + "\\" + fileNameSearchPattern + ".wav";
-
+            NarrationVoices voiceType = NarrationVoices.SystemVoice;
+            HumanVoice voice = null;
+            if (VoiceNameToObjectMapping.VoiceNameToObjectMap.Keys.Contains(voiceName))
+            {
+                voiceType = NarrationVoices.AzureVoice;
+                voice = VoiceNameToObjectMapping.VoiceNameToObjectMap[voiceName] as HumanVoice;
+            }
             try
             {
-                if (!IsHumanVoiceSelected)
+                if (voiceType == NarrationVoices.SystemVoice)
                 {
-                    TextToSpeech.SaveStringToWaveFile(note, filePath);
+                    TextToSpeech.SaveStringToWaveFile(note, filePath, voiceName);
                 }
-                else
+                else if (voiceType == NarrationVoices.AzureVoice && voice != null)
                 {
-                    TextToSpeech.SaveStringToWaveFileWithHumanVoice(note, filePath);
+                    TextToSpeech.SaveStringToWaveFileWithHumanVoice(note, filePath, voice);
                 }
 
                 Shape audioShape = InsertAudioFileOnSlide(slide, filePath);
-                //  audioShape.Name = string.Format("PowerPointLabs Speech ClickNo {0} SeqNo {1}", clickNo, seqNo);
-                audioShape.Name = notetag;
+                audioShape.Name = notetag + FYPText.Underscore + voiceName;
                 slide.RemoveAnimationsForShape(audioShape);
                 Effect effect;
                 if (clickNo == 0)

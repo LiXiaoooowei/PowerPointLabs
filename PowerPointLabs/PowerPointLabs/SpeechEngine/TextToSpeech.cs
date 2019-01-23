@@ -125,6 +125,45 @@ namespace PowerPointLabs.SpeechEngine
 
         }
 
+        public static void SaveStringToWaveFileWithHumanVoice(string textToSave, string filePath, HumanVoice voice)
+        {
+            string accessToken;
+            string textToSpeak = GetHumanSpeakNotesForText(textToSave);
+
+            try
+            {
+                Authentication auth = Authentication.GetInstance();
+                accessToken = auth.GetAccessToken();
+                Logger.Log("Token: " + accessToken);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Failed authentication.");
+                Logger.Log(ex.ToString());
+                Logger.Log(ex.Message);
+                return;
+            }
+            string requestUri = UserAccount.GetInstance().GetUri();
+            var cortana = new Synthesize();
+
+            cortana.OnAudioAvailable += SaveAudioToWaveFile;
+            cortana.OnError += ErrorHandler;
+
+            // Reuse Synthesize object to minimize latency
+            cortana.Speak(CancellationToken.None, new Synthesize.InputOptions()
+            {
+                RequestUri = new Uri(requestUri),
+                Text = textToSpeak,
+                VoiceType = voice.voiceType,
+                Locale = voice.Locale,
+                VoiceName = voice.voiceName,
+                // Service can return audio in different output format.
+                OutputFormat = AudioOutputFormat.Riff24Khz16BitMonoPcm,
+                AuthorizationToken = "Bearer " + accessToken,
+            }, filePath).Wait();
+
+        }
+
         public static void SpeakTextWithAzureVoice(string textToSpeak, HumanVoice humanVoice)
         {
             string accessToken;
@@ -165,6 +204,12 @@ namespace PowerPointLabs.SpeechEngine
         public static void SaveStringToWaveFile(String textToSave, String filePath)
         {
             PromptBuilder builder = GetPromptForText(textToSave);
+            PromptToAudio.SaveAsWav(builder, filePath);
+        }
+
+        public static void SaveStringToWaveFile(String textToSave, String filePath, string voiceName)
+        {
+            PromptBuilder builder = GetSystemPromptForText(textToSave, voiceName);
             PromptToAudio.SaveAsWav(builder, filePath);
         }
 

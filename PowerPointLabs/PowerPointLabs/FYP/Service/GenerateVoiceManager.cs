@@ -19,13 +19,13 @@ namespace PowerPointLabs.FYP.Service
             this.tag = tag;
             this.isActivated = isActivated;
         }
-        public override List<Effect> PerformAction(PowerPointSlide slide, int clickNo, int seqNo, bool isSeperateClick = false)
+        public override List<Effect> PerformAction(PowerPointSlide slide, int clickNo, int seqNo, string voiceName, bool isSeperateClick = false)
         {
             string name = FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.AudioIdentifier;
             slide.DeleteShapeWithName(name);
             if (isActivated)
             {             
-                return NotesToAudio.EmbedSlideNote(name, text, slide, clickNo, seqNo, isSeperateClick);
+                return NotesToAudio.EmbedSlideNote(name, text, voiceName, slide, clickNo, seqNo, isSeperateClick);
             }
             return new List<Effect>();
         }
