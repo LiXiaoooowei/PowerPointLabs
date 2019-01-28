@@ -667,6 +667,7 @@
     <Compile Include="FYP\Data\BlockItem.cs" />
     <Compile Include="FYP\Data\BlockItemList.cs" />
     <Compile Include="FYP\Data\CustomAnimationItem.cs" />
+    <Compile Include="FYP\Data\CustomAnimationItems.cs" />
     <Compile Include="FYP\Data\LabAnimationItem.cs" />
     <Compile Include="FYP\Data\LabItemClickEventArgs.cs" />
     <Compile Include="FYP\Service\DragAdorner.cs" />
@@ -702,9 +703,6 @@
     </Compile>
     <Compile Include="FYP\Views\BlockPageView.xaml.cs">
       <DependentUpon>BlockPageView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="FYP\Views\PPTLabsPageView.xaml.cs">
-      <DependentUpon>PPTLabsPageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="HighlightLab\HighlightLabSettings.cs" />
     <Compile Include="CaptionsLab\Callouts.cs" />
@@ -1537,10 +1535,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FYP\Views\BlockPageView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="FYP\Views\PPTLabsPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

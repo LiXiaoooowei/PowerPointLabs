@@ -5,61 +5,69 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PowerPointLabs.FYP.Views"
              mc:Ignorable="d">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="150" />
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <TextBox x:Name="calloutText"  Grid.Row="0" Text="{Binding Text}" MaxWidth="290" Width="290"
-                 TextWrapping="Wrap" FontSize="10" BorderThickness="0 0 0.5 0"/>
-            <TextBox x:Name="explanatoryNote" Grid.Row="1" Text="{Binding Note}" MaxWidth="290" Width="290"
-                 TextWrapping="Wrap" FontSize="10" BorderThickness="0 0.5 0.5 0"/>
-        </Grid>
-        <StackPanel Grid.Column="1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+    <StackPanel>
+        <Label Margin="2 2 2 2"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="270" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="25" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="20" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <CheckBox Grid.Column="0" Grid.Row="0" IsChecked="{Binding IsCallout, Mode=TwoWay}" FontSize="8" Content="Callout"
-                          VerticalContentAlignment="Center"/>
-                <Grid Grid.Column="1" Grid.Row="0">
+                <TextBox x:Name="calloutText"  Grid.Row="0" Text="{Binding Text}" Width="270" Padding="2 2 2 2"
+                 TextWrapping="Wrap" FontSize="10" BorderThickness="0.5 0.5 0.5 0.5" BorderBrush="DarkSlateGray"/>
+                <TextBox x:Name="explanatoryNote" Grid.Row="1" Text="{Binding Note}" Width="270" Padding="2 2 2 2"
+                 TextWrapping="Wrap" FontSize="10" BorderThickness="0.5 0 0.5 0.5" BorderBrush="DarkSlateGray"/>
+            </Grid>
+            <StackPanel Grid.Column="1" Margin="5 0 5 0">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="Up" Margin="2 2 2 2" FontSize="6" BorderThickness="0.5 0.5 0.5 0.5"
-                            Click="UpBtn_Click" CommandParameter="{Binding .}"/>
-                    <Button Grid.Column="1" Content="Down" Margin="2 2 2 2" FontSize="6" BorderThickness="0.5 0.5 0.5 0.5"
-                            Click="DownBtn_Click" CommandParameter="{Binding .}"/>
-                    <Button Grid.Column="2" Content="X" Margin=" 2 2 2 2" FontSize="10" BorderThickness="0.5 0.5 0.5 0.5"/>
-                </Grid>
-                <Grid Grid.Column="1" Grid.Row="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="20" />
                     </Grid.RowDefinitions>
-                    <Label x:Name="previewVoiceLabel" Grid.Row="0" Content="{Binding VoiceLabel, Mode=TwoWay}" 
+                    <CheckBox Grid.Column="0" Grid.Row="0" IsChecked="{Binding IsCallout, Mode=TwoWay}" FontSize="8" Content="Callout"
+                          VerticalContentAlignment="Center"/>
+                    <Grid Grid.Column="1" Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Up" Margin="2 2 2 2" FontSize="6" BorderThickness="0.5 0.5 0.5 0.5"
+                            Click="UpBtn_Click" CommandParameter="{Binding .}"/>
+                        <Button Grid.Column="1" Content="Down" Margin="2 2 2 2" FontSize="6" BorderThickness="0.5 0.5 0.5 0.5"
+                            Click="DownBtn_Click" CommandParameter="{Binding .}"/>
+                        <Button Grid.Column="2" Content="X" Margin=" 2 2 2 2" FontSize="10" BorderThickness="0.5 0.5 0.5 0.5"/>
+                    </Grid>
+                    <Grid Grid.Column="1" Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="2*" />
+                        </Grid.RowDefinitions>
+                        <Label x:Name="previewVoiceLabel" Grid.Row="0" Content="{Binding VoiceLabel, Mode=TwoWay}" 
                            HorizontalContentAlignment="Center" FontSize="5" Padding="0"/>
-                    <CheckBox Grid.Row="1" IsChecked="{Binding IsVoice, Mode=TwoWay}" FontSize="8"
+                        <CheckBox Grid.Row="1" IsChecked="{Binding IsVoice, Mode=TwoWay}" FontSize="8"
                               Content="Voice" VerticalContentAlignment="Center" Checked="VoiceCheckBox_Checked" Unchecked="VoiceCheckBox_Unchecked"/>
-                    <Button Grid.Row="1" Margin=" 2 2 2 2" FontSize="10"
+                        <Button Grid.Row="1" Margin=" 2 2 2 2" FontSize="10"
                             BorderThickness="0.5 0.5 0.5 0.5" HorizontalAlignment="Right" Width="10"
                             Click="VoicePreviewButton_Click" CommandParameter="{Binding . , Mode=TwoWay}"/>
-                </Grid>
-                <CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding IsCaption, Mode=TwoWay}" FontSize="8" Content="Caption"
+                    </Grid>
+                    <CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding IsCaption, Mode=TwoWay}" FontSize="8" Content="Caption"
                           VerticalContentAlignment="Center" />
+                </Grid>
+            </StackPanel>
+            <Grid Margin="2 2 2 2" Grid.Column="2">
+                <CheckBox HorizontalAlignment="Right" BorderThickness="0.5"
+                Checked="TailCheckBox_Clicked"/>
             </Grid>
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </StackPanel>
 </UserControl>

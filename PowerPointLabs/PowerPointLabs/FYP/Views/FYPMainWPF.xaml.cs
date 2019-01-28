@@ -27,20 +27,12 @@ namespace PowerPointLabs.FYP
             InitializeComponent();
         }
 
-        private void PPTLabsPageView_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (tabControl.SelectedIndex == 0)
             {
                 blockView.HandleSyncButtonClick();
-            }
-            else if (tabControl.SelectedIndex == 1)
-            {
-                labView.HandleSyncButtonClick();
             }
         }
 
@@ -57,11 +49,7 @@ namespace PowerPointLabs.FYP
                 blockView.AddLabAnimationItem(
                     new Data.LabAnimationItem(text, LabAnimationItemIdentifierManager.GenerateUniqueNumber()));
             }
-            else if (tabControl.SelectedIndex == 1)
-            {
-                labView.AddLabAnimationItem(
-                    new Data.LabAnimationItem(text, LabAnimationItemIdentifierManager.GenerateUniqueNumber()));
-            }
+
             textBox.Text = "";
         }
     }

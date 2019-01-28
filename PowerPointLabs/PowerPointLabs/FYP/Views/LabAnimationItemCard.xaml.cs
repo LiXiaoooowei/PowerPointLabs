@@ -110,5 +110,10 @@ namespace PowerPointLabs.FYP.Views
         {
             previewVoiceLabel.Content = "";
         }
+
+        private void TailCheckBox_Clicked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

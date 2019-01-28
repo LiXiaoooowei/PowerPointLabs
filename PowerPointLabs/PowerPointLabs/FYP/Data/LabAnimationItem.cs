@@ -88,6 +88,18 @@ namespace PowerPointLabs.FYP.Data
             }
         }
 
+        public bool IsTail
+        {
+            get
+            {
+                return isTail;
+            }
+            set
+            {
+                isTail = (bool)value;
+            }
+        }
+
         public GenerateCalloutManager generateCalloutManager;
         public GenerateCaptionManager generateCaptionManager;
         public GenerateVoiceManager GenerateVoiceManager;
@@ -97,12 +109,13 @@ namespace PowerPointLabs.FYP.Data
         private string text;
         private string note;
         private string voiceLabel;
+        private bool isTail;
         private bool isCaption;
         private bool isVoice;
         private bool isCallout;
 
         public LabAnimationItem(string text, int tagNo, string note = "", bool isCaption = false, bool isVoice = false,
-            bool isCallout = false, string voiceLabel = ""):base()
+            bool isCallout = false, string voiceLabel = "", bool isTail = false):base()
         {
             this.text = text;
             this.note = note;
@@ -111,6 +124,7 @@ namespace PowerPointLabs.FYP.Data
             this.isVoice = isVoice;
             this.isCallout = isCallout;
             this.voiceLabel = voiceLabel;
+            this.isTail = isTail;
             AssociatedShapes = new ObservableCollection<string>();
             generateCalloutManager = new GenerateCalloutManager(text, tagNo, isCallout);
             generateCaptionManager = new GenerateCaptionManager(text, tagNo, isCaption);

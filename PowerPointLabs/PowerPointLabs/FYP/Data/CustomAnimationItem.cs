@@ -9,7 +9,7 @@ using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
 namespace PowerPointLabs.FYP.Data
 {
-    public class CustomAnimationItem: AnimationItem
+    public class CustomAnimationItem
     {
         public string ShapeName
         {

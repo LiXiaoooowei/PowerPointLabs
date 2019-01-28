@@ -17,11 +17,7 @@
                     <local:BlockPageView x:Name="blockView"/>
                 </TabItem.Content>
             </TabItem>
-            <TabItem Header="PPTLabsView" Height="50">
-                <TabItem.Content>
-                    <local:PPTLabsPageView x:Name="labView"/>
-                </TabItem.Content>
-            </TabItem>
+           
         </TabControl>
         <Button Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Right" Content="Sync" 
                 Width="80" Margin="0 20 20 0" Padding="2"

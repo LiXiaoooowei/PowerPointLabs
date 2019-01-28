@@ -26,17 +26,10 @@ namespace PowerPointLabs.FYP.Views
     /// </summary>
     public partial class BlockPageView : UserControl
     {
-        public ObservableCollection<BlockItem> BlockItems
-        {
-            get
-            {
-                return blockItemList.items;
-            }
-        }
+        public ObservableCollection<AnimationItem> Items { get; set; }
         private ListView draggedListView = null;
         private int draggedListViewIndex = -1;
-        private BlockItemList blockItemList;
-        private ListViewDragDropManager<BlockItem> blockDragManager;
+     //   private ListViewDragDropManager<BlockItem> blockDragManager;
 
 
         public BlockPageView()
@@ -44,9 +37,9 @@ namespace PowerPointLabs.FYP.Views
             if (LicenseManager.UsageMode == LicenseUsageMode.Runtime)
             {
                 InitializeComponent();
-                blockItemList = InitializeBlockItemList();
+                Items = InitializeItemList();
                 Globals.ThisAddIn.Application.SlideSelectionChanged += Handle;
-                listView.ItemsSource = BlockItems;
+                listView.ItemsSource = Items;
             }
         }
 
@@ -93,7 +86,7 @@ namespace PowerPointLabs.FYP.Views
                     bool containsCustomAnimationInBlock = ContainsCustomAnimationInBlock(blockItem);
                     if (i == 0 && effects.Count() > 0)
                     {
-                        effects.ElementAt(0).Timing.TriggerType = containsCustomAnimationInBlock && clickNo == 0? MsoAnimTriggerType.msoAnimTriggerWithPrevious:
+                        effects.ElementAt(0).Timing.TriggerType = containsCustomAnimationInBlock && clickNo == 0 ? MsoAnimTriggerType.msoAnimTriggerWithPrevious :
                             MsoAnimTriggerType.msoAnimTriggerOnPageClick;
                     }
 
@@ -144,7 +137,7 @@ namespace PowerPointLabs.FYP.Views
                         if (item.GetType() == typeof(LabAnimationItem))
                         {
                             SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo, j, false, false);
-                        }                        
+                        }
                     }
                 }
             }
@@ -168,35 +161,42 @@ namespace PowerPointLabs.FYP.Views
             Effect effect = slide.SetShapeAsClickTriggered(item.GetShape(), clickNo, item.GetEffectType());
             if (item.GetExit() == Microsoft.Office.Core.MsoTriState.msoTrue)
             {
-                effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;               
+                effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
             }
         }
-         
-        private void SyncLabAnimationItemToSlide(LabAnimationItem item, PowerPointSlide slide, int clickNo, int seqNo, 
+
+        private void SyncLabAnimationItemToSlide(LabAnimationItem item, PowerPointSlide slide, int clickNo, int seqNo,
             bool isSeperateClick = false, bool syncAppearance = true)
         {
             item.Execute(slide, clickNo, seqNo, isSeperateClick, syncAppearance);
         }
 
-        private BlockItemList InitializeBlockItemList()
+        private ObservableCollection<AnimationItem> InitializeItemList()
         {
             LabAnimationItemIdentifierManager.EmptyTagsCollection();
             IEnumerable<Effect> effects = PowerPointCurrentPresentationInfo.CurrentSlide.TimeLine.MainSequence.Cast<Effect>();
-            BlockItemList list = new BlockItemList();
-            ObservableCollection<AnimationItem> items = new ObservableCollection<AnimationItem>();
+            ObservableCollection<AnimationItem> list = new ObservableCollection<AnimationItem>();
+            ObservableCollection<CustomAnimationItem> customItems = new ObservableCollection<CustomAnimationItem>();
             Dictionary<int, LabAnimationItem> labItems = new Dictionary<int, LabAnimationItem>();
-            int clickNo = PowerPointCurrentPresentationInfo.CurrentSlide.IsFirstAnimationTriggeredByClick() ? 1 : 0;
+            LabAnimationItem labItem = null;
+            PowerPointSlide slide = PowerPointCurrentPresentationInfo.CurrentSlide;
+            int clickNo = slide.IsFirstAnimationTriggeredByClick() ? 1 : 0;
             for (int i = 0; i < effects.Count(); i++)
             {
                 Effect effect = effects.ElementAt(i);
-                if (effect.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerOnPageClick)
+                if (slide.TimeLine.MainSequence.FindFirstAnimationForClick(clickNo) == effect)
                 {
-                    if (items.Count > 0)
-                    {
-                        list.InsertItem(new BlockItem(clickNo, new ObservableCollection<AnimationItem>(items)));
-                    }
-                    items.Clear();
                     clickNo++;
+                    if (customItems.Count() != 0)
+                    {
+                        list.Add(new CustomAnimationItems(customItems));
+                        customItems = new ObservableCollection<CustomAnimationItem>();
+                    }
+                    if (labItem != null)
+                    {
+                        list.Add(labItem);
+                        labItem = null;
+                    }
                 }
                 if (LabAnimationItemIdentifierManager.GetTagNo(effect.Shape.Name) != -1)
                 {
@@ -209,10 +209,8 @@ namespace PowerPointLabs.FYP.Views
                     bool isCaption = functionMatch == FYPText.CaptionIdentifier;
                     bool isCallout = functionMatch == FYPText.CalloutIdentifier;
                     bool isVoice = functionMatch == FYPText.AudioIdentifier;
-                    LabAnimationItem labItem;
-                    if (labItems.ContainsKey(tagNo))
+                    if (labItem != null)
                     {
-                        labItem = labItems[tagNo];
                         if (isCaption)
                         {
                             labItem.IsCaption = true;
@@ -225,7 +223,7 @@ namespace PowerPointLabs.FYP.Views
                         }
                         if (isVoice)
                         {
-                            string voiceName = LabAnimationItemIdentifierManager.GetVoiceName(effect.Shape.Name); 
+                            string voiceName = LabAnimationItemIdentifierManager.GetVoiceName(effect.Shape.Name);
                             labItem.IsVoice = isVoice;
                             Shape shape = PowerPointCurrentPresentationInfo.CurrentSlide
                                 .GetShapeWithName(FYPText.Identifier + FYPText.Underscore + tagNo.ToString() + FYPText.Underscore + FYPText.CaptionIdentifier)[0];
@@ -241,10 +239,8 @@ namespace PowerPointLabs.FYP.Views
                             Shape shape = PowerPointCurrentPresentationInfo.CurrentSlide
                                 .GetShapeWithName(FYPText.Identifier + FYPText.Underscore + tagNo.ToString() + FYPText.Underscore + FYPText.CaptionIdentifier)[0];
                             string note = shape.TextFrame.TextRange.Text.Trim();
-                            string voiceName = LabAnimationItemIdentifierManager.GetVoiceName(effect.Shape.Name); 
+                            string voiceName = LabAnimationItemIdentifierManager.GetVoiceName(effect.Shape.Name);
                             labItem = new LabAnimationItem(text, tagNo, note, isCaption, isVoice, isCallout, voiceLabel: voiceName);
-                            labItems.Add(tagNo, labItem);
-                            items.Add(labItem);
                         }
                         catch (Exception e)
                         {
@@ -254,14 +250,21 @@ namespace PowerPointLabs.FYP.Views
                 }
                 else
                 {
-                    items.Add(new CustomAnimationItem(effect.Shape,
+                    customItems.Add(new CustomAnimationItem(effect.Shape,
                                effect.EffectType, effect.EffectInformation.BuildByLevelEffect, effect.Exit));
                 }
             }
-            if (items.Count > 0)
+            if (customItems.Count() != 0)
             {
-                list.InsertItem(new BlockItem(clickNo, items));
+                list.Add(new CustomAnimationItems(customItems));
+                customItems = new ObservableCollection<CustomAnimationItem>();
             }
+            if (labItem != null)
+            {
+                list.Add(labItem);
+                labItem = null;
+            }
+
             return list;
         }
 
@@ -269,97 +272,37 @@ namespace PowerPointLabs.FYP.Views
         {
             if (PowerPointCurrentPresentationInfo.CurrentSlide != null)
             {
-                blockItemList = InitializeBlockItemList();
+                Items = InitializeItemList();
                 listView.ItemsSource = null;
-                listView.ItemsSource = BlockItems;
+                listView.ItemsSource = Items;
             }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            blockDragManager = new ListViewDragDropManager<BlockItem>(listView);
-            listView.Drop += ListView_Drop;
+          //  blockDragManager = new ListViewDragDropManager<BlockItem>(listView);
+           // listView.Drop += ListView_Drop;
         }
 
         private void HandleUpBtnClickedEvent(object sender, RoutedEventArgs e)
         {
             LabAnimationItem labItem = ((Button)e.OriginalSource).CommandParameter as LabAnimationItem;
-            ObservableCollection<BlockItem> blockItems = listView.ItemsSource as ObservableCollection<BlockItem>;
-            for (int i = 0; i < listView.Items.Count; i++)
+            ObservableCollection<AnimationItem> blockItems = listView.ItemsSource as ObservableCollection<AnimationItem>;
+            int index = blockItems.IndexOf(labItem);
+            if (index > 0)
             {
-                ListViewItem item = GetListViewItem(listView, i);
-                ListView view = GetChildOfType<ListView>(item);
-                if (IsMouseDirectOver(view))
-                {
-                    ObservableCollection<AnimationItem> list = view.ItemsSource as ObservableCollection<AnimationItem>;
-                    list.Remove(labItem);
-                    if (i > 0 && list.Count == 0)
-                    {
-                        ListViewItem prevItem = GetListViewItem(listView, i - 1);
-                        ListView prevView = GetChildOfType<ListView>(prevItem);
-                        ObservableCollection<AnimationItem> prevList = prevView.ItemsSource as ObservableCollection<AnimationItem>;
-                        prevList.Add(labItem);
-                    }
-                    else
-                    {
-                        blockItems.Insert(i, new BlockItem(0, new ObservableCollection<AnimationItem>() { labItem}));
-                    }
-                    if (list.Count() == 0)
-                    {
-                        (listView.ItemsSource as ObservableCollection<BlockItem>).RemoveAt(i);
-                    }
-                    break;
-                }
-            }
-            for (int i = 0; i < this.listView.Items.Count; ++i)
-            {
-                ListViewItem item = GetListViewItem(listView, i);
-                Label label = GetChildOfType<Label>(item);
-                if (label != null)
-                {
-                    label.Content = PowerPointCurrentPresentationInfo.CurrentSlide.IsFirstAnimationTriggeredByClick() ? (i + 1).ToString() : i.ToString();
-                }
-            }
+                blockItems.Move(index, index - 1);
+            }                               
         }
 
         private void HandleDownBtnClickedEvent(object sender, RoutedEventArgs e)
         {
             LabAnimationItem labItem = ((Button)e.OriginalSource).CommandParameter as LabAnimationItem;
-            ObservableCollection<BlockItem> blockItems = listView.ItemsSource as ObservableCollection<BlockItem>;
-            for (int i = 0; i < listView.Items.Count; i++)
+            ObservableCollection<AnimationItem> blockItems = listView.ItemsSource as ObservableCollection<AnimationItem>;
+            int index = blockItems.IndexOf(labItem);
+            if (index < blockItems.Count() - 1 && index >= 0)
             {
-                ListViewItem item = GetListViewItem(listView, i);
-                ListView view = GetChildOfType<ListView>(item);
-                if (IsMouseDirectOver(view))
-                {
-                    ObservableCollection<AnimationItem> list = view.ItemsSource as ObservableCollection<AnimationItem>;
-                    list.Remove(labItem);
-                    if (i < listView.Items.Count - 1 && list.Count == 0)
-                    {
-                        ListViewItem nextItem = GetListViewItem(listView, i + 1);
-                        ListView nextView = GetChildOfType<ListView>(nextItem);
-                        ObservableCollection<AnimationItem> nextList = nextView.ItemsSource as ObservableCollection<AnimationItem>;
-                        nextList.Insert(0, labItem);
-                    }
-                    else
-                    {
-                        blockItems.Insert(i + 1, new BlockItem(0, new ObservableCollection<AnimationItem>() { labItem }));
-                    }
-                    if (list.Count() == 0)
-                    {
-                        (listView.ItemsSource as ObservableCollection<BlockItem>).RemoveAt(i);
-                    }
-                    break;
-                }
-            }
-            for (int i = 0; i < this.listView.Items.Count; ++i)
-            {
-                ListViewItem item = GetListViewItem(listView, i);
-                Label label = GetChildOfType<Label>(item);
-                if (label != null)
-                {
-                    label.Content = PowerPointCurrentPresentationInfo.CurrentSlide.IsFirstAnimationTriggeredByClick() ? (i + 1).ToString() : i.ToString();
-                }
+                blockItems.Move(index, index + 1);
             }
         }
 

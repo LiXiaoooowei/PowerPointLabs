@@ -7,14 +7,13 @@
              xmlns:views="clr-namespace:PowerPointLabs.FYP.Views"
              xmlns:converters="clr-namespace:PowerPointLabs.FYP.Converters"
              mc:Ignorable="d" 
-             views:InnerBlockListView.UpBtnClickedHandlerParent="HandleUpBtnClickedEvent"
-             views:InnerBlockListView.DownBtnClickedHandlerParent="HandleDownBtnClickedEvent"
+             views:LabAnimationItemCard.UpBtnClickedHandler="HandleUpBtnClickedEvent"
+             views:LabAnimationItemCard.DownBtnClickedHandler="HandleDownBtnClickedEvent"
              d:DesignHeight="600" d:DesignWidth="550" Loaded="UserControl_Loaded">
     <Grid>
-        <ListView x:Name="listView" ItemsSource="{Binding BlockItems}" AlternationCount="{Binding BlockItems.Count}"
-                  BorderThickness="0" Margin="0" SelectionMode="Single"
-                  PreviewMouseLeftButtonDown="ListView_PreviewMouseLeftButtonDown">
-            <ListView.ItemTemplate>
+        <ListView x:Name="listView" ItemsSource="{Binding Items}" AlternationCount="{Binding Items.Count}"
+                  BorderThickness="0" Margin="0" SelectionMode="Single">
+            <!--ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:BlockItem}">
                     <Border BorderThickness="0.25" BorderBrush="Black">
                         <StackPanel Margin="2 2 2 2">
@@ -27,7 +26,24 @@
                         </StackPanel>
                     </Border>
                 </DataTemplate>
-            </ListView.ItemTemplate>
+            </ListView.ItemTemplate-->
+
+            <ListBox.Resources>
+                <DataTemplate DataType="{x:Type local:CustomAnimationItems}">
+                    <Border BorderThickness="0.25" BorderBrush="Black">
+                        <StackPanel Margin="2 2 2 2">
+                            <views:CustomAnimationItemCard DataContext="{Binding}" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type local:LabAnimationItem}">
+                    <Border BorderThickness="0.25" BorderBrush="Black">
+                        <StackPanel Margin="2 2 2 2">
+                            <views:LabAnimationItemCard DataContext="{Binding}"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.Resources>
         </ListView>
     </Grid>
 </UserControl>
