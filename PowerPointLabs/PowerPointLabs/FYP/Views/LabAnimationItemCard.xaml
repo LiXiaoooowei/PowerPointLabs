@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PowerPointLabs.FYP.Views"
+             xmlns:converters="clr-namespace:PowerPointLabs.FYP.Converters"
              mc:Ignorable="d">
     <StackPanel>
-        <Label Margin="2 2 2 2"/>
+        
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="270" />
@@ -65,8 +66,12 @@
                 </Grid>
             </StackPanel>
             <Grid Margin="2 2 2 2" Grid.Column="2">
-                <CheckBox HorizontalAlignment="Right" BorderThickness="0.5"
-                Checked="TailCheckBox_Clicked"/>
+                <CheckBox HorizontalAlignment="Right" BorderThickness="0.5" IsChecked="{Binding IsTail}" IsEnabled="{Binding
+                                Path=.,
+                                Converter={converters:IsTailCheckBoxEnabledConverter},
+                                RelativeSource={RelativeSource FindAncestor, 
+                                         AncestorType={x:Type ListViewItem}}}" 
+                Checked="TailCheckBox_Checked" Unchecked="TailCheckBox_Unchecked" CommandParameter="{Binding . , Mode=TwoWay}"/>
             </Grid>
         </Grid>
     </StackPanel>

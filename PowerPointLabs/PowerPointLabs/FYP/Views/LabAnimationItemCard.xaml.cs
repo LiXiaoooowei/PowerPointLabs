@@ -40,6 +40,18 @@ namespace PowerPointLabs.FYP.Views
             typeof(RoutedEventHandler),
             typeof(LabAnimationItemCard));
 
+        public static readonly RoutedEvent TailCheckedEvent = EventManager.RegisterRoutedEvent(
+            "TailCheckedHandler",
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(LabAnimationItemCard));
+
+        public static readonly RoutedEvent TailUncheckedEvent = EventManager.RegisterRoutedEvent(
+            "TailUncheckedHandler",
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(LabAnimationItemCard));
+
         public event RoutedEventHandler UpBtnClickedHandler
         {
             add { AddHandler(UpBtnClickedEvent, value); }
@@ -50,6 +62,18 @@ namespace PowerPointLabs.FYP.Views
         {
             add { AddHandler(DownBtnClickedEvent, value); }
             remove { RemoveHandler(DownBtnClickedEvent, value); }
+        }
+
+        public event RoutedEventHandler TailCheckedHandler
+        {
+            add { AddHandler(TailCheckedEvent, value); }
+            remove { RemoveHandler(TailCheckedEvent, value); }
+        }
+
+        public event RoutedEventHandler TailUncheckedHandler
+        {
+            add { AddHandler(TailUncheckedEvent, value); }
+            remove { RemoveHandler(TailUncheckedEvent, value); }
         }
 
         public LabAnimationItemCard()
@@ -111,9 +135,18 @@ namespace PowerPointLabs.FYP.Views
             previewVoiceLabel.Content = "";
         }
 
-        private void TailCheckBox_Clicked(object sender, RoutedEventArgs e)
+        private void TailCheckBox_Checked(object sender, RoutedEventArgs e)
         {
+            RoutedEventArgs eventArgs = new RoutedEventArgs(TailCheckedEvent);
+            eventArgs.Source = sender;
+            RaiseEvent(eventArgs);
+        }
 
+        private void TailCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            RoutedEventArgs eventArgs = new RoutedEventArgs(TailUncheckedEvent);
+            eventArgs.Source = sender;
+            RaiseEvent(eventArgs);
         }
     }
 }

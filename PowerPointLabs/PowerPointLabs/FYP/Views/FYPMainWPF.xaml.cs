@@ -45,9 +45,9 @@ namespace PowerPointLabs.FYP
                 return;
             }
             if (tabControl.SelectedIndex == 0)
-            {                           
+            {
                 blockView.AddLabAnimationItem(
-                    new Data.LabAnimationItem(text, LabAnimationItemIdentifierManager.GenerateUniqueNumber()));
+                    new Data.LabAnimationItem(-1, text, LabAnimationItemIdentifierManager.GenerateUniqueNumber()));
             }
 
             textBox.Text = "";

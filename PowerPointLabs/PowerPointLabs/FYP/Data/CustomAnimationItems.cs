@@ -10,7 +10,7 @@ namespace PowerPointLabs.FYP.Data
     public class CustomAnimationItems:AnimationItem
     {
         public ObservableCollection<CustomAnimationItem> Items { get; set; }
-        public CustomAnimationItems(ObservableCollection<CustomAnimationItem> items)
+        public CustomAnimationItems(ObservableCollection<CustomAnimationItem> items, int clickNo):base(clickNo)
         {
             Items = items;
         }

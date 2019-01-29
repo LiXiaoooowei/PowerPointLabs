@@ -9,7 +9,9 @@
              mc:Ignorable="d" 
              views:LabAnimationItemCard.UpBtnClickedHandler="HandleUpBtnClickedEvent"
              views:LabAnimationItemCard.DownBtnClickedHandler="HandleDownBtnClickedEvent"
-             d:DesignHeight="600" d:DesignWidth="550" Loaded="UserControl_Loaded">
+             views:LabAnimationItemCard.TailCheckedHandler="HandleTailCheckedEvent"
+             views:LabAnimationItemCard.TailUncheckedHandler="HandleTailUncheckedEvent"
+             d:DesignHeight="600" d:DesignWidth="550">
     <Grid>
         <ListView x:Name="listView" ItemsSource="{Binding Items}" AlternationCount="{Binding Items.Count}"
                   BorderThickness="0" Margin="0" SelectionMode="Single">
@@ -32,6 +34,11 @@
                 <DataTemplate DataType="{x:Type local:CustomAnimationItems}">
                     <Border BorderThickness="0.25" BorderBrush="Black">
                         <StackPanel Margin="2 2 2 2">
+                            <Label Content="{Binding
+                                Path=.,
+                                Converter={converters:BlockItemIndexConverter},
+                                RelativeSource={RelativeSource FindAncestor, 
+                                         AncestorType={x:Type ListViewItem}}}"/>
                             <views:CustomAnimationItemCard DataContext="{Binding}" />
                         </StackPanel>
                     </Border>
@@ -39,6 +46,11 @@
                 <DataTemplate DataType="{x:Type local:LabAnimationItem}">
                     <Border BorderThickness="0.25" BorderBrush="Black">
                         <StackPanel Margin="2 2 2 2">
+                            <Label Content="{Binding
+                                Path=.,
+                                Converter={converters:BlockItemIndexConverter},
+                                RelativeSource={RelativeSource FindAncestor, 
+                                         AncestorType={x:Type ListViewItem}}}"/>
                             <views:LabAnimationItemCard DataContext="{Binding}"/>
                         </StackPanel>
                     </Border>

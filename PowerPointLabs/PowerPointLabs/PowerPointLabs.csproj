@@ -663,6 +663,7 @@
     <Compile Include="EffectsLab\EffectsLabUtil.cs" />
     <Compile Include="EffectsLab\EffectsLabRecolor.cs" />
     <Compile Include="FYP\Converters\BlockItemIndexConverter.cs" />
+    <Compile Include="FYP\Converters\IsTailCheckBoxEnabledConverter.cs" />
     <Compile Include="FYP\Data\AnimationItem.cs" />
     <Compile Include="FYP\Data\BlockItem.cs" />
     <Compile Include="FYP\Data\BlockItemList.cs" />

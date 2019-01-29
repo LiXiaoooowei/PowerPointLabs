@@ -9,43 +9,30 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-using PowerPointLabs.ActionFramework.Common.Log;
 using PowerPointLabs.FYP.Data;
-using PowerPointLabs.Models;
 
 namespace PowerPointLabs.FYP.Converters
 {
-#pragma warning disable 0618
-    public class BlockItemIndexConverter : MarkupExtension, IValueConverter
+    public class IsTailCheckBoxEnabledConverter : MarkupExtension, IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             ListViewItem item = (ListViewItem)value;
             ListView listView = ItemsControl.ItemsControlFromItemContainer(item) as ListView;
             ObservableCollection<AnimationItem> items = listView.ItemsSource as ObservableCollection<AnimationItem>;
             int index = listView.ItemContainerGenerator.IndexFromContainer(item);
-            AnimationItem animationItem = items.ElementAt(index);
-            if (index == 0)
+            bool isTailEnabled = index != 0 && (items.ElementAt(index - 1) is CustomAnimationItems);
+            LabAnimationItem labItem = items.ElementAt(index) as LabAnimationItem;
+            if (labItem != null)
             {
-                animationItem.ClickNo = PowerPointCurrentPresentationInfo.CurrentSlide.IsFirstAnimationTriggeredByClick() ? 1 : 0;
+                labItem.IsTailEnabled = isTailEnabled;
             }
-            else if (animationItem is LabAnimationItem && (items.ElementAt(index - 1) is CustomAnimationItems) 
-                && (animationItem as LabAnimationItem).IsTail)
-            {
-                animationItem.ClickNo = items.ElementAt(index - 1).ClickNo;
-            }
-            else
-            {
-               
-                animationItem.ClickNo = items.ElementAt(index - 1).ClickNo + 1;
-            }
-            return animationItem.ClickNo;
+            return isTailEnabled;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         public override object ProvideValue(IServiceProvider serviceProvider)

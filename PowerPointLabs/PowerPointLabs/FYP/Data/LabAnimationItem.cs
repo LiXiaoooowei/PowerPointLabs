@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows;
 using Microsoft.Office.Interop.PowerPoint;
 using PowerPointLabs.ActionFramework.Common.Log;
 using PowerPointLabs.FYP.Service;
@@ -87,7 +87,6 @@ namespace PowerPointLabs.FYP.Data
                 generateCalloutManager.isActivated = (bool)value;
             }
         }
-
         public bool IsTail
         {
             get
@@ -96,9 +95,13 @@ namespace PowerPointLabs.FYP.Data
             }
             set
             {
-                isTail = (bool)value;
+                if (isTail != value)
+                {
+                    isTail = (bool)value;
+                }
             }
         }
+        public bool IsTailEnabled { get; set; }
 
         public GenerateCalloutManager generateCalloutManager;
         public GenerateCaptionManager generateCaptionManager;
@@ -114,8 +117,8 @@ namespace PowerPointLabs.FYP.Data
         private bool isVoice;
         private bool isCallout;
 
-        public LabAnimationItem(string text, int tagNo, string note = "", bool isCaption = false, bool isVoice = false,
-            bool isCallout = false, string voiceLabel = "", bool isTail = false):base()
+        public LabAnimationItem(int clickNo, string text, int tagNo, string note = "", bool isCaption = false, bool isVoice = false,
+            bool isCallout = false, string voiceLabel = "", bool isTail = false):base(clickNo)
         {
             this.text = text;
             this.note = note;
