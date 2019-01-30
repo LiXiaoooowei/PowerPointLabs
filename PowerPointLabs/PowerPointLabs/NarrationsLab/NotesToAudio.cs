@@ -217,10 +217,10 @@ namespace PowerPointLabs.NarrationsLab
             }
         }
 
-        public static List<Effect> EmbedSlideNote(string notetag, string note, string voiceName, PowerPointSlide slide, int clickNo, int seqNo, bool isSeperateClick = false)
+        public static List<Effect> EmbedSlideNote(string notetag, string note, string voiceName, PowerPointSlide slide, int clickNo, bool isSeperateClick = false)
         {
             string folderPath = Path.GetTempPath() + TempFolderName;
-            string fileNameSearchPattern = string.Format("Slide {0} ClickNo {1} SeqNo {2} Speech", slide.ID, clickNo, seqNo);
+            string fileNameSearchPattern = string.Format("Slide {0} ClickNo {1} Speech", slide.ID, clickNo);
             Directory.CreateDirectory(folderPath);
             string filePath = folderPath + "\\" + fileNameSearchPattern + ".wav";
             NarrationVoices voiceType = NarrationVoices.SystemVoice;

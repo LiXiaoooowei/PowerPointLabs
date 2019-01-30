@@ -29,7 +29,7 @@ namespace PowerPointLabs.FYP.Views
         public ObservableCollection<AnimationItem> Items { get; set; }
         private ListView draggedListView = null;
         private int draggedListViewIndex = -1;
-     //   private ListViewDragDropManager<BlockItem> blockDragManager;
+        //   private ListViewDragDropManager<BlockItem> blockDragManager;
 
 
         public BlockPageView()
@@ -38,7 +38,7 @@ namespace PowerPointLabs.FYP.Views
             {
                 InitializeComponent();
                 Items = InitializeItemList();
-                Globals.ThisAddIn.Application.SlideSelectionChanged += Handle;
+                Globals.ThisAddIn.Application.SlideSelectionChanged += HandleSlideSelectionChange;
                 listView.ItemsSource = Items;
             }
         }
@@ -66,7 +66,6 @@ namespace PowerPointLabs.FYP.Views
             if (lastItem is CustomAnimationItems)
             {
                 item.IsTailEnabled = true;
-          
             }
             else
             {
@@ -89,16 +88,16 @@ namespace PowerPointLabs.FYP.Views
                 {
                     int clickNo = Convert.ToInt32(label.Content.ToString());
 
-                        LabAnimationItem item = animationItems.ElementAt(i) as LabAnimationItem;
-                        if (item.IsTail && item.IsTailEnabled)
-                        {
-                            SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo, -1);
-                        }
-                        else 
-                        {
-                                SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo - 1, -1, true);
-                        }
-                    
+                    LabAnimationItem item = animationItems.ElementAt(i) as LabAnimationItem;
+                    if (item.IsTail && item.IsTailEnabled) // tail lab item
+                    {
+                        SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo);
+                    }
+                    else // independent lab item
+                    {
+                        SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo - 1, isSeperateClick: true);
+                    }
+
                 }
             }
         }
@@ -117,27 +116,15 @@ namespace PowerPointLabs.FYP.Views
                 {
                     int clickNo = Convert.ToInt32(label.Content.ToString());
                     LabAnimationItem item = animationItems.ElementAt(i) as LabAnimationItem;
-
-                    SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo, -1, false, false);
-                        
-                    
+                    SyncLabAnimationItemToSlide(item as LabAnimationItem, slide, clickNo, isSeperateClick: false, syncAppearance: false);
                 }
             }
         }
 
-        private void SyncCustomAnimationItemToSlide(CustomAnimationItem item, PowerPointSlide slide, int clickNo, int j)
-        {
-            Effect effect = slide.SetShapeAsClickTriggered(item.GetShape(), clickNo, item.GetEffectType());
-            if (item.GetExit() == Microsoft.Office.Core.MsoTriState.msoTrue)
-            {
-                effect.Exit = Microsoft.Office.Core.MsoTriState.msoTrue;
-            }
-        }
-
-        private void SyncLabAnimationItemToSlide(LabAnimationItem item, PowerPointSlide slide, int clickNo, int seqNo,
+        private void SyncLabAnimationItemToSlide(LabAnimationItem item, PowerPointSlide slide, int clickNo, 
             bool isSeperateClick = false, bool syncAppearance = true)
         {
-            item.Execute(slide, clickNo, seqNo, isSeperateClick, syncAppearance);
+            item.Execute(slide, clickNo, isSeperateClick, syncAppearance);
         }
 
         private ObservableCollection<AnimationItem> InitializeItemList()
@@ -171,7 +158,7 @@ namespace PowerPointLabs.FYP.Views
                             labItem.IsTailEnabled = true;
                         }
                         list.Add(labItem);
-                        labItem = null;                      
+                        labItem = null;
                     }
                     else
                     {
@@ -249,7 +236,7 @@ namespace PowerPointLabs.FYP.Views
             return list;
         }
 
-        private void Handle(SlideRange sldRange)
+        private void HandleSlideSelectionChange(SlideRange sldRange)
         {
             if (PowerPointCurrentPresentationInfo.CurrentSlide != null)
             {
@@ -257,12 +244,6 @@ namespace PowerPointLabs.FYP.Views
                 listView.ItemsSource = null;
                 listView.ItemsSource = Items;
             }
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            //  blockDragManager = new ListViewDragDropManager<BlockItem>(listView);
-            // listView.Drop += ListView_Drop;
         }
 
         private void HandleUpBtnClickedEvent(object sender, RoutedEventArgs e)
@@ -298,7 +279,7 @@ namespace PowerPointLabs.FYP.Views
             int index = blockItems.IndexOf(labItem);
             for (int i = index; i < blockItems.Count() && i >= 0; i++)
             {
-               blockItems.ElementAt(i).ClickNo -= 1;
+                blockItems.ElementAt(i).ClickNo -= 1;
                 Label label = GetChildOfType<Label>(GetListViewItem(listView, i));
                 label.Content = blockItems.ElementAt(i).ClickNo.ToString();
             }

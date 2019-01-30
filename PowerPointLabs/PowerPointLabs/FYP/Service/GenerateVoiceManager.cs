@@ -19,7 +19,7 @@ namespace PowerPointLabs.FYP.Service
             this.tag = tag;
             this.isActivated = isActivated;
         }
-        public override List<Effect> PerformAction(PowerPointSlide slide, int clickNo, int seqNo, string voiceName, bool isSeperateClick = false,
+        public override List<Effect> PerformAction(PowerPointSlide slide, int clickNo, string voiceName, bool isSeperateClick = false,
             bool syncAppearance = true)
         {
             if (!syncAppearance)
@@ -30,7 +30,7 @@ namespace PowerPointLabs.FYP.Service
             slide.DeleteShapeWithName(name);
             if (isActivated)
             {             
-                return NotesToAudio.EmbedSlideNote(name, text, voiceName, slide, clickNo, seqNo, isSeperateClick);
+                return NotesToAudio.EmbedSlideNote(name, text, voiceName, slide, clickNo, isSeperateClick);
             }
             return new List<Effect>();
         }

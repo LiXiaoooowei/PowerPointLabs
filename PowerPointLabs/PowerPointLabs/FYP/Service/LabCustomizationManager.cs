@@ -16,6 +16,6 @@ namespace PowerPointLabs.FYP.Service
         public bool isActivated;
 
         public abstract List<Effect> PerformAction(PowerPointSlide slide, int clickNo, 
-            int seqNo, string voiceName = null, bool isSeperateClick = false, bool syncAppearance = true);
+            string voiceName = null, bool isSeperateClick = false, bool syncAppearance = true);
     }
 }

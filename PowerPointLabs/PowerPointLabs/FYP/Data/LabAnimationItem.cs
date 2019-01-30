@@ -134,13 +134,13 @@ namespace PowerPointLabs.FYP.Data
             GenerateVoiceManager = new GenerateVoiceManager(text, tagNo, isVoice);
         }
 
-        public void Execute(PowerPointSlide slide, int clickNo, int seqNo, bool isSeperateClick = false, bool syncAppearance = true)
+        public void Execute(PowerPointSlide slide, int clickNo, bool isSeperateClick = false, bool syncAppearance = true)
         {         
             bool firstAnimationTriggeredByClick = slide.IsFirstAnimationTriggeredByClick();
             List<Effect> effects = generateCalloutManager.PerformAction(slide, clickNo, isSeperateClick: isSeperateClick, syncAppearance: syncAppearance);
             effects = effects.Concat(generateCaptionManager.PerformAction(slide, clickNo, 
                 isSeperateClick: isSeperateClick && !generateCalloutManager.isActivated, syncAppearance: syncAppearance)).ToList();
-            effects = effects.Concat(GenerateVoiceManager.PerformAction(slide, clickNo, seqNo, VoiceLabel,
+            effects = effects.Concat(GenerateVoiceManager.PerformAction(slide, clickNo, VoiceLabel,
                 isSeperateClick: isSeperateClick && !generateCalloutManager.isActivated && !generateCaptionManager.isActivated, syncAppearance: syncAppearance)).ToList();
             if (effects.Count() > 0 && isSeperateClick)
             {

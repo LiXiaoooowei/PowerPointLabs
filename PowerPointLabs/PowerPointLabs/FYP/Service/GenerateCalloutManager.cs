@@ -18,7 +18,7 @@ namespace PowerPointLabs.FYP.Service
             this.tag = tag;
             this.isActivated = isActivated;
         }
-        public override List<Effect> PerformAction(PowerPointSlide slide, int clickNo, int seqNo = -1, 
+        public override List<Effect> PerformAction(PowerPointSlide slide, int clickNo, 
             string voiceName = null, bool isSeperateClick = false, bool syncAppearance = true)
         {
             string name = FYPText.Identifier + FYPText.Underscore + tag.ToString() + FYPText.Underscore + FYPText.CalloutIdentifier;
