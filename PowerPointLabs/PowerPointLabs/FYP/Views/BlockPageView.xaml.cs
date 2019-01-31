@@ -62,6 +62,12 @@ namespace PowerPointLabs.FYP.Views
         public void AddLabAnimationItem(LabAnimationItem item)
         {
             ObservableCollection<AnimationItem> items = listView.ItemsSource as ObservableCollection<AnimationItem>;
+            if (items.Count() == 0)
+            {
+                item.IsTailEnabled = false;
+                items.Add(item);
+                return;
+            }
             AnimationItem lastItem = items.ElementAt(items.Count() - 1);
             if (lastItem is CustomAnimationItems)
             {

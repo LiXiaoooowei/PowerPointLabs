@@ -32,7 +32,7 @@
 
             <ListBox.Resources>
                 <DataTemplate DataType="{x:Type local:CustomAnimationItems}">
-                    <Border BorderThickness="0.25" BorderBrush="Black">
+                    <Border BorderThickness="0.25" BorderBrush="CadetBlue">
                         <StackPanel Margin="2 2 2 2">
                             <Label Content="{Binding
                                 Path=.,
@@ -44,7 +44,7 @@
                     </Border>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:LabAnimationItem}">
-                    <Border BorderThickness="0.25" BorderBrush="Black">
+                    <Border BorderThickness="0.25" BorderBrush="OrangeRed">
                         <StackPanel Margin="2 2 2 2">
                             <Label Content="{Binding
                                 Path=.,
